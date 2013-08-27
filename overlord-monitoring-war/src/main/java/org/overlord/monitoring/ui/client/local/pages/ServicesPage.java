@@ -18,7 +18,6 @@ package org.overlord.monitoring.ui.client.local.pages;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
-import org.jboss.errai.ui.nav.client.local.DefaultPage;
 import org.jboss.errai.ui.nav.client.local.Page;
 import org.jboss.errai.ui.nav.client.local.PageShown;
 import org.jboss.errai.ui.nav.client.local.TransitionAnchor;
@@ -26,24 +25,22 @@ import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 
 /**
- * The "Dashboard" page.
+ * The "Services" page.
  *
  * @author eric.wittmann@redhat.com
  */
-@Templated("/org/overlord/monitoring/ui/client/local/site/dashboard.html#page")
-@Page(path="dashboard", role=DefaultPage.class)
+@Templated("/org/overlord/monitoring/ui/client/local/site/services.html#page")
+@Page(path="services")
 @Dependent
-public class DashboardPage extends AbstractPage {
+public class ServicesPage extends AbstractPage {
 
-    @Inject @DataField("to-services-page")
-    private TransitionAnchor<ServicesPage> toServicesPage;
-    @Inject @DataField("to-faults-page")
-    private TransitionAnchor<FaultsPage> toFaultsPage;
+    @Inject @DataField("back-to-dashboard")
+    private TransitionAnchor<DashboardPage> toDashboardPage;
 
     /**
      * Constructor.
      */
-    public DashboardPage() {
+    public ServicesPage() {
     }
 
     /**
