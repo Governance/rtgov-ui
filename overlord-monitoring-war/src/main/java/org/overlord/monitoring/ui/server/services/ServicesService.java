@@ -27,7 +27,7 @@ import org.overlord.monitoring.ui.client.shared.exceptions.UiException;
 import org.overlord.monitoring.ui.client.shared.services.IServicesService;
 
 /**
- * Concrete implementation of the task inbox service.
+ * Concrete implementation of the services service. :)
  *
  * @author eric.wittmann@redhat.com
  */

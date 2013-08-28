@@ -10,6 +10,7 @@
   "option-waiting" : "Waiting",
   "option.oneway" : "OneWay/Request",
   "option.request-response" : "RequestResponse",
-  "services.error-loading" : "Error loading services."
+  "services.error-loading" : "Error loading services.",
+  "faults.error-loading" : "Error loading faults."
 
 }

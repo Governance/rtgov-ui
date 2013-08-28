@@ -334,3 +334,11 @@ footer hr {
   background-position: top left;
 }
 
+.table-actions {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+.table-actions .icon {
+  margin-left: 4px;
+}
+
