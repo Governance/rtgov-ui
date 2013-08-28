@@ -1,2 +1,15 @@
 {
+  "no-value" : "<no value>",
+  "date-format" : "MM/dd/yyyy",
+  "time-format" : "h:mma",
+  "dateTime-format" : "MM/dd/yyyy at h:mma",
+  "any" : "Any",
+  "option.with-errors" : "With Errors",
+  "option-successful" : "Successful",
+  "option-running" : "Running",
+  "option-waiting" : "Waiting",
+  "option.oneway" : "OneWay/Request",
+  "option.request-response" : "RequestResponse",
+  "services.error-loading" : "Error loading services."
+
 }
