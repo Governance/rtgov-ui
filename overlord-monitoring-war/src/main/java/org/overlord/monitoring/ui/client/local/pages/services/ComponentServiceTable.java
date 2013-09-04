@@ -19,18 +19,18 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import org.overlord.monitoring.ui.client.local.ClientMessages;
-import org.overlord.monitoring.ui.client.shared.beans.ServiceSummaryBean;
+import org.overlord.monitoring.ui.client.shared.beans.ComponentServiceSummaryBean;
 import org.overlord.sramp.ui.client.local.widgets.common.TemplatedWidgetTable;
 
 import com.google.gwt.user.client.ui.InlineLabel;
 
 /**
- * A table of services.
+ * A table of component services.
  *
  * @author eric.wittmann@redhat.com
  */
 @Dependent
-public class ServiceTable extends TemplatedWidgetTable {
+public class ComponentServiceTable extends TemplatedWidgetTable {
 
     @Inject
     protected ClientMessages i18n;
@@ -40,28 +40,28 @@ public class ServiceTable extends TemplatedWidgetTable {
     /**
      * Constructor.
      */
-    public ServiceTable() {
+    public ComponentServiceTable() {
     }
 
     /**
      * Adds a single row to the table.
-     * @param serviceSummaryBean
+     * @param summaryBean
      */
-    public void addRow(final ServiceSummaryBean serviceSummaryBean) {
+    public void addRow(final ComponentServiceSummaryBean summaryBean) {
         int rowIdx = this.rowElements.size();
 
 //        Anchor name = toDetailsPageLinkFactory.get("uuid", serviceSummaryBean.getUuid()); //$NON-NLS-1$
 //        name.setText(serviceSummaryBean.getName());
-        InlineLabel name = new InlineLabel(serviceSummaryBean.getName());
-        InlineLabel application = new InlineLabel(serviceSummaryBean.getApplication());
-        InlineLabel interf4ce = new InlineLabel(serviceSummaryBean.getIface());
-        InlineLabel bindings = new InlineLabel(serviceSummaryBean.getBindings());
-        InlineLabel averageDuration = new InlineLabel(formatDuration(serviceSummaryBean.getAverageDuration()));
+        InlineLabel name = new InlineLabel(summaryBean.getName());
+        InlineLabel application = new InlineLabel(summaryBean.getApplication());
+        InlineLabel interf4ce = new InlineLabel(summaryBean.getIface());
+        InlineLabel implementation = new InlineLabel(summaryBean.getImplementation());
+        InlineLabel averageDuration = new InlineLabel(formatDuration(summaryBean.getAverageDuration()));
 
         add(rowIdx, 0, name);
         add(rowIdx, 1, application);
         add(rowIdx, 2, interf4ce);
-        add(rowIdx, 3, bindings);
+        add(rowIdx, 3, implementation);
         add(rowIdx, 4, averageDuration);
     }
 

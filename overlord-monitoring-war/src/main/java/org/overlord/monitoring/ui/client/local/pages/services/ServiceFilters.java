@@ -22,7 +22,6 @@ import javax.inject.Inject;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.overlord.monitoring.ui.client.shared.beans.ServicesFilterBean;
-import org.overlord.sramp.ui.client.local.widgets.bootstrap.DateBox;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -32,9 +31,10 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.TextBox;
 
 /**
- * The deployments filtersPanel sidebar.  Whenever the user changes any of the settings in
+ * The services filtersPanel sidebar.  Whenever the user changes any of the settings in
  * the filter sidebar, a ValueChangeEvent will be fired.
  *
  * @author eric.wittmann@redhat.com
@@ -45,20 +45,12 @@ public class ServiceFilters extends Composite implements HasValueChangeHandlers<
 
     private ServicesFilterBean currentState = new ServicesFilterBean();
 
-    // Owner, type, bundle name
     @Inject @DataField
-    protected ServiceNameListBox serviceName;
+    protected ApplicationNameListBox applicationName;
     @Inject @DataField
-    protected ServiceCategoryListBox serviceCategory;
+    protected TextBox serviceName;
     @Inject @DataField
     protected ProcessingStateListBox processingState;
-    @Inject @DataField
-    protected ServiceStyleListBox serviceStyle;
-
-    @Inject @DataField
-    protected DateBox processingStartedFrom;
-    @Inject @DataField
-    protected DateBox processingStartedTo;
 
     @Inject @DataField
     protected Anchor clearFilters;
@@ -90,12 +82,9 @@ public class ServiceFilters extends Composite implements HasValueChangeHandlers<
                 onFilterValueChange();
             }
         };
+        applicationName.addValueChangeHandler(valueChangeHandler);
         serviceName.addValueChangeHandler(valueChangeHandler);
-        serviceCategory.addValueChangeHandler(valueChangeHandler);
         processingState.addValueChangeHandler(valueChangeHandler);
-        serviceStyle.addValueChangeHandler(valueChangeHandler);
-        processingStartedFrom.addValueChangeHandler(valueChangeHandler);
-        processingStartedTo.addValueChangeHandler(valueChangeHandler);
     }
 
     /**
@@ -104,11 +93,8 @@ public class ServiceFilters extends Composite implements HasValueChangeHandlers<
     protected void onFilterValueChange() {
         ServicesFilterBean newState = new ServicesFilterBean();
         newState.setServiceName(serviceName.getValue())
-            .setServiceCategory(serviceCategory.getValue())
-            .setProcessingState(processingState.getValue())
-            .setServiceStyle(serviceStyle.getValue())
-            .setProcessingStartedFrom(processingStartedFrom.getDateValue())
-            .setProcessingStartedTo(processingStartedTo.getDateValue());
+            .setApplicationName(applicationName.getValue())
+            .setProcessingState(processingState.getValue());
 
         ServicesFilterBean oldState = this.currentState;
         this.currentState = newState;
@@ -127,12 +113,9 @@ public class ServiceFilters extends Composite implements HasValueChangeHandlers<
      * @param value the new filter settings
      */
     public void setValue(ServicesFilterBean value) {
+        serviceName.setValue(value.getApplicationName() == null ? "" : value.getApplicationName()); //$NON-NLS-1$
         serviceName.setValue(value.getServiceName() == null ? "" : value.getServiceName()); //$NON-NLS-1$
-        serviceCategory.setValue(value.getServiceCategory() == null ? "" : value.getServiceCategory()); //$NON-NLS-1$
         processingState.setValue(value.getProcessingState() == null ? "" : value.getProcessingState()); //$NON-NLS-1$
-        serviceStyle.setValue(value.getServiceStyle() == null ? "" : value.getServiceStyle()); //$NON-NLS-1$
-        processingStartedFrom.setDateValue(value.getProcessingStartedFrom() == null ? null : value.getProcessingStartedFrom());
-        processingStartedTo.setDateValue(value.getProcessingStartedTo() == null ? null : value.getProcessingStartedTo());
         onFilterValueChange();
     }
 

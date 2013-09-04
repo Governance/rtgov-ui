@@ -15,8 +15,6 @@
  */
 package org.overlord.monitoring.ui.client.shared.beans;
 
-import java.util.Date;
-
 import org.jboss.errai.common.client.api.annotations.Portable;
 
 /**
@@ -28,12 +26,9 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 @Portable
 public class ServicesFilterBean {
 
+    private String applicationName;
     private String serviceName;
-    private String serviceCategory;
     private String processingState;
-    private String serviceStyle;
-    private Date processingStartedFrom;
-    private Date processingStartedTo;
 
     /**
      * Constructor.
@@ -49,13 +44,6 @@ public class ServicesFilterBean {
     }
 
     /**
-     * @return the serviceCategory
-     */
-    public String getServiceCategory() {
-        return serviceCategory;
-    }
-
-    /**
      * @return the processingState
      */
     public String getProcessingState() {
@@ -63,24 +51,10 @@ public class ServicesFilterBean {
     }
 
     /**
-     * @return the serviceStyle
+     * @return the applicationName
      */
-    public String getServiceStyle() {
-        return serviceStyle;
-    }
-
-    /**
-     * @return the processingStartedFrom
-     */
-    public Date getProcessingStartedFrom() {
-        return processingStartedFrom;
-    }
-
-    /**
-     * @return the processingStartedTo
-     */
-    public Date getProcessingStartedTo() {
-        return processingStartedTo;
+    public String getApplicationName() {
+        return applicationName;
     }
 
     /**
@@ -92,10 +66,10 @@ public class ServicesFilterBean {
     }
 
     /**
-     * @param serviceCategory the serviceCategory to set
+     * @param appName the appName to set
      */
-    public ServicesFilterBean setServiceCategory(String serviceCategory) {
-        this.serviceCategory = serviceCategory;
+    public ServicesFilterBean setApplicationName(String appName) {
+        this.applicationName = appName;
         return this;
     }
 
@@ -108,42 +82,15 @@ public class ServicesFilterBean {
     }
 
     /**
-     * @param serviceStyle the serviceStyle to set
-     */
-    public ServicesFilterBean setServiceStyle(String serviceStyle) {
-        this.serviceStyle = serviceStyle;
-        return this;
-    }
-
-    /**
-     * @param processingStartedFrom the processingStartedFrom to set
-     */
-    public ServicesFilterBean setProcessingStartedFrom(Date processingStartedFrom) {
-        this.processingStartedFrom = processingStartedFrom;
-        return this;
-    }
-
-    /**
-     * @param processingStartedTo the processingStartedTo to set
-     */
-    public ServicesFilterBean setProcessingStartedTo(Date processingStartedTo) {
-        this.processingStartedTo = processingStartedTo;
-        return this;
-    }
-
-    /**
      * @see java.lang.Object#hashCode()
      */
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((processingStartedFrom == null) ? 0 : processingStartedFrom.hashCode());
-        result = prime * result + ((processingStartedTo == null) ? 0 : processingStartedTo.hashCode());
+        result = prime * result + ((applicationName == null) ? 0 : applicationName.hashCode());
         result = prime * result + ((processingState == null) ? 0 : processingState.hashCode());
-        result = prime * result + ((serviceCategory == null) ? 0 : serviceCategory.hashCode());
         result = prime * result + ((serviceName == null) ? 0 : serviceName.hashCode());
-        result = prime * result + ((serviceStyle == null) ? 0 : serviceStyle.hashCode());
         return result;
     }
 
@@ -159,35 +106,20 @@ public class ServicesFilterBean {
         if (getClass() != obj.getClass())
             return false;
         ServicesFilterBean other = (ServicesFilterBean) obj;
-        if (processingStartedFrom == null) {
-            if (other.processingStartedFrom != null)
+        if (applicationName == null) {
+            if (other.applicationName != null)
                 return false;
-        } else if (!processingStartedFrom.equals(other.processingStartedFrom))
-            return false;
-        if (processingStartedTo == null) {
-            if (other.processingStartedTo != null)
-                return false;
-        } else if (!processingStartedTo.equals(other.processingStartedTo))
+        } else if (!applicationName.equals(other.applicationName))
             return false;
         if (processingState == null) {
             if (other.processingState != null)
                 return false;
         } else if (!processingState.equals(other.processingState))
             return false;
-        if (serviceCategory == null) {
-            if (other.serviceCategory != null)
-                return false;
-        } else if (!serviceCategory.equals(other.serviceCategory))
-            return false;
         if (serviceName == null) {
             if (other.serviceName != null)
                 return false;
         } else if (!serviceName.equals(other.serviceName))
-            return false;
-        if (serviceStyle == null) {
-            if (other.serviceStyle != null)
-                return false;
-        } else if (!serviceStyle.equals(other.serviceStyle))
             return false;
         return true;
     }

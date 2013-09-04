@@ -26,11 +26,14 @@ import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.overlord.monitoring.ui.client.local.ClientMessages;
+import org.overlord.monitoring.ui.client.local.pages.services.ComponentServiceTable;
 import org.overlord.monitoring.ui.client.local.pages.services.ServiceFilters;
 import org.overlord.monitoring.ui.client.local.pages.services.ServiceTable;
 import org.overlord.monitoring.ui.client.local.services.NotificationService;
 import org.overlord.monitoring.ui.client.local.services.ServicesRpcService;
 import org.overlord.monitoring.ui.client.local.services.rpc.IRpcServiceInvocationHandler;
+import org.overlord.monitoring.ui.client.shared.beans.ComponentServiceResultSetBean;
+import org.overlord.monitoring.ui.client.shared.beans.ComponentServiceSummaryBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceResultSetBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceSummaryBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServicesFilterBean;
@@ -68,8 +71,10 @@ public class ServicesPage extends AbstractPage {
     @Inject @DataField("filter-sidebar")
     protected ServiceFilters filtersPanel;
 
-    @Inject @DataField("btn-refresh")
-    protected Button refreshButton;
+    @Inject @DataField("services-btn-refresh")
+    protected Button servicesRefreshButton;
+    @Inject @DataField("cs-btn-refresh")
+    protected Button componentServicesRefreshButton;
 
     @Inject @DataField("services-none")
     protected HtmlSnippet noDataMessage;
@@ -77,6 +82,12 @@ public class ServicesPage extends AbstractPage {
     protected HtmlSnippet searchInProgressMessage;
     @Inject @DataField("services-table")
     protected ServiceTable servicesTable;
+    @Inject @DataField("cs-none")
+    protected HtmlSnippet noDataMessage_cs;
+    @Inject @DataField("cs-searching")
+    protected HtmlSnippet searchInProgressMessage_cs;
+    @Inject @DataField("cs-table")
+    protected ComponentServiceTable componentServicesTable;
 
     @Inject @DataField("services-pager")
     protected Pager pager;
@@ -84,8 +95,15 @@ public class ServicesPage extends AbstractPage {
     protected SpanElement rangeSpan = Document.get().createSpanElement();
     @DataField("services-total")
     protected SpanElement totalSpan = Document.get().createSpanElement();
+    @Inject @DataField("cs-pager")
+    protected Pager pager_cs;
+    @DataField("cs-range")
+    protected SpanElement rangeSpan_cs = Document.get().createSpanElement();
+    @DataField("cs-total")
+    protected SpanElement totalSpan_cs = Document.get().createSpanElement();
 
-    private int currentPage = 1;
+    private int currentServicesPage = 1;
+    private int currentServicesPage_cs = 1;
 
     /**
      * Constructor.
@@ -108,30 +126,52 @@ public class ServicesPage extends AbstractPage {
         filtersPanel.addValueChangeHandler(new ValueChangeHandler<ServicesFilterBean>() {
             @Override
             public void onValueChange(ValueChangeEvent<ServicesFilterBean> event) {
-                doSearch();
+                doServicesSearch();
+                doComponentServicesSearch();
             }
         });
         pager.addValueChangeHandler(new ValueChangeHandler<Integer>() {
             @Override
             public void onValueChange(ValueChangeEvent<Integer> event) {
-                doSearch(event.getValue());
+                doServicesSearch(event.getValue());
+            }
+        });
+        pager_cs.addValueChangeHandler(new ValueChangeHandler<Integer>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<Integer> event) {
+                doComponentServicesSearch(event.getValue());
             }
         });
 
-        // Hide column 1 when in mobile mode.
-        servicesTable.setColumnClasses(1, "desktop-only"); //$NON-NLS-1$
+        servicesTable.setColumnClasses(2, "desktop-only"); //$NON-NLS-1$
+        servicesTable.setColumnClasses(3, "desktop-only"); //$NON-NLS-1$
+        servicesTable.setColumnClasses(4, "desktop-only"); //$NON-NLS-1$
+        componentServicesTable.setColumnClasses(2, "desktop-only"); //$NON-NLS-1$
+        componentServicesTable.setColumnClasses(3, "desktop-only"); //$NON-NLS-1$
+        componentServicesTable.setColumnClasses(4, "desktop-only"); //$NON-NLS-1$
 
         this.rangeSpan.setInnerText("?"); //$NON-NLS-1$
         this.totalSpan.setInnerText("?"); //$NON-NLS-1$
+        this.rangeSpan_cs.setInnerText("?"); //$NON-NLS-1$
+        this.totalSpan_cs.setInnerText("?"); //$NON-NLS-1$
     }
 
     /**
      * Event handler that fires when the user clicks the refresh button.
      * @param event
      */
-    @EventHandler("btn-refresh")
+    @EventHandler("services-btn-refresh")
     public void onRefreshClick(ClickEvent event) {
-        doSearch(currentPage);
+        doServicesSearch(currentServicesPage);
+    }
+
+    /**
+     * Event handler that fires when the user clicks the refresh button.
+     * @param event
+     */
+    @EventHandler("cs-btn-refresh")
+    public void onRefreshClick_cs(ClickEvent event) {
+        doComponentServicesSearch(currentServicesPage_cs);
     }
 
     /**
@@ -140,31 +180,37 @@ public class ServicesPage extends AbstractPage {
      */
     @Override
     protected void onPageShowing() {
-        // Kick off an artifact search
-        doSearch();
-        // Refresh the artifact filters
+        doServicesSearch();
+        doComponentServicesSearch();
         filtersPanel.refresh();
     }
 
     /**
-     * Search for artifacts based on the current filter settings and search text.
+     * Search for services based on the current filter settings.
      */
-    protected void doSearch() {
-        doSearch(1);
+    protected void doServicesSearch() {
+        doServicesSearch(1);
+    }
+
+    /**
+     * Search for services based on the current filter settings.
+     */
+    protected void doComponentServicesSearch() {
+        doComponentServicesSearch(1);
     }
 
     /**
      * Search for services based on the current filter settings.
      * @param page
      */
-    protected void doSearch(int page) {
-        onSearchStarting();
-        currentPage = page;
-        servicesService.search(filtersPanel.getValue(), page, new IRpcServiceInvocationHandler<ServiceResultSetBean>() {
+    protected void doServicesSearch(int page) {
+        onServicesSearchStarting();
+        currentServicesPage = page;
+        servicesService.findServices(filtersPanel.getValue(), page, new IRpcServiceInvocationHandler<ServiceResultSetBean>() {
             @Override
             public void onReturn(ServiceResultSetBean data) {
-                updateTable(data);
-                updatePager(data);
+                updateServicesTable(data);
+                updateServicesPager(data);
             }
             @Override
             public void onError(Throwable error) {
@@ -176,9 +222,31 @@ public class ServicesPage extends AbstractPage {
     }
 
     /**
+     * Search for services based on the current filter settings.
+     * @param page
+     */
+    protected void doComponentServicesSearch(int page) {
+        onComponentServicesSearchStarting();
+        currentServicesPage_cs = page;
+        servicesService.findComponentServices(filtersPanel.getValue(), page, new IRpcServiceInvocationHandler<ComponentServiceResultSetBean>() {
+            @Override
+            public void onReturn(ComponentServiceResultSetBean data) {
+                updateComponentServicesTable(data);
+                updateComponentServicesPager(data);
+            }
+            @Override
+            public void onError(Throwable error) {
+                notificationService.sendErrorNotification(i18n.format("services.error-loading"), error); //$NON-NLS-1$
+                noDataMessage_cs.setVisible(true);
+                searchInProgressMessage_cs.setVisible(false);
+            }
+        });
+    }
+
+    /**
      * Called when a new search is kicked off.
      */
-    protected void onSearchStarting() {
+    protected void onServicesSearchStarting() {
         this.pager.setVisible(false);
         this.searchInProgressMessage.setVisible(true);
         this.servicesTable.setVisible(false);
@@ -188,10 +256,22 @@ public class ServicesPage extends AbstractPage {
     }
 
     /**
+     * Called when a new search is kicked off.
+     */
+    protected void onComponentServicesSearchStarting() {
+        this.pager_cs.setVisible(false);
+        this.searchInProgressMessage_cs.setVisible(true);
+        this.componentServicesTable.setVisible(false);
+        this.noDataMessage_cs.setVisible(false);
+        this.rangeSpan_cs.setInnerText("?"); //$NON-NLS-1$
+        this.totalSpan_cs.setInnerText("?"); //$NON-NLS-1$
+    }
+
+    /**
      * Updates the table of services with the given data.
      * @param data
      */
-    protected void updateTable(ServiceResultSetBean data) {
+    protected void updateServicesTable(ServiceResultSetBean data) {
         this.servicesTable.clear();
         this.searchInProgressMessage.setVisible(false);
         if (data.getServices().size() > 0) {
@@ -205,10 +285,27 @@ public class ServicesPage extends AbstractPage {
     }
 
     /**
+     * Updates the table of services with the given data.
+     * @param data
+     */
+    protected void updateComponentServicesTable(ComponentServiceResultSetBean data) {
+        this.componentServicesTable.clear();
+        this.searchInProgressMessage_cs.setVisible(false);
+        if (data.getServices().size() > 0) {
+            for (ComponentServiceSummaryBean deploymentSummaryBean : data.getServices()) {
+                this.componentServicesTable.addRow(deploymentSummaryBean);
+            }
+            this.componentServicesTable.setVisible(true);
+        } else {
+            this.noDataMessage_cs.setVisible(true);
+        }
+    }
+
+    /**
      * Updates the pager with the given data.
      * @param data
      */
-    protected void updatePager(ServiceResultSetBean data) {
+    protected void updateServicesPager(ServiceResultSetBean data) {
         int numPages = ((int) (data.getTotalResults() / data.getItemsPerPage())) + (data.getTotalResults() % data.getItemsPerPage() == 0 ? 0 : 1);
         int thisPage = (data.getStartIndex() / data.getItemsPerPage()) + 1;
         this.pager.setNumPages(numPages);
@@ -222,6 +319,26 @@ public class ServicesPage extends AbstractPage {
         String totalText = String.valueOf(data.getTotalResults());
         this.rangeSpan.setInnerText(rangeText);
         this.totalSpan.setInnerText(totalText);
+    }
+
+    /**
+     * Updates the pager with the given data.
+     * @param data
+     */
+    protected void updateComponentServicesPager(ComponentServiceResultSetBean data) {
+        int numPages = ((int) (data.getTotalResults() / data.getItemsPerPage())) + (data.getTotalResults() % data.getItemsPerPage() == 0 ? 0 : 1);
+        int thisPage = (data.getStartIndex() / data.getItemsPerPage()) + 1;
+        this.pager_cs.setNumPages(numPages);
+        this.pager_cs.setPage(thisPage);
+        if (numPages > 1)
+            this.pager_cs.setVisible(true);
+
+        int startIndex = data.getStartIndex() + 1;
+        int endIndex = startIndex + data.getServices().size() - 1;
+        String rangeText = "" + startIndex + "-" + endIndex; //$NON-NLS-1$ //$NON-NLS-2$
+        String totalText = String.valueOf(data.getTotalResults());
+        this.rangeSpan_cs.setInnerText(rangeText);
+        this.totalSpan_cs.setInnerText(totalText);
     }
 
 }

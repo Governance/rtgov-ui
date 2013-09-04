@@ -49,7 +49,7 @@ public class FaultsService implements IFaultsService {
     }
 
     /**
-     * @see org.overlord.dtgov.ui.client.shared.services.IFaultsService#get(java.lang.String)
+     * @see org.overlord.dtgov.ui.client.shared.services.IFaultsService#getService(java.lang.String)
      */
     @Override
     public FaultBean get(String uuid) throws UiException {

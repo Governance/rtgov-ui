@@ -16,6 +16,7 @@
 package org.overlord.monitoring.ui.client.shared.services;
 
 import org.jboss.errai.bus.server.annotations.Remote;
+import org.overlord.monitoring.ui.client.shared.beans.ComponentServiceResultSetBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceResultSetBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServicesFilterBean;
@@ -30,19 +31,28 @@ import org.overlord.monitoring.ui.client.shared.exceptions.UiException;
 public interface IServicesService {
 
     /**
-     * Search for services using the given filters and search text.
+     * Search for services using the given filters.
      * @param filters
      * @param searchText
      * @param page
      * @throws UiException
      */
-    public ServiceResultSetBean search(ServicesFilterBean filters, int page) throws UiException;
+    public ServiceResultSetBean findServices(ServicesFilterBean filters, int page) throws UiException;
+
+    /**
+     * Search for component services using the given filters.
+     * @param filters
+     * @param searchText
+     * @param page
+     * @throws UiException
+     */
+    public ComponentServiceResultSetBean findComponentServices(ServicesFilterBean filters, int page) throws UiException;
 
     /**
      * Fetches a full service by its name.
      * @param name
      * @throws UiException
      */
-    public ServiceBean get(String name) throws UiException;
+    public ServiceBean getService(String name) throws UiException;
 
 }

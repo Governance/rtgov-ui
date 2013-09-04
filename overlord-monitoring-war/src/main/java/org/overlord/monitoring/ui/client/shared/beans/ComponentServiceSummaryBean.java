@@ -19,24 +19,24 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 
 /**
- * A simple data bean for returning summary information for single service.
+ * A simple data bean for returning summary information for single component service.
  *
  * @author eric.wittmann@redhat.com
  */
 @Portable
 @Bindable
-public class ServiceSummaryBean {
+public class ComponentServiceSummaryBean {
 
     private String name;
     private String application;
     private String iface;
-    private String bindings;
+    private String implementation;
     private long averageDuration;
 
     /**
      * Constructor.
      */
-    public ServiceSummaryBean() {
+    public ComponentServiceSummaryBean() {
     }
 
     /**
@@ -63,8 +63,8 @@ public class ServiceSummaryBean {
     /**
      * @return the address
      */
-    public String getBindings() {
-        return bindings;
+    public String getImplementation() {
+        return implementation;
     }
 
     /**
@@ -77,7 +77,7 @@ public class ServiceSummaryBean {
     /**
      * @param name the name to set
      */
-    public ServiceSummaryBean setName(String name) {
+    public ComponentServiceSummaryBean setName(String name) {
         this.name = name;
         return this;
     }
@@ -85,7 +85,7 @@ public class ServiceSummaryBean {
     /**
      * @param category the category to set
      */
-    public ServiceSummaryBean setApplication(String category) {
+    public ComponentServiceSummaryBean setApplication(String category) {
         this.application = category;
         return this;
     }
@@ -93,7 +93,7 @@ public class ServiceSummaryBean {
     /**
      * @param iface the iface to set
      */
-    public ServiceSummaryBean setIface(String iface) {
+    public ComponentServiceSummaryBean setIface(String iface) {
         this.iface = iface;
         return this;
     }
@@ -101,15 +101,15 @@ public class ServiceSummaryBean {
     /**
      * @param address the address to set
      */
-    public ServiceSummaryBean setBindings(String address) {
-        this.bindings = address;
+    public ComponentServiceSummaryBean setImplementation(String address) {
+        this.implementation = address;
         return this;
     }
 
     /**
      * @param averageDuration the averageDuration to set
      */
-    public ServiceSummaryBean setAverageDuration(long averageDuration) {
+    public ComponentServiceSummaryBean setAverageDuration(long averageDuration) {
         this.averageDuration = averageDuration;
         return this;
     }
@@ -136,7 +136,7 @@ public class ServiceSummaryBean {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        ServiceSummaryBean other = (ServiceSummaryBean) obj;
+        ComponentServiceSummaryBean other = (ComponentServiceSummaryBean) obj;
         if (name == null) {
             if (other.name != null)
                 return false;

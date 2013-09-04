@@ -21,10 +21,10 @@ import org.overlord.monitoring.ui.client.local.ClientMessages;
 import org.overlord.monitoring.ui.client.local.widgets.common.AbstractFilterListBox;
 
 /**
- * Injectable list box for the deployment type filter.
+ * Injectable list box for the app name.
  * @author eric.wittmann@redhat.com
  */
-public class ServiceNameListBox extends AbstractFilterListBox {
+public class ApplicationNameListBox extends AbstractFilterListBox {
 
     @Inject
     protected ClientMessages i18n;
@@ -32,7 +32,7 @@ public class ServiceNameListBox extends AbstractFilterListBox {
     /**
      * Constructor.
      */
-    public ServiceNameListBox() {
+    public ApplicationNameListBox() {
     }
 
     /**
