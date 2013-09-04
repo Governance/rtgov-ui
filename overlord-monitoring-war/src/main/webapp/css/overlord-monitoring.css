@@ -239,6 +239,12 @@ footer hr {
   background-color: rgb(242, 242, 242);
   padding: 10px;
 }
+.overlord-details-actions {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 0px;
+  padding-right: 0px;
+}
 
 .overlord-none, .overlord-searching {
   float: left;
@@ -267,6 +273,9 @@ footer hr {
   border-right: 1px solid rgb(211, 211, 211);
   border-bottom: 1px solid rgb(211, 211, 211);
 }
+.overlord-standalone-table {
+  border-top: 1px solid rgb(211, 211, 211);
+}
 
 .overlord-table thead th, .overlord-table tbody td {
   border-left: 1px solid rgb(211, 211, 211);
@@ -274,8 +283,13 @@ footer hr {
 .overlord-table thead th {
   background-color: white;
 }
+.overlord-standalone-table thead th {
+  background-color: rgb(31, 151, 216);
+  color: white;
+  text-shadow: 1px 1px 3px #444;
+}
 
-.service-details-title {
+.details-title {
   font-weight: bold;
   font-size: 16px;
   text-shadow: 1px 1px 2px rgb(170, 170, 170);
