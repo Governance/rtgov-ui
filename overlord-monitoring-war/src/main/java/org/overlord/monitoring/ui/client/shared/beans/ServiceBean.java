@@ -16,6 +16,8 @@
 package org.overlord.monitoring.ui.client.shared.beans;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
@@ -41,6 +43,7 @@ public class ServiceBean implements Serializable {
     private long averageTime;
     private long minTime;
     private long maxTime;
+    private List<GatewayMetric> gatewayMetrics = new ArrayList<GatewayMetric>();
 
     /**
      * Constructor.
@@ -186,6 +189,40 @@ public class ServiceBean implements Serializable {
      */
     public void setMaxTime(long maxTime) {
         this.maxTime = maxTime;
+    }
+
+    /**
+     * Adds a single gateway metric to the bean.
+     * @param name
+     * @param type
+     * @param messageCount
+     * @param averageTime
+     * @param timePercent
+     * @param faultPercent
+     */
+    public void addGatewayMetric(String name, String type, long messageCount, long averageTime, int timePercent, int faultPercent) {
+        GatewayMetric metric = new GatewayMetric();
+        metric.setName(name);
+        metric.setType(type);
+        metric.setMessageCount(messageCount);
+        metric.setAverageTime(averageTime);
+        metric.setTimePercent(timePercent);
+        metric.setFaultPercent(faultPercent);
+        this.getGatewayMetrics().add(metric);
+    }
+
+    /**
+     * @return the gatewayMetrics
+     */
+    public List<GatewayMetric> getGatewayMetrics() {
+        return gatewayMetrics;
+    }
+
+    /**
+     * @param gatewayMetrics the gatewayMetrics to set
+     */
+    public void setGatewayMetrics(List<GatewayMetric> gatewayMetrics) {
+        this.gatewayMetrics = gatewayMetrics;
     }
 
 }

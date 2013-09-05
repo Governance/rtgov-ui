@@ -29,6 +29,7 @@ import org.jboss.errai.ui.shared.api.annotations.Bound;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.overlord.monitoring.ui.client.local.ClientMessages;
+import org.overlord.monitoring.ui.client.local.pages.services.GatewayMetricsTable;
 import org.overlord.monitoring.ui.client.local.services.NotificationService;
 import org.overlord.monitoring.ui.client.local.services.ServicesRpcService;
 import org.overlord.monitoring.ui.client.local.services.rpc.IRpcServiceInvocationHandler;
@@ -105,6 +106,9 @@ public class ServiceDetailsPage extends AbstractPage {
     @Inject @DataField("max-time") @Bound(property="maxTime", converter=DataBindingLongConverter.class)
     InlineLabel maxTime;
 
+    // Gateway Metrics
+    @Inject @DataField("gateway-table") @Bound(property="gatewayMetrics")
+    GatewayMetricsTable gatewayMetricsTable;
 
     @Inject @DataField("service-details-loading-spinner")
     protected HtmlSnippet loading;

@@ -16,6 +16,8 @@
 package org.overlord.monitoring.ui.client.shared.beans;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
@@ -42,6 +44,7 @@ public class ComponentServiceBean implements Serializable {
     private long averageTime;
     private long minTime;
     private long maxTime;
+    private List<ReferenceMetric> referenceMetrics = new ArrayList<ReferenceMetric>();
 
     /**
      * Constructor.
@@ -201,6 +204,38 @@ public class ComponentServiceBean implements Serializable {
      */
     public void setServiceImplementation(String serviceImplementation) {
         this.serviceImplementation = serviceImplementation;
+    }
+
+    /**
+     * Adds a single reference metric to the bean.
+     * @param name
+     * @param messageCount
+     * @param averageTime
+     * @param timePercent
+     * @param faultPercent
+     */
+    public void addReferenceMetric(String name, long messageCount, long averageTime, int timePercent, int faultPercent) {
+        ReferenceMetric metric = new ReferenceMetric();
+        metric.setName(name);
+        metric.setMessageCount(messageCount);
+        metric.setAverageTime(averageTime);
+        metric.setTimePercent(timePercent);
+        metric.setFaultPercent(faultPercent);
+        this.getReferenceMetrics().add(metric);
+    }
+
+    /**
+     * @return the referenceMetrics
+     */
+    public List<ReferenceMetric> getReferenceMetrics() {
+        return referenceMetrics;
+    }
+
+    /**
+     * @param referenceMetrics the referenceMetrics to set
+     */
+    public void setReferenceMetrics(List<ReferenceMetric> referenceMetrics) {
+        this.referenceMetrics = referenceMetrics;
     }
 
 }

@@ -77,6 +77,8 @@ public class ServicesService implements IServicesService {
         service.setAverageTime(41);
         service.setMinTime(3);
         service.setMaxTime(101);
+        service.addGatewayMetric("_CreateApplicationWebservice_soap1", "soap", 87, 42, 90, 0); //$NON-NLS-1$ //$NON-NLS-2$
+        service.addGatewayMetric("_CreateApplicationWebservice_jms1", "jms", 13, 35, 10, 0); //$NON-NLS-1$ //$NON-NLS-2$
         return service;
     }
 
@@ -97,6 +99,8 @@ public class ServicesService implements IServicesService {
         service.setAverageTime(41);
         service.setMinTime(3);
         service.setMaxTime(101);
+        service.addReferenceMetric("Inventory Service", 17, 7, 75, 100); //$NON-NLS-1$
+        service.addReferenceMetric("Provisioning Service", 13, 3, 25, 0); //$NON-NLS-1$
         return service;
     }
 
