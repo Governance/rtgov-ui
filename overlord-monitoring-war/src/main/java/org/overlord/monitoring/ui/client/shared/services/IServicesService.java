@@ -16,6 +16,7 @@
 package org.overlord.monitoring.ui.client.shared.services;
 
 import org.jboss.errai.bus.server.annotations.Remote;
+import org.overlord.monitoring.ui.client.shared.beans.ComponentServiceBean;
 import org.overlord.monitoring.ui.client.shared.beans.ComponentServiceResultSetBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceResultSetBean;
@@ -50,9 +51,16 @@ public interface IServicesService {
 
     /**
      * Fetches a full service by its name.
-     * @param name
+     * @param serviceId
      * @throws UiException
      */
-    public ServiceBean getService(String name) throws UiException;
+    public ServiceBean getService(String serviceId) throws UiException;
+
+    /**
+     * Fetches a full component service by its name.
+     * @param serviceId
+     * @throws UiException
+     */
+    public ComponentServiceBean getComponentService(String serviceId) throws UiException;
 
 }

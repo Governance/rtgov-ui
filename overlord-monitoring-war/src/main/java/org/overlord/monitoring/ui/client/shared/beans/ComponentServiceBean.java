@@ -27,14 +27,15 @@ import org.jboss.errai.databinding.client.api.Bindable;
  */
 @Portable
 @Bindable
-public class ServiceBean implements Serializable {
+public class ComponentServiceBean implements Serializable {
 
-    private static final long serialVersionUID = ServiceBean.class.hashCode();
+    private static final long serialVersionUID = ComponentServiceBean.class.hashCode();
 
     private String serviceId;
     private QName name;
     private QName application;
     private String serviceInterface;
+    private String serviceImplementation;
     private long successCount;
     private long faultCount;
     private long totalTime;
@@ -45,7 +46,7 @@ public class ServiceBean implements Serializable {
     /**
      * Constructor.
      */
-    public ServiceBean() {
+    public ComponentServiceBean() {
     }
 
     /**
@@ -186,6 +187,20 @@ public class ServiceBean implements Serializable {
      */
     public void setMaxTime(long maxTime) {
         this.maxTime = maxTime;
+    }
+
+    /**
+     * @return the serviceImplementation
+     */
+    public String getServiceImplementation() {
+        return serviceImplementation;
+    }
+
+    /**
+     * @param serviceImplementation the serviceImplementation to set
+     */
+    public void setServiceImplementation(String serviceImplementation) {
+        this.serviceImplementation = serviceImplementation;
     }
 
 }

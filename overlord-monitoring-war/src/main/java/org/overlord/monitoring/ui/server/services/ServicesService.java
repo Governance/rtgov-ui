@@ -19,8 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.errai.bus.server.annotations.Service;
+import org.overlord.monitoring.ui.client.shared.beans.ComponentServiceBean;
 import org.overlord.monitoring.ui.client.shared.beans.ComponentServiceResultSetBean;
 import org.overlord.monitoring.ui.client.shared.beans.ComponentServiceSummaryBean;
+import org.overlord.monitoring.ui.client.shared.beans.QName;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceResultSetBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceSummaryBean;
@@ -64,7 +66,38 @@ public class ServicesService implements IServicesService {
      */
     @Override
     public ServiceBean getService(String uuid) throws UiException {
-        return null;
+        ServiceBean service = new ServiceBean();
+        service.setServiceId("1"); //$NON-NLS-1$
+        service.setName(new QName("urn:jboss:demo:services", "CreateApplicationWebservice")); //$NON-NLS-1$ //$NON-NLS-2$
+        service.setApplication(new QName("urn:jboss:demos:applications", "Contract")); //$NON-NLS-1$ //$NON-NLS-2$
+        service.setServiceInterface("{urn:jboss:demo:create-application}CreateApplicationPT"); //$NON-NLS-1$
+        service.setSuccessCount(83);
+        service.setFaultCount(4);
+        service.setTotalTime(804);
+        service.setAverageTime(41);
+        service.setMinTime(3);
+        service.setMaxTime(101);
+        return service;
+    }
+
+    /**
+     * @see org.overlord.monitoring.ui.client.shared.services.IServicesService#getComponentService(java.lang.String)
+     */
+    @Override
+    public ComponentServiceBean getComponentService(String serviceId) throws UiException {
+        ComponentServiceBean service = new ComponentServiceBean();
+        service.setServiceId("1"); //$NON-NLS-1$
+        service.setName(new QName("urn:jboss:demo:services", "CreateApplicationService")); //$NON-NLS-1$ //$NON-NLS-2$
+        service.setApplication(new QName("urn:jboss:demos:applications", "Contract")); //$NON-NLS-1$ //$NON-NLS-2$
+        service.setServiceInterface("org.jboss.demos.services.ICreateApplication"); //$NON-NLS-1$
+        service.setServiceImplementation("org.jboss.demos.services.CreateApplicationService"); //$NON-NLS-1$
+        service.setSuccessCount(83);
+        service.setFaultCount(4);
+        service.setTotalTime(804);
+        service.setAverageTime(41);
+        service.setMinTime(3);
+        service.setMaxTime(101);
+        return service;
     }
 
     /**
@@ -79,6 +112,7 @@ public class ServicesService implements IServicesService {
         rval.setTotalResults(2);
 
         ServiceSummaryBean service = new ServiceSummaryBean();
+        service.setServiceId("1"); //$NON-NLS-1$
         service.setName("CreateApplicationWebservice"); //$NON-NLS-1$
         service.setApplication("Contract"); //$NON-NLS-1$
         service.setIface("{urn:jboss:demo:create-application}CreateApplicationPT"); //$NON-NLS-1$
@@ -87,6 +121,7 @@ public class ServicesService implements IServicesService {
         services.add(service);
 
         service = new ServiceSummaryBean();
+        service.setServiceId("2"); //$NON-NLS-1$
         service.setName("CreateQuoteWebservice"); //$NON-NLS-1$
         service.setApplication("Contract"); //$NON-NLS-1$
         service.setIface("{urn:jboss:demo:create-application}CreateQuotePT"); //$NON-NLS-1$
@@ -109,6 +144,7 @@ public class ServicesService implements IServicesService {
         rval.setTotalResults(2);
 
         ComponentServiceSummaryBean service = new ComponentServiceSummaryBean();
+        service.setServiceId("1"); //$NON-NLS-1$
         service.setName("CreateApplicationService"); //$NON-NLS-1$
         service.setApplication("Contract"); //$NON-NLS-1$
         service.setIface("org.jboss.demos.services.ICreateApplication"); //$NON-NLS-1$
@@ -117,6 +153,7 @@ public class ServicesService implements IServicesService {
         services.add(service);
 
         service = new ComponentServiceSummaryBean();
+        service.setServiceId("2"); //$NON-NLS-1$
         service.setName("CreateQuoteService"); //$NON-NLS-1$
         service.setApplication("Contract"); //$NON-NLS-1$
         service.setIface("org.jboss.demos.services.ICreateQuote"); //$NON-NLS-1$

@@ -18,10 +18,13 @@ package org.overlord.monitoring.ui.client.local.pages.services;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
+import org.jboss.errai.ui.nav.client.local.TransitionAnchorFactory;
 import org.overlord.monitoring.ui.client.local.ClientMessages;
+import org.overlord.monitoring.ui.client.local.pages.ServiceDetailsPage;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceSummaryBean;
 import org.overlord.sramp.ui.client.local.widgets.common.TemplatedWidgetTable;
 
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.InlineLabel;
 
 /**
@@ -34,8 +37,8 @@ public class ServiceTable extends TemplatedWidgetTable {
 
     @Inject
     protected ClientMessages i18n;
-//    @Inject
-//    protected TransitionAnchorFactory<ServiceDetailsPage> toDetailsPageLinkFactory;
+    @Inject
+    protected TransitionAnchorFactory<ServiceDetailsPage> toDetailsPageLinkFactory;
 
     /**
      * Constructor.
@@ -50,9 +53,8 @@ public class ServiceTable extends TemplatedWidgetTable {
     public void addRow(final ServiceSummaryBean serviceSummaryBean) {
         int rowIdx = this.rowElements.size();
 
-//        Anchor name = toDetailsPageLinkFactory.get("uuid", serviceSummaryBean.getUuid()); //$NON-NLS-1$
-//        name.setText(serviceSummaryBean.getName());
-        InlineLabel name = new InlineLabel(serviceSummaryBean.getName());
+        Anchor name = toDetailsPageLinkFactory.get("id", serviceSummaryBean.getServiceId()); //$NON-NLS-1$
+        name.setText(serviceSummaryBean.getName());
         InlineLabel application = new InlineLabel(serviceSummaryBean.getApplication());
         InlineLabel interf4ce = new InlineLabel(serviceSummaryBean.getIface());
         InlineLabel bindings = new InlineLabel(serviceSummaryBean.getBindings());

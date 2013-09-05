@@ -24,6 +24,7 @@ import org.jboss.errai.common.client.api.RemoteCallback;
 import org.overlord.monitoring.ui.client.local.services.rpc.DelegatingErrorCallback;
 import org.overlord.monitoring.ui.client.local.services.rpc.DelegatingRemoteCallback;
 import org.overlord.monitoring.ui.client.local.services.rpc.IRpcServiceInvocationHandler;
+import org.overlord.monitoring.ui.client.shared.beans.ComponentServiceBean;
 import org.overlord.monitoring.ui.client.shared.beans.ComponentServiceResultSetBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceResultSetBean;
@@ -85,11 +86,24 @@ public class ServicesRpcService {
     /**
      * @see org.overlord.monitoring.ui.client.shared.services.IServicesService#getService(String)
      */
-    public void get(String uuid, IRpcServiceInvocationHandler<ServiceBean> handler) {
+    public void getService(String serviceId, IRpcServiceInvocationHandler<ServiceBean> handler) {
         RemoteCallback<ServiceBean> successCallback = new DelegatingRemoteCallback<ServiceBean>(handler);
         ErrorCallback<?> errorCallback = new DelegatingErrorCallback(handler);
         try {
-            remoteServicesService.call(successCallback, errorCallback).getService(uuid);
+            remoteServicesService.call(successCallback, errorCallback).getService(serviceId);
+        } catch (UiException e) {
+            errorCallback.error(null, e);
+        }
+    }
+
+    /**
+     * @see org.overlord.monitoring.ui.client.shared.services.IServicesService#getComponentService(String)
+     */
+    public void getComponentService(String serviceId, IRpcServiceInvocationHandler<ComponentServiceBean> handler) {
+        RemoteCallback<ComponentServiceBean> successCallback = new DelegatingRemoteCallback<ComponentServiceBean>(handler);
+        ErrorCallback<?> errorCallback = new DelegatingErrorCallback(handler);
+        try {
+            remoteServicesService.call(successCallback, errorCallback).getComponentService(serviceId);
         } catch (UiException e) {
             errorCallback.error(null, e);
         }

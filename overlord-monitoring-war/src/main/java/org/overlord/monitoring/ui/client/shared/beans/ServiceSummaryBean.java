@@ -27,6 +27,7 @@ import org.jboss.errai.databinding.client.api.Bindable;
 @Bindable
 public class ServiceSummaryBean {
 
+    private String serviceId;
     private String name;
     private String application;
     private String iface;
@@ -115,13 +116,27 @@ public class ServiceSummaryBean {
     }
 
     /**
+     * @return the serviceId
+     */
+    public String getServiceId() {
+        return serviceId;
+    }
+
+    /**
+     * @param serviceId the serviceId to set
+     */
+    public void setServiceId(String serviceId) {
+        this.serviceId = serviceId;
+    }
+
+    /**
      * @see java.lang.Object#hashCode()
      */
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = prime * result + ((serviceId == null) ? 0 : serviceId.hashCode());
         return result;
     }
 
@@ -137,10 +152,10 @@ public class ServiceSummaryBean {
         if (getClass() != obj.getClass())
             return false;
         ServiceSummaryBean other = (ServiceSummaryBean) obj;
-        if (name == null) {
-            if (other.name != null)
+        if (serviceId == null) {
+            if (other.serviceId != null)
                 return false;
-        } else if (!name.equals(other.name))
+        } else if (!serviceId.equals(other.serviceId))
             return false;
         return true;
     }
