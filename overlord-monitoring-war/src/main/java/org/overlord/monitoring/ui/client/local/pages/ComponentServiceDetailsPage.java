@@ -145,7 +145,7 @@ public class ComponentServiceDetailsPage extends AbstractPage {
             }
             @Override
             public void onError(Throwable error) {
-                notificationService.sendErrorNotification("Error getting service detail information.", error);
+                notificationService.sendErrorNotification(i18n.format("component-service-details.error-getting-detail-info"), error); //$NON-NLS-1$
             }
         });
     }

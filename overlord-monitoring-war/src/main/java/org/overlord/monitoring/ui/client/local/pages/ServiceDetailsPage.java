@@ -143,7 +143,7 @@ public class ServiceDetailsPage extends AbstractPage {
             }
             @Override
             public void onError(Throwable error) {
-                notificationService.sendErrorNotification("Error getting service detail information.", error);
+                notificationService.sendErrorNotification(i18n.format("service-details.error-getting-detail-info"), error); //$NON-NLS-1$
             }
         });
     }

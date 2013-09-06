@@ -26,12 +26,14 @@ import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.overlord.monitoring.ui.client.local.ClientMessages;
+import org.overlord.monitoring.ui.client.local.events.TableSortEvent;
 import org.overlord.monitoring.ui.client.local.pages.services.ComponentServiceTable;
 import org.overlord.monitoring.ui.client.local.pages.services.ServiceFilters;
 import org.overlord.monitoring.ui.client.local.pages.services.ServiceTable;
 import org.overlord.monitoring.ui.client.local.services.NotificationService;
 import org.overlord.monitoring.ui.client.local.services.ServicesRpcService;
 import org.overlord.monitoring.ui.client.local.services.rpc.IRpcServiceInvocationHandler;
+import org.overlord.monitoring.ui.client.local.widgets.common.SortableTemplatedWidgetTable.SortColumn;
 import org.overlord.monitoring.ui.client.shared.beans.ComponentServiceResultSetBean;
 import org.overlord.monitoring.ui.client.shared.beans.ComponentServiceSummaryBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceResultSetBean;
@@ -142,6 +144,18 @@ public class ServicesPage extends AbstractPage {
                 doComponentServicesSearch(event.getValue());
             }
         });
+        servicesTable.addTableSortHandler(new TableSortEvent.Handler() {
+            @Override
+            public void onTableSort(TableSortEvent event) {
+                doServicesSearch(currentServicesPage);
+            }
+        });
+        componentServicesTable.addTableSortHandler(new TableSortEvent.Handler() {
+            @Override
+            public void onTableSort(TableSortEvent event) {
+                doComponentServicesSearch(currentServicesPage_cs);
+            }
+        });
 
         servicesTable.setColumnClasses(2, "desktop-only"); //$NON-NLS-1$
         servicesTable.setColumnClasses(3, "desktop-only"); //$NON-NLS-1$
@@ -206,7 +220,9 @@ public class ServicesPage extends AbstractPage {
     protected void doServicesSearch(int page) {
         onServicesSearchStarting();
         currentServicesPage = page;
-        servicesService.findServices(filtersPanel.getValue(), page, new IRpcServiceInvocationHandler<ServiceResultSetBean>() {
+        SortColumn currentSortColumn = this.servicesTable.getCurrentSortColumn();
+        servicesService.findServices(filtersPanel.getValue(), page, currentSortColumn.columnId,
+                currentSortColumn.ascending, new IRpcServiceInvocationHandler<ServiceResultSetBean>() {
             @Override
             public void onReturn(ServiceResultSetBean data) {
                 updateServicesTable(data);
@@ -228,7 +244,10 @@ public class ServicesPage extends AbstractPage {
     protected void doComponentServicesSearch(int page) {
         onComponentServicesSearchStarting();
         currentServicesPage_cs = page;
-        servicesService.findComponentServices(filtersPanel.getValue(), page, new IRpcServiceInvocationHandler<ComponentServiceResultSetBean>() {
+        SortColumn currentSortColumn = this.componentServicesTable.getCurrentSortColumn();
+        servicesService.findComponentServices(filtersPanel.getValue(), page, currentSortColumn.columnId,
+                currentSortColumn.ascending,
+                new IRpcServiceInvocationHandler<ComponentServiceResultSetBean>() {
             @Override
             public void onReturn(ComponentServiceResultSetBean data) {
                 updateComponentServicesTable(data);

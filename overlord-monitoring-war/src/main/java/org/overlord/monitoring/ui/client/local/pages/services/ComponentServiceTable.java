@@ -21,8 +21,9 @@ import javax.inject.Inject;
 import org.jboss.errai.ui.nav.client.local.TransitionAnchorFactory;
 import org.overlord.monitoring.ui.client.local.ClientMessages;
 import org.overlord.monitoring.ui.client.local.pages.ComponentServiceDetailsPage;
+import org.overlord.monitoring.ui.client.local.widgets.common.SortableTemplatedWidgetTable;
 import org.overlord.monitoring.ui.client.shared.beans.ComponentServiceSummaryBean;
-import org.overlord.sramp.ui.client.local.widgets.common.TemplatedWidgetTable;
+import org.overlord.monitoring.ui.client.shared.beans.Constants;
 
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.InlineLabel;
@@ -33,7 +34,7 @@ import com.google.gwt.user.client.ui.InlineLabel;
  * @author eric.wittmann@redhat.com
  */
 @Dependent
-public class ComponentServiceTable extends TemplatedWidgetTable {
+public class ComponentServiceTable extends SortableTemplatedWidgetTable {
 
     @Inject
     protected ClientMessages i18n;
@@ -44,6 +45,27 @@ public class ComponentServiceTable extends TemplatedWidgetTable {
      * Constructor.
      */
     public ComponentServiceTable() {
+    }
+
+    /**
+     * @see org.overlord.monitoring.ui.client.local.widgets.common.SortableTemplatedWidgetTable#getDefaultSortColumn()
+     */
+    @Override
+    protected SortColumn getDefaultSortColumn() {
+        SortColumn sortColumn = new SortColumn();
+        sortColumn.columnId = Constants.SORT_COLID_NAME;
+        sortColumn.ascending = true;
+        return sortColumn;
+    }
+
+    /**
+     * @see org.overlord.monitoring.ui.client.local.widgets.common.SortableTemplatedWidgetTable#configureColumnSorting()
+     */
+    @Override
+    protected void configureColumnSorting() {
+        setColumnSortable(0, Constants.SORT_COLID_NAME);
+        setColumnSortable(4, Constants.SORT_COLID_AVERAGE_DURATION);
+        sortBy(Constants.SORT_COLID_NAME, true);
     }
 
     /**
@@ -73,7 +95,7 @@ public class ComponentServiceTable extends TemplatedWidgetTable {
      */
     private String formatDuration(long averageDuration) {
         // TODO implement this!
-        return "TBD"; //$NON-NLS-1$
+        return String.valueOf(averageDuration);
     }
 
 }

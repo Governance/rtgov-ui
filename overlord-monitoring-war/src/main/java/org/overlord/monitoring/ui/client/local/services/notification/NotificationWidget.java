@@ -227,7 +227,7 @@ public class NotificationWidget extends Composite implements HasMouseInHandlers,
     }
 
     /**
-     * @see org.overlord.dtgov.ui.client.local.events.MouseInEvent.HasMouseInHandlers#addMouseInHandler(org.overlord.dtgov.ui.client.local.events.MouseInEvent.Handler)
+     * @see org.overlord.HasTableSortHandlers.ui.client.local.events.MouseInEvent.HasMouseInHandlers#addTableSortHandler(org.overlord.dtgov.ui.client.local.events.MouseInEvent.Handler)
      */
     @Override
     public HandlerRegistration addMouseInHandler(

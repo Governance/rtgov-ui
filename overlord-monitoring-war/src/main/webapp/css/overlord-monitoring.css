@@ -300,6 +300,14 @@ footer hr {
   text-shadow: 1px 1px 3px #444;
 }
 
+.sortable-column-header {
+  color: rgb(0, 85, 128);
+}
+.sortable-column-icon {
+  font-size: 8px;
+  color: rgb(0, 85, 128);
+}
+
 .details-title {
   font-weight: bold;
   font-size: 16px;

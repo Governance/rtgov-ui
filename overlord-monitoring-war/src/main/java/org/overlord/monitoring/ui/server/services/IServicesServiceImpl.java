@@ -34,20 +34,24 @@ public interface IServicesServiceImpl {
     /**
      * Search for services using the given filters.
      * @param filters
-     * @param searchText
      * @param page
+     * @param sortColumn
+     * @param ascending
      * @throws UiException
      */
-    public ServiceResultSetBean findServices(ServicesFilterBean filters, int page) throws UiException;
+    public ServiceResultSetBean findServices(ServicesFilterBean filters, int page, String sortColumn,
+            boolean ascending) throws UiException;
 
     /**
      * Search for component services using the given filters.
      * @param filters
-     * @param searchText
      * @param page
+     * @param sortColumn
+     * @param ascending
      * @throws UiException
      */
-    public ComponentServiceResultSetBean findComponentServices(ServicesFilterBean filters, int page) throws UiException;
+    public ComponentServiceResultSetBean findComponentServices(ServicesFilterBean filters, int page,
+            String sortColumn, boolean ascending) throws UiException;
 
     /**
      * Fetches a full service by its name.

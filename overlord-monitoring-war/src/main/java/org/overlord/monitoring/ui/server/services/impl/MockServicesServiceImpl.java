@@ -48,19 +48,20 @@ public class MockServicesServiceImpl implements IServicesServiceImpl {
     }
 
     /**
-     * @see org.overlord.monitoring.ui.server.services.IServicesServiceImpl#findServices(org.overlord.monitoring.ui.client.shared.beans.ServicesFilterBean, int)
+     * @see org.overlord.monitoring.ui.server.services.IServicesServiceImpl#findServices(org.overlord.monitoring.ui.client.shared.beans.ServicesFilterBean, int, java.lang.String, boolean)
      */
     @Override
-    public ServiceResultSetBean findServices(ServicesFilterBean filters, int page) throws UiException {
+    public ServiceResultSetBean findServices(ServicesFilterBean filters, int page, String sortColumn,
+            boolean ascending) throws UiException {
         return createMockServicesResponse();
     }
 
     /**
-     * @see org.overlord.monitoring.ui.server.services.IServicesServiceImpl#findComponentServices(org.overlord.monitoring.ui.client.shared.beans.ServicesFilterBean, int)
+     * @see org.overlord.monitoring.ui.server.services.IServicesServiceImpl#findComponentServices(org.overlord.monitoring.ui.client.shared.beans.ServicesFilterBean, int, java.lang.String, boolean)
      */
     @Override
-    public ComponentServiceResultSetBean findComponentServices(ServicesFilterBean filters, int page)
-            throws UiException {
+    public ComponentServiceResultSetBean findComponentServices(ServicesFilterBean filters, int page,
+            String sortColumn, boolean ascending) throws UiException {
         return createMockComponentServicesResponse();
     }
 

@@ -50,9 +50,9 @@ public class ServicesRpcService {
     }
 
     /**
-     * @see org.overlord.monitoring.ui.client.shared.services.IServicesService#findServices(ServicesFilterBean, int)
+     * @see org.overlord.monitoring.ui.client.shared.services.IServicesService#findServices(ServicesFilterBean, int, String, boolean)
      */
-    public void findServices(ServicesFilterBean filters, int page,
+    public void findServices(ServicesFilterBean filters, int page, String sortColumn, boolean ascending,
             final IRpcServiceInvocationHandler<ServiceResultSetBean> handler) {
         // TODO only allow one search at a time.  If another search comes in before the previous one
         // finished, cancel the previous one.  In other words, only return the results of the *last*
@@ -60,16 +60,16 @@ public class ServicesRpcService {
         RemoteCallback<ServiceResultSetBean> successCallback = new DelegatingRemoteCallback<ServiceResultSetBean>(handler);
         ErrorCallback<?> errorCallback = new DelegatingErrorCallback(handler);
         try {
-            remoteServicesService.call(successCallback, errorCallback).findServices(filters, page);
+            remoteServicesService.call(successCallback, errorCallback).findServices(filters, page, sortColumn, ascending);
         } catch (UiException e) {
             errorCallback.error(null, e);
         }
     }
 
     /**
-     * @see org.overlord.monitoring.ui.client.shared.services.IServicesService#findComponentServices(ServicesFilterBean, int)
+     * @see org.overlord.monitoring.ui.client.shared.services.IServicesService#findComponentServices(ServicesFilterBean, int, String, boolean)
      */
-    public void findComponentServices(ServicesFilterBean filters, int page,
+    public void findComponentServices(ServicesFilterBean filters, int page, String sortColumn, boolean ascending,
             final IRpcServiceInvocationHandler<ComponentServiceResultSetBean> handler) {
         // TODO only allow one search at a time.  If another search comes in before the previous one
         // finished, cancel the previous one.  In other words, only return the results of the *last*
@@ -77,7 +77,7 @@ public class ServicesRpcService {
         RemoteCallback<ComponentServiceResultSetBean> successCallback = new DelegatingRemoteCallback<ComponentServiceResultSetBean>(handler);
         ErrorCallback<?> errorCallback = new DelegatingErrorCallback(handler);
         try {
-            remoteServicesService.call(successCallback, errorCallback).findComponentServices(filters, page);
+            remoteServicesService.call(successCallback, errorCallback).findComponentServices(filters, page, sortColumn, ascending);
         } catch (UiException e) {
             errorCallback.error(null, e);
         }
