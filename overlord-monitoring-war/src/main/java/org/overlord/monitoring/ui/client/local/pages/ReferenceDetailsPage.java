@@ -29,7 +29,7 @@ import org.jboss.errai.ui.shared.api.annotations.Bound;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.overlord.monitoring.ui.client.local.ClientMessages;
-import org.overlord.monitoring.ui.client.local.pages.services.ReferenceMetricsTable;
+import org.overlord.monitoring.ui.client.local.pages.services.GatewayMetricsTable;
 import org.overlord.monitoring.ui.client.local.services.NotificationService;
 import org.overlord.monitoring.ui.client.local.services.ServicesRpcService;
 import org.overlord.monitoring.ui.client.local.services.rpc.IRpcServiceInvocationHandler;
@@ -37,21 +37,21 @@ import org.overlord.monitoring.ui.client.local.util.DOMUtil;
 import org.overlord.monitoring.ui.client.local.util.DataBindingLongConverter;
 import org.overlord.monitoring.ui.client.local.util.DataBindingQNameLocalPartConverter;
 import org.overlord.monitoring.ui.client.local.util.DataBindingQNameNamespaceConverter;
-import org.overlord.monitoring.ui.client.shared.beans.ComponentServiceBean;
+import org.overlord.monitoring.ui.client.shared.beans.ReferenceBean;
 import org.overlord.sramp.ui.client.local.widgets.common.HtmlSnippet;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.InlineLabel;
 
 /**
- * The Component Service Details page.
+ * The Reference Details page.
  *
  * @author eric.wittmann@redhat.com
  */
-@Templated("/org/overlord/monitoring/ui/client/local/site/componentServiceDetails.html#page")
-@Page(path="componentServiceDetails")
+@Templated("/org/overlord/monitoring/ui/client/local/site/referenceDetails.html#page")
+@Page(path="referenceDetails")
 @Dependent
-public class ComponentServiceDetailsPage extends AbstractPage {
+public class ReferenceDetailsPage extends AbstractPage {
 
     @Inject
     protected ClientMessages i18n;
@@ -64,7 +64,7 @@ public class ComponentServiceDetailsPage extends AbstractPage {
     private String id;
 
     @Inject @AutoBound
-    protected DataBinder<ComponentServiceBean> service;
+    protected DataBinder<ReferenceBean> reference;
 
     // Breadcrumbs
     @Inject @DataField("back-to-dashboard")
@@ -74,19 +74,17 @@ public class ComponentServiceDetailsPage extends AbstractPage {
 
     // Header
     @Inject @DataField @Bound(property="name", converter=DataBindingQNameLocalPartConverter.class)
-    InlineLabel serviceName;
+    InlineLabel referenceName;
 
     // Properties
     @Inject @DataField @Bound(property="name", converter=DataBindingQNameNamespaceConverter.class)
-    InlineLabel serviceNamespace;
+    InlineLabel referenceNamespace;
     @Inject @DataField @Bound(property="application", converter=DataBindingQNameNamespaceConverter.class)
     InlineLabel applicationNamespace;
     @Inject @DataField @Bound(property="application", converter=DataBindingQNameLocalPartConverter.class)
     InlineLabel applicationName;
     @Inject @DataField @Bound(property="serviceInterface")
     InlineLabel serviceInterface;
-    @Inject @DataField @Bound(property="serviceImplementation")
-    InlineLabel serviceImplementation;
 
     // Message Counts
     @Inject @DataField("total-count")
@@ -108,18 +106,18 @@ public class ComponentServiceDetailsPage extends AbstractPage {
     @Inject @DataField("max-time") @Bound(property="maxTime", converter=DataBindingLongConverter.class)
     InlineLabel maxTime;
 
-    // Reference Metrics
-    @Inject @DataField("reference-table") @Bound(property="referenceMetrics")
-    ReferenceMetricsTable referenceMetricsTable;
+    // Gateway Metrics
+    @Inject @DataField("gateway-table") @Bound(property="gatewayMetrics")
+    GatewayMetricsTable gatewayMetricsTable;
 
-    @Inject @DataField("service-details-loading-spinner")
+    @Inject @DataField("reference-details-loading-spinner")
     protected HtmlSnippet loading;
     protected Element pageContent;
 
     /**
      * Constructor.
      */
-    public ComponentServiceDetailsPage() {
+    public ReferenceDetailsPage() {
     }
 
     /**
@@ -127,7 +125,7 @@ public class ComponentServiceDetailsPage extends AbstractPage {
      */
     @PostConstruct
     protected void onPostConstruct() {
-        pageContent = DOMUtil.findElementById(getElement(), "service-details-content-wrapper"); //$NON-NLS-1$
+        pageContent = DOMUtil.findElementById(getElement(), "reference-details-content-wrapper"); //$NON-NLS-1$
         pageContent.addClassName("hide"); //$NON-NLS-1$
     }
 
@@ -138,29 +136,29 @@ public class ComponentServiceDetailsPage extends AbstractPage {
     protected void onPageShowing() {
         pageContent.addClassName("hide"); //$NON-NLS-1$
         loading.getElement().removeClassName("hide"); //$NON-NLS-1$
-        servicesService.getComponentService(id, new IRpcServiceInvocationHandler<ComponentServiceBean>() {
+        servicesService.getReference(id, new IRpcServiceInvocationHandler<ReferenceBean>() {
             @Override
-            public void onReturn(ComponentServiceBean data) {
+            public void onReturn(ReferenceBean data) {
                 updateMetaData(data);
             }
             @Override
             public void onError(Throwable error) {
-                notificationService.sendErrorNotification(i18n.format("component-service-details.error-getting-detail-info"), error); //$NON-NLS-1$
+                notificationService.sendErrorNotification(i18n.format("reference-details.error-getting-detail-info"), error); //$NON-NLS-1$
             }
         });
     }
 
     /**
-     * Called when the service is loaded.
-     * @param service
+     * Called when the reference is loaded.
+     * @param reference
      */
-    protected void updateMetaData(ComponentServiceBean service) {
-        this.service.setModel(service, InitialState.FROM_MODEL);
+    protected void updateMetaData(ReferenceBean reference) {
+        this.reference.setModel(reference, InitialState.FROM_MODEL);
         loading.getElement().addClassName("hide"); //$NON-NLS-1$
         pageContent.removeClassName("hide"); //$NON-NLS-1$
-        long total = service.getSuccessCount() + service.getFaultCount();
+        long total = reference.getSuccessCount() + reference.getFaultCount();
         totalCount.setText(String.valueOf(total));
-        long rate = (service.getSuccessCount() * 100) / total;
+        long rate = (reference.getSuccessCount() * 100) / total;
         successRate.setText(String.valueOf(rate) + "%"); //$NON-NLS-1$
     }
 

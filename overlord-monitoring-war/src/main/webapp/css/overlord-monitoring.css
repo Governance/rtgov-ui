@@ -338,7 +338,7 @@ footer hr {
   float: left;
 }
 
-.service-details {
+.reference-details, .service-details {
   border-left: 1px solid rgb(211, 211, 211);
   border-bottom: 1px solid rgb(211, 211, 211);
   border-right: 1px solid rgb(211, 211, 211);

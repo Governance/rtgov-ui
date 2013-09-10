@@ -56,7 +56,7 @@ public class MonitoringServiceActivator  implements ServiceActivator {
       LOG.info("Activating monitoring service") ;
       context
           .getServiceTarget()
-          .addService(ServiceName.of("management", "client", "getter"), service)
+          .addService(ServiceName.of("management", "client", "getter"), service) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           .addDependency(Services.JBOSS_SERVER_CONTROLLER, ModelController.class, service.modelControllerValue)
           .install();
    }
@@ -79,7 +79,7 @@ public class MonitoringServiceActivator  implements ServiceActivator {
             public Thread newThread(Runnable r) {
                Thread t = new Thread(r);
                t.setDaemon(true);
-               t.setName("MonitoringServiceActivatorModelControllerClientThread");
+               t.setName("MonitoringServiceActivatorModelControllerClientThread"); //$NON-NLS-1$
                return t;
             }
          });

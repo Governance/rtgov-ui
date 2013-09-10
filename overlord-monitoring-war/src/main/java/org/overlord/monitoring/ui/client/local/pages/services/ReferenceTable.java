@@ -20,31 +20,31 @@ import javax.inject.Inject;
 
 import org.jboss.errai.ui.nav.client.local.TransitionAnchorFactory;
 import org.overlord.monitoring.ui.client.local.ClientMessages;
-import org.overlord.monitoring.ui.client.local.pages.ComponentServiceDetailsPage;
+import org.overlord.monitoring.ui.client.local.pages.ReferenceDetailsPage;
 import org.overlord.monitoring.ui.client.local.widgets.common.SortableTemplatedWidgetTable;
-import org.overlord.monitoring.ui.client.shared.beans.ComponentServiceSummaryBean;
+import org.overlord.monitoring.ui.client.shared.beans.ReferenceSummaryBean;
 import org.overlord.monitoring.ui.client.shared.beans.Constants;
 
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.InlineLabel;
 
 /**
- * A table of component services.
+ * A table of reference.
  *
  * @author eric.wittmann@redhat.com
  */
 @Dependent
-public class ComponentServiceTable extends SortableTemplatedWidgetTable {
+public class ReferenceTable extends SortableTemplatedWidgetTable {
 
     @Inject
     protected ClientMessages i18n;
     @Inject
-    protected TransitionAnchorFactory<ComponentServiceDetailsPage> toDetailsPageLinkFactory;
+    protected TransitionAnchorFactory<ReferenceDetailsPage> toDetailsPageLinkFactory;
 
     /**
      * Constructor.
      */
-    public ComponentServiceTable() {
+    public ReferenceTable() {
     }
 
     /**
@@ -72,20 +72,20 @@ public class ComponentServiceTable extends SortableTemplatedWidgetTable {
      * Adds a single row to the table.
      * @param summaryBean
      */
-    public void addRow(final ComponentServiceSummaryBean summaryBean) {
+    public void addRow(final ReferenceSummaryBean summaryBean) {
         int rowIdx = this.rowElements.size();
 
-        Anchor name = toDetailsPageLinkFactory.get("id", summaryBean.getServiceId()); //$NON-NLS-1$
+        Anchor name = toDetailsPageLinkFactory.get("id", summaryBean.getReferenceId()); //$NON-NLS-1$
         name.setText(summaryBean.getName());
         InlineLabel application = new InlineLabel(summaryBean.getApplication());
         InlineLabel interf4ce = new InlineLabel(summaryBean.getIface());
-        InlineLabel implementation = new InlineLabel(summaryBean.getImplementation());
+        InlineLabel bindings = new InlineLabel(summaryBean.getBindings());
         InlineLabel averageDuration = new InlineLabel(formatDuration(summaryBean.getAverageDuration()));
 
         add(rowIdx, 0, name);
         add(rowIdx, 1, application);
         add(rowIdx, 2, interf4ce);
-        add(rowIdx, 3, implementation);
+        add(rowIdx, 3, bindings);
         add(rowIdx, 4, averageDuration);
     }
 

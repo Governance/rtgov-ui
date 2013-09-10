@@ -16,8 +16,8 @@
 package org.overlord.monitoring.ui.server.services;
 
 import org.jboss.errai.bus.server.annotations.Remote;
-import org.overlord.monitoring.ui.client.shared.beans.ComponentServiceBean;
-import org.overlord.monitoring.ui.client.shared.beans.ComponentServiceResultSetBean;
+import org.overlord.monitoring.ui.client.shared.beans.ReferenceBean;
+import org.overlord.monitoring.ui.client.shared.beans.ReferenceResultSetBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceResultSetBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServicesFilterBean;
@@ -43,14 +43,14 @@ public interface IServicesServiceImpl {
             boolean ascending) throws UiException;
 
     /**
-     * Search for component services using the given filters.
+     * Search for references using the given filters.
      * @param filters
      * @param page
      * @param sortColumn
      * @param ascending
      * @throws UiException
      */
-    public ComponentServiceResultSetBean findComponentServices(ServicesFilterBean filters, int page,
+    public ReferenceResultSetBean findReferences(ServicesFilterBean filters, int page,
             String sortColumn, boolean ascending) throws UiException;
 
     /**
@@ -61,10 +61,10 @@ public interface IServicesServiceImpl {
     public ServiceBean getService(String serviceId) throws UiException;
 
     /**
-     * Fetches a full component service by its name.
-     * @param serviceId
+     * Fetches a full reference by its id.
+     * @param referenceId
      * @throws UiException
      */
-    public ComponentServiceBean getComponentService(String serviceId) throws UiException;
+    public ReferenceBean getReference(String referenceId) throws UiException;
 
 }

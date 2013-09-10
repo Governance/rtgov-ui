@@ -27,15 +27,15 @@ import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.overlord.monitoring.ui.client.local.ClientMessages;
 import org.overlord.monitoring.ui.client.local.events.TableSortEvent;
-import org.overlord.monitoring.ui.client.local.pages.services.ComponentServiceTable;
+import org.overlord.monitoring.ui.client.local.pages.services.ReferenceTable;
 import org.overlord.monitoring.ui.client.local.pages.services.ServiceFilters;
 import org.overlord.monitoring.ui.client.local.pages.services.ServiceTable;
 import org.overlord.monitoring.ui.client.local.services.NotificationService;
 import org.overlord.monitoring.ui.client.local.services.ServicesRpcService;
 import org.overlord.monitoring.ui.client.local.services.rpc.IRpcServiceInvocationHandler;
 import org.overlord.monitoring.ui.client.local.widgets.common.SortableTemplatedWidgetTable.SortColumn;
-import org.overlord.monitoring.ui.client.shared.beans.ComponentServiceResultSetBean;
-import org.overlord.monitoring.ui.client.shared.beans.ComponentServiceSummaryBean;
+import org.overlord.monitoring.ui.client.shared.beans.ReferenceResultSetBean;
+import org.overlord.monitoring.ui.client.shared.beans.ReferenceSummaryBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceResultSetBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceSummaryBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServicesFilterBean;
@@ -75,8 +75,8 @@ public class ServicesPage extends AbstractPage {
 
     @Inject @DataField("services-btn-refresh")
     protected Button servicesRefreshButton;
-    @Inject @DataField("cs-btn-refresh")
-    protected Button componentServicesRefreshButton;
+    @Inject @DataField("ref-btn-refresh")
+    protected Button referencesRefreshButton;
 
     @Inject @DataField("services-none")
     protected HtmlSnippet noDataMessage;
@@ -84,12 +84,12 @@ public class ServicesPage extends AbstractPage {
     protected HtmlSnippet searchInProgressMessage;
     @Inject @DataField("services-table")
     protected ServiceTable servicesTable;
-    @Inject @DataField("cs-none")
-    protected HtmlSnippet noDataMessage_cs;
-    @Inject @DataField("cs-searching")
-    protected HtmlSnippet searchInProgressMessage_cs;
-    @Inject @DataField("cs-table")
-    protected ComponentServiceTable componentServicesTable;
+    @Inject @DataField("ref-none")
+    protected HtmlSnippet noDataMessage_ref;
+    @Inject @DataField("ref-searching")
+    protected HtmlSnippet searchInProgressMessage_ref;
+    @Inject @DataField("ref-table")
+    protected ReferenceTable referencesTable;
 
     @Inject @DataField("services-pager")
     protected Pager pager;
@@ -97,15 +97,15 @@ public class ServicesPage extends AbstractPage {
     protected SpanElement rangeSpan = Document.get().createSpanElement();
     @DataField("services-total")
     protected SpanElement totalSpan = Document.get().createSpanElement();
-    @Inject @DataField("cs-pager")
-    protected Pager pager_cs;
-    @DataField("cs-range")
-    protected SpanElement rangeSpan_cs = Document.get().createSpanElement();
-    @DataField("cs-total")
-    protected SpanElement totalSpan_cs = Document.get().createSpanElement();
+    @Inject @DataField("ref-pager")
+    protected Pager pager_ref;
+    @DataField("ref-range")
+    protected SpanElement rangeSpan_ref = Document.get().createSpanElement();
+    @DataField("ref-total")
+    protected SpanElement totalSpan_ref = Document.get().createSpanElement();
 
     private int currentServicesPage = 1;
-    private int currentServicesPage_cs = 1;
+    private int currentServicesPage_ref = 1;
 
     /**
      * Constructor.
@@ -129,7 +129,7 @@ public class ServicesPage extends AbstractPage {
             @Override
             public void onValueChange(ValueChangeEvent<ServicesFilterBean> event) {
                 doServicesSearch();
-                doComponentServicesSearch();
+                doReferencesSearch();
             }
         });
         pager.addValueChangeHandler(new ValueChangeHandler<Integer>() {
@@ -138,10 +138,10 @@ public class ServicesPage extends AbstractPage {
                 doServicesSearch(event.getValue());
             }
         });
-        pager_cs.addValueChangeHandler(new ValueChangeHandler<Integer>() {
+        pager_ref.addValueChangeHandler(new ValueChangeHandler<Integer>() {
             @Override
             public void onValueChange(ValueChangeEvent<Integer> event) {
-                doComponentServicesSearch(event.getValue());
+                doReferencesSearch(event.getValue());
             }
         });
         servicesTable.addTableSortHandler(new TableSortEvent.Handler() {
@@ -150,24 +150,24 @@ public class ServicesPage extends AbstractPage {
                 doServicesSearch(currentServicesPage);
             }
         });
-        componentServicesTable.addTableSortHandler(new TableSortEvent.Handler() {
+        referencesTable.addTableSortHandler(new TableSortEvent.Handler() {
             @Override
             public void onTableSort(TableSortEvent event) {
-                doComponentServicesSearch(currentServicesPage_cs);
+                doReferencesSearch(currentServicesPage_ref);
             }
         });
 
         servicesTable.setColumnClasses(2, "desktop-only"); //$NON-NLS-1$
         servicesTable.setColumnClasses(3, "desktop-only"); //$NON-NLS-1$
         servicesTable.setColumnClasses(4, "desktop-only"); //$NON-NLS-1$
-        componentServicesTable.setColumnClasses(2, "desktop-only"); //$NON-NLS-1$
-        componentServicesTable.setColumnClasses(3, "desktop-only"); //$NON-NLS-1$
-        componentServicesTable.setColumnClasses(4, "desktop-only"); //$NON-NLS-1$
+        referencesTable.setColumnClasses(2, "desktop-only"); //$NON-NLS-1$
+        referencesTable.setColumnClasses(3, "desktop-only"); //$NON-NLS-1$
+        referencesTable.setColumnClasses(4, "desktop-only"); //$NON-NLS-1$
 
         this.rangeSpan.setInnerText("?"); //$NON-NLS-1$
         this.totalSpan.setInnerText("?"); //$NON-NLS-1$
-        this.rangeSpan_cs.setInnerText("?"); //$NON-NLS-1$
-        this.totalSpan_cs.setInnerText("?"); //$NON-NLS-1$
+        this.rangeSpan_ref.setInnerText("?"); //$NON-NLS-1$
+        this.totalSpan_ref.setInnerText("?"); //$NON-NLS-1$
     }
 
     /**
@@ -183,9 +183,9 @@ public class ServicesPage extends AbstractPage {
      * Event handler that fires when the user clicks the refresh button.
      * @param event
      */
-    @EventHandler("cs-btn-refresh")
-    public void onRefreshClick_cs(ClickEvent event) {
-        doComponentServicesSearch(currentServicesPage_cs);
+    @EventHandler("ref-btn-refresh")
+    public void onRefreshClick_ref(ClickEvent event) {
+        doReferencesSearch(currentServicesPage_ref);
     }
 
     /**
@@ -195,7 +195,7 @@ public class ServicesPage extends AbstractPage {
     @Override
     protected void onPageShowing() {
         doServicesSearch();
-        doComponentServicesSearch();
+        doReferencesSearch();
         filtersPanel.refresh();
     }
 
@@ -209,8 +209,8 @@ public class ServicesPage extends AbstractPage {
     /**
      * Search for services based on the current filter settings.
      */
-    protected void doComponentServicesSearch() {
-        doComponentServicesSearch(1);
+    protected void doReferencesSearch() {
+        doReferencesSearch(1);
     }
 
     /**
@@ -241,23 +241,23 @@ public class ServicesPage extends AbstractPage {
      * Search for services based on the current filter settings.
      * @param page
      */
-    protected void doComponentServicesSearch(int page) {
-        onComponentServicesSearchStarting();
-        currentServicesPage_cs = page;
-        SortColumn currentSortColumn = this.componentServicesTable.getCurrentSortColumn();
-        servicesService.findComponentServices(filtersPanel.getValue(), page, currentSortColumn.columnId,
+    protected void doReferencesSearch(int page) {
+        onReferencesSearchStarting();
+        currentServicesPage_ref = page;
+        SortColumn currentSortColumn = this.referencesTable.getCurrentSortColumn();
+        servicesService.findReferences(filtersPanel.getValue(), page, currentSortColumn.columnId,
                 currentSortColumn.ascending,
-                new IRpcServiceInvocationHandler<ComponentServiceResultSetBean>() {
+                new IRpcServiceInvocationHandler<ReferenceResultSetBean>() {
             @Override
-            public void onReturn(ComponentServiceResultSetBean data) {
-                updateComponentServicesTable(data);
-                updateComponentServicesPager(data);
+            public void onReturn(ReferenceResultSetBean data) {
+                updateReferencesTable(data);
+                updateReferencesPager(data);
             }
             @Override
             public void onError(Throwable error) {
                 notificationService.sendErrorNotification(i18n.format("services.error-loading"), error); //$NON-NLS-1$
-                noDataMessage_cs.setVisible(true);
-                searchInProgressMessage_cs.setVisible(false);
+                noDataMessage_ref.setVisible(true);
+                searchInProgressMessage_ref.setVisible(false);
             }
         });
     }
@@ -277,13 +277,13 @@ public class ServicesPage extends AbstractPage {
     /**
      * Called when a new search is kicked off.
      */
-    protected void onComponentServicesSearchStarting() {
-        this.pager_cs.setVisible(false);
-        this.searchInProgressMessage_cs.setVisible(true);
-        this.componentServicesTable.setVisible(false);
-        this.noDataMessage_cs.setVisible(false);
-        this.rangeSpan_cs.setInnerText("?"); //$NON-NLS-1$
-        this.totalSpan_cs.setInnerText("?"); //$NON-NLS-1$
+    protected void onReferencesSearchStarting() {
+        this.pager_ref.setVisible(false);
+        this.searchInProgressMessage_ref.setVisible(true);
+        this.referencesTable.setVisible(false);
+        this.noDataMessage_ref.setVisible(false);
+        this.rangeSpan_ref.setInnerText("?"); //$NON-NLS-1$
+        this.totalSpan_ref.setInnerText("?"); //$NON-NLS-1$
     }
 
     /**
@@ -307,16 +307,16 @@ public class ServicesPage extends AbstractPage {
      * Updates the table of services with the given data.
      * @param data
      */
-    protected void updateComponentServicesTable(ComponentServiceResultSetBean data) {
-        this.componentServicesTable.clear();
-        this.searchInProgressMessage_cs.setVisible(false);
+    protected void updateReferencesTable(ReferenceResultSetBean data) {
+        this.referencesTable.clear();
+        this.searchInProgressMessage_ref.setVisible(false);
         if (data.getServices().size() > 0) {
-            for (ComponentServiceSummaryBean deploymentSummaryBean : data.getServices()) {
-                this.componentServicesTable.addRow(deploymentSummaryBean);
+            for (ReferenceSummaryBean deploymentSummaryBean : data.getServices()) {
+                this.referencesTable.addRow(deploymentSummaryBean);
             }
-            this.componentServicesTable.setVisible(true);
+            this.referencesTable.setVisible(true);
         } else {
-            this.noDataMessage_cs.setVisible(true);
+            this.noDataMessage_ref.setVisible(true);
         }
     }
 
@@ -344,20 +344,20 @@ public class ServicesPage extends AbstractPage {
      * Updates the pager with the given data.
      * @param data
      */
-    protected void updateComponentServicesPager(ComponentServiceResultSetBean data) {
+    protected void updateReferencesPager(ReferenceResultSetBean data) {
         int numPages = ((int) (data.getTotalResults() / data.getItemsPerPage())) + (data.getTotalResults() % data.getItemsPerPage() == 0 ? 0 : 1);
         int thisPage = (data.getStartIndex() / data.getItemsPerPage()) + 1;
-        this.pager_cs.setNumPages(numPages);
-        this.pager_cs.setPage(thisPage);
+        this.pager_ref.setNumPages(numPages);
+        this.pager_ref.setPage(thisPage);
         if (numPages > 1)
-            this.pager_cs.setVisible(true);
+            this.pager_ref.setVisible(true);
 
         int startIndex = data.getStartIndex() + 1;
         int endIndex = startIndex + data.getServices().size() - 1;
         String rangeText = "" + startIndex + "-" + endIndex; //$NON-NLS-1$ //$NON-NLS-2$
         String totalText = String.valueOf(data.getTotalResults());
-        this.rangeSpan_cs.setInnerText(rangeText);
-        this.totalSpan_cs.setInnerText(totalText);
+        this.rangeSpan_ref.setInnerText(rangeText);
+        this.totalSpan_ref.setInnerText(totalText);
     }
 
 }

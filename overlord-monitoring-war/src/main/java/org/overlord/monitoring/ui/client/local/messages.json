@@ -12,6 +12,6 @@
   "option.request-response" : "RequestResponse",
   "services.error-loading" : "Error loading services.",
   "faults.error-loading" : "Error loading faults.",
-  "component-service-details.error-getting-detail-info" : "Error getting component service detail information.",
+  "reference-details.error-getting-detail-info" : "Error getting component service detail information.",
   "service-details.error-getting-detail-info" : "Error getting service detail information."
 }

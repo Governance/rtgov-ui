@@ -18,8 +18,8 @@ package org.overlord.monitoring.ui.server.services;
 import javax.inject.Inject;
 
 import org.jboss.errai.bus.server.annotations.Service;
-import org.overlord.monitoring.ui.client.shared.beans.ComponentServiceBean;
-import org.overlord.monitoring.ui.client.shared.beans.ComponentServiceResultSetBean;
+import org.overlord.monitoring.ui.client.shared.beans.ReferenceBean;
+import org.overlord.monitoring.ui.client.shared.beans.ReferenceResultSetBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceResultSetBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServicesFilterBean;
@@ -52,12 +52,12 @@ public class ServicesService implements IServicesService {
     }
 
     /**
-     * @see org.overlord.monitoring.ui.client.shared.services.IServicesService#findComponentServices(org.overlord.monitoring.ui.client.shared.beans.ServicesFilterBean, int, java.lang.String, boolean)
+     * @see org.overlord.monitoring.ui.client.shared.services.IServicesService#findReferences(org.overlord.monitoring.ui.client.shared.beans.ServicesFilterBean, int, java.lang.String, boolean)
      */
     @Override
-    public ComponentServiceResultSetBean findComponentServices(ServicesFilterBean filters, int page,
+    public ReferenceResultSetBean findReferences(ServicesFilterBean filters, int page,
             String sortColumn, boolean ascending) throws UiException {
-        return impl.findComponentServices(filters, page, sortColumn, ascending);
+        return impl.findReferences(filters, page, sortColumn, ascending);
     }
 
     /**
@@ -69,10 +69,10 @@ public class ServicesService implements IServicesService {
     }
 
     /**
-     * @see org.overlord.monitoring.ui.client.shared.services.IServicesService#getComponentService(java.lang.String)
+     * @see org.overlord.monitoring.ui.client.shared.services.IServicesService#getReference(java.lang.String)
      */
     @Override
-    public ComponentServiceBean getComponentService(String serviceId) throws UiException {
-        return impl.getComponentService(serviceId);
+    public ReferenceBean getReference(String referenceId) throws UiException {
+        return impl.getReference(referenceId);
     }
 }

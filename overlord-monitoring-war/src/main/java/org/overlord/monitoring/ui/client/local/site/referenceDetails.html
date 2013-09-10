@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title data-role="dummy">Overlord Monitoring - Component Service Details</title>
+    <title data-role="dummy">Overlord Monitoring - Reference Details</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
     <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap.min.css" rel="stylesheet" media="screen"></link>
     <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen"></link>
@@ -31,37 +31,37 @@
         <div class="row-fluid">
           <ul class="breadcrumb">
             <li><a data-field="back-to-dashboard" href="dashboard.html" data-i18n-key="breadcrumb.dashboard">Dashboard</a> <span class="divider">/<span data-role="dummy" /></span></li>
-            <li><a data-field="back-to-services" href="services.html" data-i18n-key="breadcrumb.services">Services</a> <span class="divider">/<span data-role="dummy" /></span></li>
-            <li class="active" data-i18n-key="breadcrumb.component-service-details">Component Service Details</li>
+            <li><a data-field="back-to-services" href="services.html" data-i18n-key="breadcrumb.services">Services/References</a> <span class="divider">/<span data-role="dummy" /></span></li>
+            <li class="active" data-i18n-key="breadcrumb.reference-details">Reference Details</li>
           </ul>
         </div>
 
         <!-- Loading spinner -->
-        <div data-field="service-details-loading-spinner" class="spinner service-details-loading hide" data-i18n-key="loading-service">Loading component service, please wait...</div>
+        <div data-field="reference-details-loading-spinner" class="spinner reference-details-loading hide" data-i18n-key="loading-reference">Loading reference, please wait...</div>
 
-        <div id="service-details-content-wrapper">
+        <div id="reference-details-content-wrapper">
         <!-- Action bar -->
         <div class="row-fluid overlord-actions overlord-details-actions">
           <div class="span12">
             <span class="sp4n-label">
-              <span class="details-title" data-field="serviceName" data-role="dummy">CreateApplicationService</span>
+              <span class="details-title" data-field="referenceName" data-role="dummy">CreateApplicationRef</span>
             </span>
             <div class="btn-group" style="visibility:hidden">
               <button class="btn" disabled="true">Spacer<span data-role="dummy" /></button>
             </div>
           </div>
         </div>
-        <!-- Component Service Details -->
-        <div class="row-fluid service-details">
+        <!-- Reference Details -->
+        <div class="row-fluid reference-details">
           <div class="container-fluid">
-            <!-- Service Properties and Description -->
+            <!-- Properties and Description -->
             <div class="row-fluid">
-              <!-- Service Properties -->
+              <!-- Properties -->
               <div class="span6 details-meta-data-section">
-                <div class="details-meta-data-section-header" data-i18n-key="header.service-properties">Service Properties</div>
+                <div class="details-meta-data-section-header" data-i18n-key="header.reference-properties">Reference Properties</div>
                 <div class="clearfix"></div>
                 <div class="details-meta-data-section-label" data-i18n-key="namespace">Namespace:</div>
-                <div data-field="serviceNamespace" class="details-meta-data-section-value" data-role="dummy">urn:jboss:demo:services</div>
+                <div data-field="referenceNamespace" class="details-meta-data-section-value" data-role="dummy">urn:jboss:demo:references</div>
                 <div class="clearfix"></div>
                 <div class="details-meta-data-section-label" data-i18n-key="application">Application:</div>
                 <div data-field="applicationNamespace" class="details-meta-data-section-value" data-role="dummy">urn:jboss:demos:applications</div>
@@ -70,13 +70,10 @@
                 <div data-field="applicationName" class="details-meta-data-section-value" data-role="dummy">Contract</div>
                 <div class="clearfix"></div>
                 <div class="details-meta-data-section-label" data-i18n-key="service-interface">Service Interface:</div>
-                <div data-field="serviceInterface" class="details-meta-data-section-value" data-role="dummy">org.jboss.demos.services.ICreateApplication</div>
-                <div class="clearfix"></div>
-                <div class="details-meta-data-section-label" data-i18n-key="implementation">Implementation:</div>
-                <div data-field="serviceImplementation" class="details-meta-data-section-value" data-role="dummy">org.jboss.demos.services.CreateApplicationService</div>
+                <div data-field="serviceInterface" class="details-meta-data-section-value" data-role="dummy">org.jboss.demos.service.ICreateApplication</div>
                 <div class="clearfix"></div>
               </div>
-              <!-- Service Metrics - Message Counts -->
+              <!-- Metrics - Message Counts -->
               <div class="span3 details-meta-data-section">
                 <div class="details-meta-data-section-header" data-i18n-key="message-counts">Message Counts</div>
                 <div class="clearfix"></div>
@@ -93,7 +90,7 @@
                 <div data-field="success-rate" class="details-meta-data-section-value" data-role="dummy" style="font-weight: bold">92%</div>
                 <div class="clearfix"></div>
               </div>
-              <!-- Service Metrics - Processing Times -->
+              <!-- Metrics - Processing Times -->
               <div class="span3 details-meta-data-section">
                 <div class="details-meta-data-section-header" data-i18n-key="processing-times">Processing Times</div>
                 <div class="clearfix"></div>
@@ -112,15 +109,16 @@
               </div>
             </div>
             <hr />
-            <!-- Reference Metrics -->
+            <!-- Gateway Metrics -->
             <div class="row-fluid">
               <div class="span12 details-meta-data-section">
-                <div class="details-meta-data-section-header" data-i18n-key="reference-metrics">Reference Metrics</div>
+                <div class="details-meta-data-section-header" data-i18n-key="gateway-metrics">Gateway Metrics</div>
                 <div class="clearfix"></div>
-                <table data-field="reference-table" class="overlord-table overlord-standalone-table table table-striped table-condensed table-hover">
+                <table data-field="gateway-table" class="overlord-table overlord-standalone-table table table-striped table-condensed table-hover">
                 <thead>
                   <tr>
                     <th data-i18n-key="name">Name</th>
+                    <th data-i18n-key="type">Type</th>
                     <th class="desktop-only" data-i18n-key="message-count">Message Count</th>
                     <th class="desktop-only" data-i18n-key="average-time">Average Time</th>
                     <th class="desktop-only" data-i18n-key="time-percent">Time %</th>
@@ -129,11 +127,12 @@
                 </thead>
                 <tbody data-role="dummy">
                   <tr>
-                    <td>Inventory Service</td>
-                    <td class="desktop-only">1</td>
-                    <td class="desktop-only">1</td>
-                    <td class="desktop-only">13%</td>
+                    <td>_CreateApplicationWebservice_soap1</td>
+                    <td>soap</td>
+                    <td class="desktop-only">87</td>
+                    <td class="desktop-only">42</td>
                     <td class="desktop-only">100%</td>
+                    <td class="desktop-only">0%</td>
                   </tr>
                 </tbody>
                 </table>

@@ -33,6 +33,20 @@
       <version>${overlord-commons.version}</version>
     </dependency>
 
+    <!-- ServiceActivator/dmr -->
+    <dependency>
+      <groupId>org.jboss.msc</groupId>
+      <artifactId>jboss-msc</artifactId>
+      <version>${jboss.msc.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.as</groupId>
+      <artifactId>jboss-as-server</artifactId>
+      <version>${jboss.as.server.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
     <dependency>
       <groupId>org.overlord.monitoring</groupId>
       <artifactId>overlord-monitoring-war</artifactId>

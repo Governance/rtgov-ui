@@ -24,8 +24,8 @@ import org.jboss.errai.common.client.api.RemoteCallback;
 import org.overlord.monitoring.ui.client.local.services.rpc.DelegatingErrorCallback;
 import org.overlord.monitoring.ui.client.local.services.rpc.DelegatingRemoteCallback;
 import org.overlord.monitoring.ui.client.local.services.rpc.IRpcServiceInvocationHandler;
-import org.overlord.monitoring.ui.client.shared.beans.ComponentServiceBean;
-import org.overlord.monitoring.ui.client.shared.beans.ComponentServiceResultSetBean;
+import org.overlord.monitoring.ui.client.shared.beans.ReferenceBean;
+import org.overlord.monitoring.ui.client.shared.beans.ReferenceResultSetBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceResultSetBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServicesFilterBean;
@@ -67,17 +67,17 @@ public class ServicesRpcService {
     }
 
     /**
-     * @see org.overlord.monitoring.ui.client.shared.services.IServicesService#findComponentServices(ServicesFilterBean, int, String, boolean)
+     * @see org.overlord.monitoring.ui.client.shared.services.IServicesService#findReferences(ServicesFilterBean, int, String, boolean)
      */
-    public void findComponentServices(ServicesFilterBean filters, int page, String sortColumn, boolean ascending,
-            final IRpcServiceInvocationHandler<ComponentServiceResultSetBean> handler) {
+    public void findReferences(ServicesFilterBean filters, int page, String sortColumn, boolean ascending,
+            final IRpcServiceInvocationHandler<ReferenceResultSetBean> handler) {
         // TODO only allow one search at a time.  If another search comes in before the previous one
         // finished, cancel the previous one.  In other words, only return the results of the *last*
         // search performed.
-        RemoteCallback<ComponentServiceResultSetBean> successCallback = new DelegatingRemoteCallback<ComponentServiceResultSetBean>(handler);
+        RemoteCallback<ReferenceResultSetBean> successCallback = new DelegatingRemoteCallback<ReferenceResultSetBean>(handler);
         ErrorCallback<?> errorCallback = new DelegatingErrorCallback(handler);
         try {
-            remoteServicesService.call(successCallback, errorCallback).findComponentServices(filters, page, sortColumn, ascending);
+            remoteServicesService.call(successCallback, errorCallback).findReferences(filters, page, sortColumn, ascending);
         } catch (UiException e) {
             errorCallback.error(null, e);
         }
@@ -97,13 +97,13 @@ public class ServicesRpcService {
     }
 
     /**
-     * @see org.overlord.monitoring.ui.client.shared.services.IServicesService#getComponentService(String)
+     * @see org.overlord.monitoring.ui.client.shared.services.IServicesService#getReference(String)
      */
-    public void getComponentService(String serviceId, IRpcServiceInvocationHandler<ComponentServiceBean> handler) {
-        RemoteCallback<ComponentServiceBean> successCallback = new DelegatingRemoteCallback<ComponentServiceBean>(handler);
+    public void getReference(String referenceId, IRpcServiceInvocationHandler<ReferenceBean> handler) {
+        RemoteCallback<ReferenceBean> successCallback = new DelegatingRemoteCallback<ReferenceBean>(handler);
         ErrorCallback<?> errorCallback = new DelegatingErrorCallback(handler);
         try {
-            remoteServicesService.call(successCallback, errorCallback).getComponentService(serviceId);
+            remoteServicesService.call(successCallback, errorCallback).getReference(referenceId);
         } catch (UiException e) {
             errorCallback.error(null, e);
         }

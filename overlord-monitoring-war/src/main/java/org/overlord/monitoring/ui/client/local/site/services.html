@@ -94,7 +94,7 @@
           <div class="span9 pull-right">
             <ul class="nav nav-tabs overlord-tabs">
               <li class="active"><a data-target="#tab-services" data-toggle="tab" data-i18n-key="services">Services</a></li>
-              <li class=""><a data-target="#tab-component-services" data-toggle="tab" data-i18n-key="component-services">Component Services</a></li>
+              <li class=""><a data-target="#tab-references" data-toggle="tab" data-i18n-key="references">References</a></li>
             </ul>
 
             <div class="tab-content">
@@ -122,8 +122,8 @@
                     <tr>
                       <th data-i18n-key="service-name">Service Name</th>
                       <th data-i18n-key="application">Application</th>
-                      <th class="desktop-only" data-i18n-key="mep">Interface</th>
-                      <th class="desktop-only" data-i18n-key="address">Bindings</th>
+                      <th class="desktop-only" data-i18n-key="interface">Interface</th>
+                      <th class="desktop-only" data-i18n-key="bindings">Bindings</th>
                       <th class="desktop-only" data-i18n-key="avg-duration">Average Duration</th>
                     </tr>
                   </thead>
@@ -178,74 +178,74 @@
                 </div>
               </div>
 
-              <!-- The Component Services table -->
-              <div class="tab-pane fade container-fluid" id="tab-component-services">
+              <!-- The References table -->
+              <div class="tab-pane fade container-fluid" id="tab-references">
                 <div class="row-fluid services">
                   <div class="span12 overlord-actions">
                     <button class="btn spacer" style="visibility:hidden"><i class="icon-refresh"></i></button>
-                    <button data-field="cs-btn-refresh" class="btn pull-right"><i class="icon-refresh"></i></button>
+                    <button data-field="ref-btn-refresh" class="btn pull-right"><i class="icon-refresh"></i></button>
                     <div class="pull-right sp4n-label">
                       <span data-i18n-key="displaying" class="desktop-only">Displaying</span>
-                      <span data-field="cs-range" data-role="dummy">1-11</span>
+                      <span data-field="ref-range" data-role="dummy">1-11</span>
                       <span data-i18n-key="of">of</span>
-                      <span data-field="cs-total" data-role="dummy">37</span>
+                      <span data-field="ref-total" data-role="dummy">37</span>
                     </div>
                   </div>
-                  <div data-field="cs-none" style="display:none" class="overlord-none">
-                    <span data-i18n-key="no-component-services-found">No component services found.</span>
+                  <div data-field="ref-none" style="display:none" class="overlord-none">
+                    <span data-i18n-key="no-references-found">No references found.</span>
                   </div>
-                  <div data-field="cs-searching" style="display:none" class="overlord-searching">
-                    <span class="spinner" data-i18n-key="finding-component-services">Finding component services, please wait...</span>
+                  <div data-field="ref-searching" style="display:none" class="overlord-searching">
+                    <span class="spinner" data-i18n-key="finding-references">Finding references, please wait...</span>
                   </div>
-                  <table data-field="cs-table" class="overlord-table table table-striped table-condensed table-hover">
+                  <table data-field="ref-table" class="overlord-table table table-striped table-condensed table-hover">
                   <thead>
                     <tr>
-                      <th data-i18n-key="service-name">Service Name</th>
+                      <th data-i18n-key="reference-name">Reference Name</th>
                       <th data-i18n-key="application">Application</th>
-                      <th class="desktop-only" data-i18n-key="mep">Interface</th>
-                      <th class="desktop-only" data-i18n-key="address">Implementation</th>
+                      <th class="desktop-only" data-i18n-key="interface">Interface</th>
+                      <th class="desktop-only" data-i18n-key="bindings">Bindings</th>
                       <th class="desktop-only" data-i18n-key="avg-duration">Average Duration</th>
                     </tr>
                   </thead>
                   <tbody data-role="dummy">
                     <tr>
-                      <td><a href="componentServiceDetails.html">CreateApplicationService</a></td>
+                      <td><a href="referenceDetails.html">CreateApplicationRef</a></td>
                       <td>Contract</td>
                       <td class="desktop-only">org.jboss.demos.services.ICreateApplication</td>
-                      <td class="desktop-only">org.jboss.demos.services.impl.CreateApplicationService</td>
+                      <td class="desktop-only">JMS,SOAP,REST</td>
                       <td class="desktop-only">0.13s</td>
                     </tr>
                     <tr>
-                      <td><a href="componentServiceDetails.html">CreateQuoteService</a></td>
+                      <td><a href="referenceDetails.html">CreateQuoteRef</a></td>
                       <td>Contract</td>
                       <td class="desktop-only">org.jboss.demos.services.ICreateQuote</td>
-                      <td class="desktop-only">org.jboss.demos.services.impl.CreateQuoteService</td>
+                      <td class="desktop-only">JMS,SOAP</td>
                       <td class="desktop-only">0.22s</td>
                     </tr>
                     <tr>
-                      <td><a href="componentServiceDetails.html">SearchContractService</a></td>
+                      <td><a href="referenceDetails.html">SearchContractRef</a></td>
                       <td>Contract</td>
                       <td class="desktop-only">org.jboss.demos.services.ISearchContract</td>
-                      <td class="desktop-only">org.jboss.demos.services.impl.SearchContractService</td>
+                      <td class="desktop-only">REST</td>
                       <td class="desktop-only">3.93s</td>
                     </tr>
                     <tr>
-                      <td><a href="componentServiceDetails.html">DomainInformationService</a></td>
+                      <td><a href="referenceDetails.html">DomainInformationRef</a></td>
                       <td>GGRL</td>
                       <td class="desktop-only">org.jboss.demos.services.IDomainInformation</td>
-                      <td class="desktop-only">org.jboss.demos.services.impl.DomainInformation</td>
+                      <td class="desktop-only">JMS,REST</td>
                       <td class="desktop-only">0.17s</td>
                     </tr>
                     <tr>
-                      <td><a href="componentServiceDetails.html">FNOLService</a></td>
+                      <td><a href="referenceDetails.html">FNOLRef</a></td>
                       <td>Claim</td>
                       <td class="desktop-only">org.jboss.demos.services.IFNOL</td>
-                      <td class="desktop-only">org.jboss.demos.services.impl.FNOLService</td>
+                      <td class="desktop-only">JMS,SOAP,REST</td>
                       <td class="desktop-only">0.01s</td>
                     </tr>
                   </tbody>
                   </table>
-                  <div data-field="cs-pager" class="pagination overlord-pager" data-role="dummy">
+                  <div data-field="ref-pager" class="pagination overlord-pager" data-role="dummy">
                     <ul>
                       <li class="disabled"><a>&#x00AB;</a></li>
                       <li class="active"><a>1</a></li>

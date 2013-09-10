@@ -26,9 +26,9 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
 
 import org.jboss.dmr.ModelNode;
-import org.overlord.monitoring.ui.client.shared.beans.ComponentServiceBean;
-import org.overlord.monitoring.ui.client.shared.beans.ComponentServiceResultSetBean;
-import org.overlord.monitoring.ui.client.shared.beans.ComponentServiceSummaryBean;
+import org.overlord.monitoring.ui.client.shared.beans.ReferenceBean;
+import org.overlord.monitoring.ui.client.shared.beans.ReferenceResultSetBean;
+import org.overlord.monitoring.ui.client.shared.beans.ReferenceSummaryBean;
 import org.overlord.monitoring.ui.client.shared.beans.GatewayMetric;
 import org.overlord.monitoring.ui.client.shared.beans.QName;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceBean;
@@ -47,33 +47,33 @@ import org.overlord.monitoring.ui.server.services.activator.MonitoringServiceAct
 @ApplicationScoped
 @Alternative
 public class SwitchYardServicesServiceImpl implements IServicesServiceImpl {
-    private static final String SUBSYSTEM = "subsystem";
-    private static final String SWITCHYARD = "switchyard";
+    private static final String SUBSYSTEM = "subsystem"; //$NON-NLS-1$
+    private static final String SWITCHYARD = "switchyard"; //$NON-NLS-1$
 
-    private static final String OPERATION = "operation";
-    private static final String ADDRESS = "address";
-    private static final String APPLICATION_NAME = "application-name";
-    private static final String SERVICE_NAME = "service-name";
+    private static final String OPERATION = "operation"; //$NON-NLS-1$
+    private static final String ADDRESS = "address"; //$NON-NLS-1$
+    private static final String APPLICATION_NAME = "application-name"; //$NON-NLS-1$
+    private static final String SERVICE_NAME = "service-name"; //$NON-NLS-1$
 
-    private static final String NAME = "name";
-    private static final String APPLICATION = "application";
-    private static final String INTERFACE = "interface";
-    private static final String GATEWAYS = "gateways";
-    private static final String PROMOTED_SERVICE = "promotedService";
-    private static final String TYPE = "type";
+    private static final String NAME = "name"; //$NON-NLS-1$
+    private static final String APPLICATION = "application"; //$NON-NLS-1$
+    private static final String INTERFACE = "interface"; //$NON-NLS-1$
+    private static final String GATEWAYS = "gateways"; //$NON-NLS-1$
+    private static final String PROMOTED_SERVICE = "promotedService"; //$NON-NLS-1$
+    private static final String TYPE = "type"; //$NON-NLS-1$
 
-    private static final String SUCCESS_COUNT = "successCount";
-    private static final String FAULT_COUNT = "faultCount";
-    private static final String AVERAGE_TIME = "averageTime";
-    private static final String MIN_TIME = "minTime";
-    private static final String MAX_TIME = "maxTime";
-    private static final String TOTAL_TIME = "totalTime";
-    private static final String TOTAL_COUNT = "totalCount";
+    private static final String SUCCESS_COUNT = "successCount"; //$NON-NLS-1$
+    private static final String FAULT_COUNT = "faultCount"; //$NON-NLS-1$
+    private static final String AVERAGE_TIME = "averageTime"; //$NON-NLS-1$
+    private static final String MIN_TIME = "minTime"; //$NON-NLS-1$
+    private static final String MAX_TIME = "maxTime"; //$NON-NLS-1$
+    private static final String TOTAL_TIME = "totalTime"; //$NON-NLS-1$
+    private static final String TOTAL_COUNT = "totalCount"; //$NON-NLS-1$
 
-    private static final String READ_SERVICE = "read-service";
-    private static final String SHOW_METRICS = "show-metrics";
+    private static final String READ_SERVICE = "read-service"; //$NON-NLS-1$
+    private static final String SHOW_METRICS = "show-metrics"; //$NON-NLS-1$
 
-    private static final String RESULT = "result";
+    private static final String RESULT = "result"; //$NON-NLS-1$
 
     private static final char ESCAPE_CHAR = '\\';
     private static final char SEPARATOR_CHAR = ':';
@@ -119,38 +119,38 @@ public class SwitchYardServicesServiceImpl implements IServicesServiceImpl {
     }
 
     /**
-     * @see org.overlord.monitoring.ui.server.services.IServicesServiceImpl#findComponentServices(org.overlord.monitoring.ui.client.shared.beans.ServicesFilterBean, int)
+     * @see org.overlord.monitoring.ui.server.services.IServicesServiceImpl#findReferences(org.overlord.monitoring.ui.client.shared.beans.ServicesFilterBean, int)
      */
     @Override
-    public ComponentServiceResultSetBean findComponentServices(
+    public ReferenceResultSetBean findReferences(
             ServicesFilterBean filters, int page, String sortColumn,
             boolean ascending) throws UiException {
-      ComponentServiceResultSetBean rval = new ComponentServiceResultSetBean();
-      List<ComponentServiceSummaryBean> services = new ArrayList<ComponentServiceSummaryBean>();
-      rval.setServices(services);
-      rval.setItemsPerPage(20);
-      rval.setStartIndex(0);
-      rval.setTotalResults(2);
+        ReferenceResultSetBean rval = new ReferenceResultSetBean();
+        List<ReferenceSummaryBean> services = new ArrayList<ReferenceSummaryBean>();
+        rval.setServices(services);
+        rval.setItemsPerPage(20);
+        rval.setStartIndex(0);
+        rval.setTotalResults(2);
 
-      ComponentServiceSummaryBean service = new ComponentServiceSummaryBean();
-      service.setServiceId("1"); //$NON-NLS-1$
-      service.setName("CreateApplicationService"); //$NON-NLS-1$
-      service.setApplication("Contract"); //$NON-NLS-1$
-      service.setIface("org.jboss.demos.services.ICreateApplication"); //$NON-NLS-1$
-      service.setImplementation("org.jboss.demos.services.impl.CreateApplicationService"); //$NON-NLS-1$
-      service.setAverageDuration(2837l);
-      services.add(service);
+        ReferenceSummaryBean reference = new ReferenceSummaryBean();
+        reference.setReferenceId("1"); //$NON-NLS-1$
+        reference.setName("CreateApplicationService"); //$NON-NLS-1$
+        reference.setApplication("Contract"); //$NON-NLS-1$
+        reference.setIface("org.jboss.demos.services.ICreateApplication"); //$NON-NLS-1$
+        reference.setBindings("SOAP, JMS"); //$NON-NLS-1$
+        reference.setAverageDuration(2837l);
+        services.add(reference);
 
-      service = new ComponentServiceSummaryBean();
-      service.setServiceId("2"); //$NON-NLS-1$
-      service.setName("CreateQuoteService"); //$NON-NLS-1$
-      service.setApplication("Contract"); //$NON-NLS-1$
-      service.setIface("org.jboss.demos.services.ICreateQuote"); //$NON-NLS-1$
-      service.setImplementation("org.jboss.demos.services.impl.CreateQuoteService"); //$NON-NLS-1$
-      service.setAverageDuration(2837l);
-      services.add(service);
+        reference = new ReferenceSummaryBean();
+        reference.setReferenceId("2"); //$NON-NLS-1$
+        reference.setName("CreateQuoteService"); //$NON-NLS-1$
+        reference.setApplication("Contract"); //$NON-NLS-1$
+        reference.setIface("org.jboss.demos.services.ICreateQuote"); //$NON-NLS-1$
+        reference.setBindings("SOAP"); //$NON-NLS-1$
+        reference.setAverageDuration(2837l);
+        services.add(reference);
 
-      return rval;
+        return rval;
     }
 
     /**
@@ -225,25 +225,24 @@ public class SwitchYardServicesServiceImpl implements IServicesServiceImpl {
     }
 
     /**
-     * @see org.overlord.monitoring.ui.server.services.IServicesServiceImpl#getComponentService(java.lang.String)
+     * @see org.overlord.monitoring.ui.server.services.IServicesServiceImpl#getReference(java.lang.String)
      */
     @Override
-    public ComponentServiceBean getComponentService(String serviceId) throws UiException {
-        ComponentServiceBean service = new ComponentServiceBean();
-        service.setServiceId("1"); //$NON-NLS-1$
-        service.setName(new QName("urn:jboss:demo:services", "CreateApplicationService")); //$NON-NLS-1$ //$NON-NLS-2$
-        service.setApplication(new QName("urn:jboss:demos:applications", "Contract")); //$NON-NLS-1$ //$NON-NLS-2$
-        service.setServiceInterface("org.jboss.demos.services.ICreateApplication"); //$NON-NLS-1$
-        service.setServiceImplementation("org.jboss.demos.services.CreateApplicationService"); //$NON-NLS-1$
-        service.setSuccessCount(83);
-        service.setFaultCount(4);
-        service.setTotalTime(804);
-        service.setAverageTime(41);
-        service.setMinTime(3);
-        service.setMaxTime(101);
-        service.addReferenceMetric("Inventory Service", 17, 7, 75, 100); //$NON-NLS-1$
-        service.addReferenceMetric("Provisioning Service", 13, 3, 25, 0); //$NON-NLS-1$
-        return service;
+    public ReferenceBean getReference(String serviceId) throws UiException {
+        ReferenceBean reference = new ReferenceBean();
+        reference.setReferenceId("1"); //$NON-NLS-1$
+        reference.setName(new QName("urn:jboss:demo:services", "CreateApplicationService")); //$NON-NLS-1$ //$NON-NLS-2$
+        reference.setApplication(new QName("urn:jboss:demos:applications", "Contract")); //$NON-NLS-1$ //$NON-NLS-2$
+        reference.setServiceInterface("org.jboss.demos.services.ICreateApplication"); //$NON-NLS-1$
+        reference.setSuccessCount(83);
+        reference.setFaultCount(4);
+        reference.setTotalTime(804);
+        reference.setAverageTime(41);
+        reference.setMinTime(3);
+        reference.setMaxTime(101);
+        reference.addGatewayMetric("_CreateApplicationWebservice_soap1", "soap", 87, 42, 90, 0); //$NON-NLS-1$ //$NON-NLS-2$
+        reference.addGatewayMetric("_CreateApplicationWebservice_jms1", "jms", 13, 35, 10, 0); //$NON-NLS-1$ //$NON-NLS-2$
+        return reference;
     }
 
     private static ModelNode getBlankOperation(final String operation) {
@@ -262,9 +261,9 @@ public class SwitchYardServicesServiceImpl implements IServicesServiceImpl {
         if (serviceName != null) {
             operation.get(SERVICE_NAME).set(serviceName);
         } else {
-            operation.get(SERVICE_NAME).set("*");
+            operation.get(SERVICE_NAME).set("*"); //$NON-NLS-1$
         }
-        operation.get(TYPE).set("service");
+        operation.get(TYPE).set("service"); //$NON-NLS-1$
         final ModelNode response = execute(operation);
         final ModelNode result = response.get().get(RESULT);
         if (result.isDefined()) {
@@ -288,7 +287,7 @@ public class SwitchYardServicesServiceImpl implements IServicesServiceImpl {
     private static ModelNode getServiceMetrics(final String applicationName, final String serviceName) throws UiException {
         final ModelNode operation = getBlankOperation(SHOW_METRICS);
         operation.get(SERVICE_NAME).set(serviceName);
-        operation.get(TYPE).set("service");
+        operation.get(TYPE).set("service"); //$NON-NLS-1$
         final ModelNode response = execute(operation);
         final ModelNode result = response.get().get(RESULT);
         if (result.isDefined()) {
@@ -334,7 +333,7 @@ public class SwitchYardServicesServiceImpl implements IServicesServiceImpl {
             for(ModelNode gateway: gateways) {
                 final String type = gateway.get(TYPE).asString();
                 if (type != null) {
-                    sb.append(type).append(", ");
+                    sb.append(type).append(", "); //$NON-NLS-1$
                 }
             }
             final int length = sb.length();

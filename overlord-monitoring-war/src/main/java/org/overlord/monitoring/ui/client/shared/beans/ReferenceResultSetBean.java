@@ -21,16 +21,16 @@ import java.util.List;
 import org.jboss.errai.common.client.api.annotations.Portable;
 
 /**
- * Models the set of summary objects returned by a Component Services search.
+ * Models the set of summary objects returned by a References search.
  *
  * @author eric.wittmann@redhat.com
  */
 @Portable
-public class ComponentServiceResultSetBean implements Serializable {
+public class ReferenceResultSetBean implements Serializable {
 
-    private static final long serialVersionUID = ComponentServiceResultSetBean.class.hashCode();
+    private static final long serialVersionUID = ReferenceResultSetBean.class.hashCode();
 
-    private List<ComponentServiceSummaryBean> services;
+    private List<ReferenceSummaryBean> references;
     private long totalResults;
     private int itemsPerPage;
     private int startIndex;
@@ -38,21 +38,21 @@ public class ComponentServiceResultSetBean implements Serializable {
     /**
      * Constructor.
      */
-    public ComponentServiceResultSetBean() {
+    public ReferenceResultSetBean() {
     }
 
     /**
-     * @return the services
+     * @return the references
      */
-    public List<ComponentServiceSummaryBean> getServices() {
-        return services;
+    public List<ReferenceSummaryBean> getServices() {
+        return references;
     }
 
     /**
-     * @param services the servicess to set
+     * @param references the referencess to set
      */
-    public void setServices(List<ComponentServiceSummaryBean> services) {
-        this.services = services;
+    public void setServices(List<ReferenceSummaryBean> references) {
+        this.references = references;
     }
 
     /**
