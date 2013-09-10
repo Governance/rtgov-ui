@@ -15,9 +15,12 @@
  */
 package org.overlord.monitoring.ui.server.services;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.jboss.errai.bus.server.annotations.Service;
+import org.overlord.monitoring.ui.client.shared.beans.QName;
 import org.overlord.monitoring.ui.client.shared.beans.ReferenceBean;
 import org.overlord.monitoring.ui.client.shared.beans.ReferenceResultSetBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceBean;
@@ -40,6 +43,14 @@ public class ServicesService implements IServicesService {
      * Constructor.
      */
     public ServicesService() {
+    }
+
+    /**
+     * @see org.overlord.monitoring.ui.client.shared.services.IServicesService#getApplicationNames()
+     */
+    @Override
+    public List<QName> getApplicationNames() throws UiException {
+        return impl.getApplicationNames();
     }
 
     /**

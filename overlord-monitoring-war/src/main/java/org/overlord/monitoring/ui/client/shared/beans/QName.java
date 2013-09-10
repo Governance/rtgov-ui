@@ -75,4 +75,26 @@ public class QName implements Serializable {
         this.localPart = localPart;
     }
 
+    /**
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "{" + getNamespaceURI() + "}" + getLocalPart(); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    /**
+     * Reverses toString.
+     * @param value
+     */
+    public static QName fromString(String value) {
+        if (value == null)
+            return new QName();
+        if (value.contains("{")) { //$NON-NLS-1$
+            String [] split = value.split("[\\{\\}]"); //$NON-NLS-1$
+            return new QName(split[1], split[2]);
+        }
+        return new QName(null, value);
+    }
+
 }

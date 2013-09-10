@@ -15,6 +15,8 @@
  */
 package org.overlord.monitoring.ui.client.local.pages;
 
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -34,6 +36,7 @@ import org.overlord.monitoring.ui.client.local.services.NotificationService;
 import org.overlord.monitoring.ui.client.local.services.ServicesRpcService;
 import org.overlord.monitoring.ui.client.local.services.rpc.IRpcServiceInvocationHandler;
 import org.overlord.monitoring.ui.client.local.widgets.common.SortableTemplatedWidgetTable.SortColumn;
+import org.overlord.monitoring.ui.client.shared.beans.QName;
 import org.overlord.monitoring.ui.client.shared.beans.ReferenceResultSetBean;
 import org.overlord.monitoring.ui.client.shared.beans.ReferenceSummaryBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceResultSetBean;
@@ -118,6 +121,15 @@ public class ServicesPage extends AbstractPage {
      */
     @PageShown
     public void onPageShown() {
+        this.servicesService.getApplicationNames(new IRpcServiceInvocationHandler<List<QName>>() {
+            @Override
+            public void onReturn(List<QName> data) {
+                filtersPanel.setApplicationNames(data);
+            }
+            @Override
+            public void onError(Throwable error) {
+            }
+        });
     }
 
     /**

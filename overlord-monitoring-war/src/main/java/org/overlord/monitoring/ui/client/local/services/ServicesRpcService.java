@@ -15,6 +15,8 @@
  */
 package org.overlord.monitoring.ui.client.local.services;
 
+import java.util.List;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -24,6 +26,7 @@ import org.jboss.errai.common.client.api.RemoteCallback;
 import org.overlord.monitoring.ui.client.local.services.rpc.DelegatingErrorCallback;
 import org.overlord.monitoring.ui.client.local.services.rpc.DelegatingRemoteCallback;
 import org.overlord.monitoring.ui.client.local.services.rpc.IRpcServiceInvocationHandler;
+import org.overlord.monitoring.ui.client.shared.beans.QName;
 import org.overlord.monitoring.ui.client.shared.beans.ReferenceBean;
 import org.overlord.monitoring.ui.client.shared.beans.ReferenceResultSetBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceBean;
@@ -47,6 +50,19 @@ public class ServicesRpcService {
      * Constructor.
      */
     public ServicesRpcService() {
+    }
+
+    /**
+     * @see org.overlord.monitoring.ui.client.shared.services.IServicesService#getApplicationNames()
+     */
+    public void getApplicationNames(final IRpcServiceInvocationHandler<List<QName>> handler) {
+        RemoteCallback<List<QName>> successCallback = new DelegatingRemoteCallback<List<QName>>(handler);
+        ErrorCallback<?> errorCallback = new DelegatingErrorCallback(handler);
+        try {
+            remoteServicesService.call(successCallback, errorCallback).getApplicationNames();
+        } catch (UiException e) {
+            errorCallback.error(null, e);
+        }
     }
 
     /**

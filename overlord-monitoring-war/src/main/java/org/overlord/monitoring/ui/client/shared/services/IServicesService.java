@@ -15,7 +15,10 @@
  */
 package org.overlord.monitoring.ui.client.shared.services;
 
+import java.util.List;
+
 import org.jboss.errai.bus.server.annotations.Remote;
+import org.overlord.monitoring.ui.client.shared.beans.QName;
 import org.overlord.monitoring.ui.client.shared.beans.ReferenceBean;
 import org.overlord.monitoring.ui.client.shared.beans.ReferenceResultSetBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceBean;
@@ -30,6 +33,12 @@ import org.overlord.monitoring.ui.client.shared.exceptions.UiException;
  */
 @Remote
 public interface IServicesService {
+
+    /**
+     * Return a list of all application names.
+     * @throws UiException
+     */
+    public List<QName> getApplicationNames() throws UiException;
 
     /**
      * Search for services using the given filters.

@@ -26,11 +26,11 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
 
 import org.jboss.dmr.ModelNode;
+import org.overlord.monitoring.ui.client.shared.beans.GatewayMetric;
+import org.overlord.monitoring.ui.client.shared.beans.QName;
 import org.overlord.monitoring.ui.client.shared.beans.ReferenceBean;
 import org.overlord.monitoring.ui.client.shared.beans.ReferenceResultSetBean;
 import org.overlord.monitoring.ui.client.shared.beans.ReferenceSummaryBean;
-import org.overlord.monitoring.ui.client.shared.beans.GatewayMetric;
-import org.overlord.monitoring.ui.client.shared.beans.QName;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceResultSetBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceSummaryBean;
@@ -77,6 +77,15 @@ public class SwitchYardServicesServiceImpl implements IServicesServiceImpl {
 
     private static final char ESCAPE_CHAR = '\\';
     private static final char SEPARATOR_CHAR = ':';
+
+    /**
+     * @see org.overlord.monitoring.ui.server.services.IServicesServiceImpl#getApplicationNames()
+     */
+    @Override
+    public List<QName> getApplicationNames() throws UiException {
+        List<QName> apps = new ArrayList<QName>();
+        return apps;
+    }
 
     /**
      * @see org.overlord.monitoring.ui.server.services.IServicesServiceImpl#findServices(org.overlord.monitoring.ui.client.shared.beans.ServicesFilterBean, int)

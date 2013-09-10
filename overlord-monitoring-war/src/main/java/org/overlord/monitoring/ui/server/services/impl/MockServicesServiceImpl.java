@@ -21,10 +21,10 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
 
+import org.overlord.monitoring.ui.client.shared.beans.QName;
 import org.overlord.monitoring.ui.client.shared.beans.ReferenceBean;
 import org.overlord.monitoring.ui.client.shared.beans.ReferenceResultSetBean;
 import org.overlord.monitoring.ui.client.shared.beans.ReferenceSummaryBean;
-import org.overlord.monitoring.ui.client.shared.beans.QName;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceResultSetBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceSummaryBean;
@@ -48,6 +48,17 @@ public class MockServicesServiceImpl implements IServicesServiceImpl {
     }
 
     /**
+     * @see org.overlord.monitoring.ui.server.services.IServicesServiceImpl#getApplicationNames()
+     */
+    @Override
+    public List<QName> getApplicationNames() throws UiException {
+        List<QName> apps = new ArrayList<QName>();
+        apps.add(new QName("urn:jboss:demos:applications", "Contract")); //$NON-NLS-1$ //$NON-NLS-2$
+        apps.add(new QName("urn:jboss:demos:applications", "GGRL")); //$NON-NLS-1$ //$NON-NLS-2$
+        return apps;
+    }
+
+    /**
      * @see org.overlord.monitoring.ui.server.services.IServicesServiceImpl#findServices(org.overlord.monitoring.ui.client.shared.beans.ServicesFilterBean, int, java.lang.String, boolean)
      */
     @Override
@@ -59,7 +70,7 @@ public class MockServicesServiceImpl implements IServicesServiceImpl {
         rval.setItemsPerPage(20);
         rval.setStartIndex(0);
         rval.setTotalResults(2);
-        
+
         ServiceSummaryBean service = new ServiceSummaryBean();
         service.setServiceId("1"); //$NON-NLS-1$
         service.setName("CreateApplicationWebservice"); //$NON-NLS-1$
@@ -68,7 +79,7 @@ public class MockServicesServiceImpl implements IServicesServiceImpl {
         service.setBindings("SOAP, JMS"); //$NON-NLS-1$
         service.setAverageDuration(2837l);
         services.add(service);
-        
+
         service = new ServiceSummaryBean();
         service.setServiceId("2"); //$NON-NLS-1$
         service.setName("CreateQuoteWebservice"); //$NON-NLS-1$
@@ -77,7 +88,7 @@ public class MockServicesServiceImpl implements IServicesServiceImpl {
         service.setBindings("SOAP"); //$NON-NLS-1$
         service.setAverageDuration(2837l);
         services.add(service);
-        
+
         return rval;
     }
 
@@ -93,7 +104,7 @@ public class MockServicesServiceImpl implements IServicesServiceImpl {
         rval.setItemsPerPage(20);
         rval.setStartIndex(0);
         rval.setTotalResults(2);
-        
+
         ReferenceSummaryBean reference = new ReferenceSummaryBean();
         reference.setReferenceId("1"); //$NON-NLS-1$
         reference.setName("CreateApplicationService"); //$NON-NLS-1$
@@ -102,7 +113,7 @@ public class MockServicesServiceImpl implements IServicesServiceImpl {
         reference.setBindings("SOAP, JMS"); //$NON-NLS-1$
         reference.setAverageDuration(2837l);
         services.add(reference);
-        
+
         reference = new ReferenceSummaryBean();
         reference.setReferenceId("2"); //$NON-NLS-1$
         reference.setName("CreateQuoteService"); //$NON-NLS-1$
@@ -111,7 +122,7 @@ public class MockServicesServiceImpl implements IServicesServiceImpl {
         reference.setBindings("SOAP"); //$NON-NLS-1$
         reference.setAverageDuration(2837l);
         services.add(reference);
-        
+
         return rval;
     }
 

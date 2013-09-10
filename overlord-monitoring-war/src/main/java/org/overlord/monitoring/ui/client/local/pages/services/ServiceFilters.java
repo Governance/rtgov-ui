@@ -15,12 +15,15 @@
  */
 package org.overlord.monitoring.ui.client.local.pages.services;
 
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
+import org.overlord.monitoring.ui.client.shared.beans.QName;
 import org.overlord.monitoring.ui.client.shared.beans.ServicesFilterBean;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -113,7 +116,7 @@ public class ServiceFilters extends Composite implements HasValueChangeHandlers<
      * @param value the new filter settings
      */
     public void setValue(ServicesFilterBean value) {
-        serviceName.setValue(value.getApplicationName() == null ? "" : value.getApplicationName()); //$NON-NLS-1$
+        applicationName.setValue(value.getApplicationName() == null ? "" : value.getApplicationName()); //$NON-NLS-1$
         serviceName.setValue(value.getServiceName() == null ? "" : value.getServiceName()); //$NON-NLS-1$
         processingState.setValue(value.getProcessingState() == null ? "" : value.getProcessingState()); //$NON-NLS-1$
         onFilterValueChange();
@@ -131,6 +134,16 @@ public class ServiceFilters extends Composite implements HasValueChangeHandlers<
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<ServicesFilterBean> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
+    }
+
+    /**
+     * @param appNames
+     */
+    public void setApplicationNames(List<QName> appNames) {
+        applicationName.clear();
+        for (QName qName : appNames) {
+            applicationName.addItem(qName.getLocalPart(), qName.toString());
+        }
     }
 
 }
