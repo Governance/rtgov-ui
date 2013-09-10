@@ -54,7 +54,7 @@ public class GatewayMetricsTable extends TemplatedWidgetTable implements HasValu
         InlineLabel msgCount = new InlineLabel(String.valueOf(bean.getMessageCount()));
         InlineLabel avgTime = new InlineLabel(String.valueOf(bean.getAverageTime()));
         InlineLabel timePerc = new InlineLabel(String.valueOf(bean.getTimePercent()) + "%"); //$NON-NLS-1$
-        InlineLabel faultPerc = new InlineLabel(String.valueOf(bean.getName()) + "%"); //$NON-NLS-1$
+        InlineLabel faultPerc = new InlineLabel(String.valueOf(bean.getFaultPercent()) + "%"); //$NON-NLS-1$
 
         add(rowIdx, 0, name);
         add(rowIdx, 1, type);

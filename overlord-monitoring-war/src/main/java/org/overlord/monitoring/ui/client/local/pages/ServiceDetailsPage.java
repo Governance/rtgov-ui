@@ -158,8 +158,12 @@ public class ServiceDetailsPage extends AbstractPage {
         pageContent.removeClassName("hide"); //$NON-NLS-1$
         long total = service.getSuccessCount() + service.getFaultCount();
         totalCount.setText(String.valueOf(total));
-        long rate = (service.getSuccessCount() * 100) / total;
-        successRate.setText(String.valueOf(rate) + "%"); //$NON-NLS-1$
+        if (total > 0) {
+            long rate = (service.getSuccessCount() * 100) / total;
+            successRate.setText(String.valueOf(rate) + "%"); //$NON-NLS-1$
+        } else {
+            successRate.setText("0%"); //$NON-NLS-1$
+        }
     }
 
 }

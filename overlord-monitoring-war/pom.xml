@@ -34,7 +34,7 @@
       <artifactId>s-ramp-ui-widgets</artifactId>
       <version>${s-ramp-ui.version}</version>
     </dependency>
-    
+
     <!-- Third Party Dependencies -->
     <dependency>
       <groupId>org.apache.commons</groupId>
@@ -128,7 +128,7 @@
       <artifactId>mvel2</artifactId>
       <version>${mvel.version}</version>
     </dependency>
-    
+
     <!-- CDI Integration Modules -->
     <dependency>
       <groupId>org.jboss.errai</groupId>
@@ -164,7 +164,7 @@
       <artifactId>weld-servlet</artifactId>
       <version>${weld.version}</version>
     </dependency>
-    
+
     <!-- GWT -->
     <dependency>
       <groupId>com.google.gwt</groupId>
@@ -172,7 +172,7 @@
       <version>${gwt.version}</version>
       <scope>provided</scope>
     </dependency>
-    
+
     <!-- Runtime / Container dependencies -->
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -185,6 +185,19 @@
       <version>${jboss-logging.version}</version>
     </dependency>
 
+    <!-- ServiceActivator/dmr -->
+    <dependency>
+      <groupId>org.jboss.msc</groupId>
+      <artifactId>jboss-msc</artifactId>
+      <version>${jboss.msc.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.as</groupId>
+      <artifactId>jboss-as-server</artifactId>
+      <version>${jboss.as.server.version}</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>
