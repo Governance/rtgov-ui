@@ -31,7 +31,14 @@
         <div class="row-fluid">
           <ul class="breadcrumb">
             <li><a data-field="back-to-dashboard" href="dashboard.html" data-i18n-key="breadcrumb.dashboard">Dashboard</a> <span class="divider">/<span data-role="dummy" /></span></li>
-            <li class="active" data-i18n-key="breadcrumb.services">Services</li>
+            <li class="dropdown active">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                  <span data-i18n-key="breadcrumb.services">Services</span> <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a data-field="to-faults" href="faults.html" data-i18n-key="faults">Faults</a></li>
+                </ul>
+            </li>
           </ul>
         </div>
 

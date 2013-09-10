@@ -71,6 +71,8 @@ public class ReferenceDetailsPage extends AbstractPage {
     private TransitionAnchor<DashboardPage> toDashboardPage;
     @Inject @DataField("back-to-services")
     private TransitionAnchor<ServicesPage> toServicesPage;
+    @Inject @DataField("to-faults")
+    private TransitionAnchor<FaultsPage> toFaultsPage;
 
     // Header
     @Inject @DataField @Bound(property="name", converter=DataBindingQNameLocalPartConverter.class)
