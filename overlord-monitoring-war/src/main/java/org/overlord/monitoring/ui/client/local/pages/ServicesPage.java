@@ -324,8 +324,8 @@ public class ServicesPage extends AbstractPage {
     protected void updateReferencesTable(ReferenceResultSetBean data) {
         this.referencesTable.clear();
         this.searchInProgressMessage_ref.setVisible(false);
-        if (data.getServices().size() > 0) {
-            for (ReferenceSummaryBean deploymentSummaryBean : data.getServices()) {
+        if (data.getReferences().size() > 0) {
+            for (ReferenceSummaryBean deploymentSummaryBean : data.getReferences()) {
                 this.referencesTable.addRow(deploymentSummaryBean);
             }
             this.referencesTable.setVisible(true);
@@ -367,7 +367,7 @@ public class ServicesPage extends AbstractPage {
             this.pager_ref.setVisible(true);
 
         int startIndex = data.getStartIndex() + 1;
-        int endIndex = startIndex + data.getServices().size() - 1;
+        int endIndex = startIndex + data.getReferences().size() - 1;
         String rangeText = "" + startIndex + "-" + endIndex; //$NON-NLS-1$ //$NON-NLS-2$
         String totalText = String.valueOf(data.getTotalResults());
         this.rangeSpan_ref.setInnerText(rangeText);

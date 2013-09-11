@@ -85,8 +85,8 @@ public class ReferenceDetailsPage extends AbstractPage {
     InlineLabel applicationNamespace;
     @Inject @DataField @Bound(property="application", converter=DataBindingQNameLocalPartConverter.class)
     InlineLabel applicationName;
-    @Inject @DataField @Bound(property="serviceInterface")
-    InlineLabel serviceInterface;
+    @Inject @DataField @Bound(property="referenceInterface")
+    InlineLabel referenceInterface;
 
     // Message Counts
     @Inject @DataField("total-count")
@@ -160,8 +160,12 @@ public class ReferenceDetailsPage extends AbstractPage {
         pageContent.removeClassName("hide"); //$NON-NLS-1$
         long total = reference.getSuccessCount() + reference.getFaultCount();
         totalCount.setText(String.valueOf(total));
-        long rate = (reference.getSuccessCount() * 100) / total;
-        successRate.setText(String.valueOf(rate) + "%"); //$NON-NLS-1$
+        if (total > 0) {
+            long rate = (reference.getSuccessCount() * 100) / total;
+            successRate.setText(String.valueOf(rate) + "%"); //$NON-NLS-1$
+        } else {
+            successRate.setText("0%"); //$NON-NLS-1$
+        }
     }
 
 }
