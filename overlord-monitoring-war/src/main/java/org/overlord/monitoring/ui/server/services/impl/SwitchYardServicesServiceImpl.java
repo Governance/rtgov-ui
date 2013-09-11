@@ -54,11 +54,13 @@ public class SwitchYardServicesServiceImpl implements IServicesServiceImpl {
     private static final String ADDRESS = "address"; //$NON-NLS-1$
     private static final String APPLICATION_NAME = "application-name"; //$NON-NLS-1$
     private static final String SERVICE_NAME = "service-name"; //$NON-NLS-1$
+    private static final String REFERENCE_NAME = "reference-name"; //$NON-NLS-1$
 
     private static final String NAME = "name"; //$NON-NLS-1$
     private static final String APPLICATION = "application"; //$NON-NLS-1$
     private static final String INTERFACE = "interface"; //$NON-NLS-1$
     private static final String GATEWAYS = "gateways"; //$NON-NLS-1$
+    private static final String PROMOTED_REFERENCE = "promotedReference"; //$NON-NLS-1$
     private static final String PROMOTED_SERVICE = "promotedService"; //$NON-NLS-1$
     private static final String TYPE = "type"; //$NON-NLS-1$
 
@@ -70,7 +72,9 @@ public class SwitchYardServicesServiceImpl implements IServicesServiceImpl {
     private static final String TOTAL_TIME = "totalTime"; //$NON-NLS-1$
     private static final String TOTAL_COUNT = "totalCount"; //$NON-NLS-1$
 
+    private static final String LIST_APPLICATIONS = "list-applications"; //$NON-NLS-1$
     private static final String READ_SERVICE = "read-service"; //$NON-NLS-1$
+    private static final String READ_REFERENCE = "read-reference"; //$NON-NLS-1$
     private static final String SHOW_METRICS = "show-metrics"; //$NON-NLS-1$
 
     private static final String RESULT = "result"; //$NON-NLS-1$
@@ -83,7 +87,17 @@ public class SwitchYardServicesServiceImpl implements IServicesServiceImpl {
      */
     @Override
     public List<QName> getApplicationNames() throws UiException {
-        List<QName> apps = new ArrayList<QName>();
+        final List<QName> apps = new ArrayList<QName>();
+
+        final ModelNode operation = getBlankOperation(LIST_APPLICATIONS);
+        final ModelNode response = execute(operation);
+        final ModelNode result = response.get(RESULT);
+        if (result.isDefined()) {
+            final List<ModelNode> applications = result.asList();
+            for(ModelNode application: applications) {
+                apps.add(parseQName(asString(application)));
+            }
+        }
         return apps;
     }
 
@@ -101,14 +115,14 @@ public class SwitchYardServicesServiceImpl implements IServicesServiceImpl {
         final String serviceName = filters.getServiceName();
 
         final ModelNode operation = getBlankOperation(READ_SERVICE);
-        if (applicationName != null) {
+        if (isSet(applicationName)) {
             operation.get(APPLICATION_NAME).set(applicationName);
         }
-        if (serviceName != null) {
+        if (isSet(serviceName)) {
             operation.get(SERVICE_NAME).set(serviceName);
         }
 
-        final Map<String, Map<String, BigDecimal>> averageDurations = getAverageDuration(applicationName, serviceName);
+        final Map<String, Map<String, BigDecimal>> averageDurations = getAverageDuration(applicationName, serviceName, "service"); //$NON-NLS-1$
 
         final ModelNode response = execute(operation);
         final ModelNode result = response.get().get(RESULT);
@@ -134,32 +148,37 @@ public class SwitchYardServicesServiceImpl implements IServicesServiceImpl {
     public ReferenceResultSetBean findReferences(
             ServicesFilterBean filters, int page, String sortColumn,
             boolean ascending) throws UiException {
-        ReferenceResultSetBean rval = new ReferenceResultSetBean();
-        List<ReferenceSummaryBean> services = new ArrayList<ReferenceSummaryBean>();
-        rval.setServices(services);
-        rval.setItemsPerPage(20);
-        rval.setStartIndex(0);
-        rval.setTotalResults(2);
+        final ReferenceResultSetBean referenceResult = new ReferenceResultSetBean();
+        final List<ReferenceSummaryBean> references = new ArrayList<ReferenceSummaryBean>();
 
-        ReferenceSummaryBean reference = new ReferenceSummaryBean();
-        reference.setReferenceId("1"); //$NON-NLS-1$
-        reference.setName("CreateApplicationService"); //$NON-NLS-1$
-        reference.setApplication("Contract"); //$NON-NLS-1$
-        reference.setIface("org.jboss.demos.services.ICreateApplication"); //$NON-NLS-1$
-        reference.setBindings("SOAP, JMS"); //$NON-NLS-1$
-        reference.setAverageDuration(2837l);
-        services.add(reference);
+        final String applicationName = filters.getApplicationName();
+        final String serviceName = filters.getServiceName();
 
-        reference = new ReferenceSummaryBean();
-        reference.setReferenceId("2"); //$NON-NLS-1$
-        reference.setName("CreateQuoteService"); //$NON-NLS-1$
-        reference.setApplication("Contract"); //$NON-NLS-1$
-        reference.setIface("org.jboss.demos.services.ICreateQuote"); //$NON-NLS-1$
-        reference.setBindings("SOAP"); //$NON-NLS-1$
-        reference.setAverageDuration(2837l);
-        services.add(reference);
+        final ModelNode operation = getBlankOperation(READ_REFERENCE);
+        if (isSet(applicationName)) {
+            operation.get(APPLICATION_NAME).set(applicationName);
+        }
+        if (serviceName != null) {
+            operation.get(SERVICE_NAME).set(serviceName);
+        }
 
-        return rval;
+        final Map<String, Map<String, BigDecimal>> averageDurations = getAverageDuration(applicationName, serviceName, "reference"); //$NON-NLS-1$
+
+        final ModelNode response = execute(operation);
+        final ModelNode result = response.get().get(RESULT);
+        if (result.isDefined()) {
+            for (final ModelNode referenceNode: result.asList()) {
+                final ReferenceSummaryBean reference = createReferenceSummaryBean(referenceNode, averageDurations);
+                if (reference != null) {
+                    references.add(reference);
+                }
+            }
+        }
+        referenceResult.setReferences(references);
+        referenceResult.setItemsPerPage(references.size());
+        referenceResult.setStartIndex(0);
+        referenceResult.setTotalResults(references.size());
+        return referenceResult;
     }
 
     /**
@@ -187,9 +206,9 @@ public class SwitchYardServicesServiceImpl implements IServicesServiceImpl {
                     serviceResult.setServiceId(uuid);
                     serviceResult.setApplication(parseQName(applicationName));
                     serviceResult.setName(parseQName(serviceName));
-                    serviceResult.setServiceInterface(serviceNode.get(INTERFACE).asString());
+                    serviceResult.setServiceInterface(asString(serviceNode.get(INTERFACE)));
 
-                    final ModelNode metrics = getServiceMetrics(applicationName, serviceName);
+                    final ModelNode metrics = getMetrics(applicationName, serviceName, "service"); //$NON-NLS-1$
                     if (metrics.isDefined()) {
                         serviceResult.setSuccessCount(metrics.get(SUCCESS_COUNT).asLong());
                         serviceResult.setFaultCount(metrics.get(FAULT_COUNT).asLong());
@@ -207,8 +226,8 @@ public class SwitchYardServicesServiceImpl implements IServicesServiceImpl {
                             final List<GatewayMetric> gatewayMetrics = new ArrayList<GatewayMetric>();
                             for (ModelNode gateway: gateways.asList()) {
                                 final GatewayMetric gatewayMetric = new GatewayMetric();
-                                gatewayMetric.setName(gateway.get(NAME).asString());
-                                gatewayMetric.setType(gateway.get(TYPE).asString());
+                                gatewayMetric.setName(asString(gateway.get(NAME)));
+                                gatewayMetric.setType(asString(gateway.get(TYPE)));
                                 gatewayMetric.setAverageTime(gateway.get(AVERAGE_TIME).asLong());
                                 gatewayMetric.setMessageCount(gateway.get(TOTAL_COUNT).asLong());
                                 if (systemFaultCount > 0) {
@@ -237,21 +256,71 @@ public class SwitchYardServicesServiceImpl implements IServicesServiceImpl {
      * @see org.overlord.monitoring.ui.server.services.IServicesServiceImpl#getReference(java.lang.String)
      */
     @Override
-    public ReferenceBean getReference(String serviceId) throws UiException {
-        ReferenceBean reference = new ReferenceBean();
-        reference.setReferenceId("1"); //$NON-NLS-1$
-        reference.setName(new QName("urn:jboss:demo:services", "CreateApplicationService")); //$NON-NLS-1$ //$NON-NLS-2$
-        reference.setApplication(new QName("urn:jboss:demos:applications", "Contract")); //$NON-NLS-1$ //$NON-NLS-2$
-        reference.setServiceInterface("org.jboss.demos.services.ICreateApplication"); //$NON-NLS-1$
-        reference.setSuccessCount(83);
-        reference.setFaultCount(4);
-        reference.setTotalTime(804);
-        reference.setAverageTime(41);
-        reference.setMinTime(3);
-        reference.setMaxTime(101);
-        reference.addGatewayMetric("_CreateApplicationWebservice_soap1", "soap", 87, 42, 90, 0); //$NON-NLS-1$ //$NON-NLS-2$
-        reference.addGatewayMetric("_CreateApplicationWebservice_jms1", "jms", 13, 35, 10, 0); //$NON-NLS-1$ //$NON-NLS-2$
-        return reference;
+    public ReferenceBean getReference(final String referenceId) throws UiException {
+        final ReferenceBean referenceResult = new ReferenceBean();
+
+        final List<String> ids = parseId(referenceId);
+        if (ids.size() == 2) {
+            final String applicationName = ids.get(0);
+            final String referenceName = ids.get(1);
+
+            final ModelNode operation = getBlankOperation(READ_REFERENCE);
+            operation.get(APPLICATION_NAME).set(applicationName);
+            operation.get(REFERENCE_NAME).set(referenceName);
+
+            final ModelNode response = execute(operation);
+            final ModelNode result = response.get().get(RESULT);
+            if (result.isDefined()) {
+                final List<ModelNode> references = result.asList();
+                if ((references != null) && (references.size() == 1)) {
+                    final ModelNode referenceNode = references.get(0);
+                    referenceResult.setReferenceId(referenceId);
+                    referenceResult.setApplication(parseQName(applicationName));
+                    referenceResult.setName(parseQName(referenceName));
+                    referenceResult.setReferenceInterface(asString(referenceNode.get(INTERFACE)));
+
+                    final ModelNode metrics = getMetrics(applicationName, referenceName, "reference"); //$NON-NLS-1$
+                    if (metrics.isDefined()) {
+                        referenceResult.setSuccessCount(metrics.get(SUCCESS_COUNT).asLong());
+                        referenceResult.setFaultCount(metrics.get(FAULT_COUNT).asLong());
+                        final long totalTime = metrics.get(TOTAL_TIME).asLong();
+                        referenceResult.setTotalTime(totalTime);
+                        referenceResult.setAverageTime(metrics.get(AVERAGE_TIME).asLong());
+                        referenceResult.setMaxTime(metrics.get(MAX_TIME).asLong());
+                        referenceResult.setMinTime(metrics.get(MIN_TIME).asLong());
+
+                        final ModelNode gateways = metrics.get(GATEWAYS);
+                        if (gateways.isDefined()) {
+                            final ModelNode systemMetrics = getSystemMetrics();
+                            final int systemFaultCount = systemMetrics.isDefined() ? systemMetrics.get(FAULT_COUNT).asInt() : 0;
+                            final long systemTotalTime = systemMetrics.isDefined() ? systemMetrics.get(TOTAL_TIME).asLong() : 0L;
+                            final List<GatewayMetric> gatewayMetrics = new ArrayList<GatewayMetric>();
+                            for (ModelNode gateway: gateways.asList()) {
+                                final GatewayMetric gatewayMetric = new GatewayMetric();
+                                gatewayMetric.setName(asString(gateway.get(NAME)));
+                                gatewayMetric.setType(asString(gateway.get(TYPE)));
+                                gatewayMetric.setAverageTime(gateway.get(AVERAGE_TIME).asLong());
+                                gatewayMetric.setMessageCount(gateway.get(TOTAL_COUNT).asLong());
+                                if (systemFaultCount > 0) {
+                                    gatewayMetric.setFaultPercent((int)(100 * gateway.get(FAULT_COUNT).asLong() / systemFaultCount));
+                                } else {
+                                    gatewayMetric.setFaultPercent(0);
+                                }
+                                if (systemTotalTime > 0) {
+                                    gatewayMetric.setTimePercent((int)(100 * gateway.get(TOTAL_TIME).asLong() / systemTotalTime));
+                                } else {
+                                    gatewayMetric.setTimePercent(0);
+                                }
+                                gatewayMetrics.add(gatewayMetric);
+                            }
+                            referenceResult.setGatewayMetrics(gatewayMetrics);
+                        }
+                    }
+                    return referenceResult;
+                }
+            }
+        }
+        return null;
     }
 
     private static ModelNode getBlankOperation(final String operation) {
@@ -263,28 +332,28 @@ public class SwitchYardServicesServiceImpl implements IServicesServiceImpl {
         return modelNode;
     }
 
-    private static Map<String, Map<String, BigDecimal>> getAverageDuration(final String applicationName, final String serviceName) throws UiException {
+    private static Map<String, Map<String, BigDecimal>> getAverageDuration(final String applicationName, final String serviceName, final String type) throws UiException {
         final Map<String, Map<String, BigDecimal>> averageDurations = new TreeMap<String, Map<String, BigDecimal>>();
 
         final ModelNode operation = getBlankOperation(SHOW_METRICS);
-        if (serviceName != null) {
+        if (isSet(serviceName)) {
             operation.get(SERVICE_NAME).set(serviceName);
         } else {
             operation.get(SERVICE_NAME).set("*"); //$NON-NLS-1$
         }
-        operation.get(TYPE).set("service"); //$NON-NLS-1$
+        operation.get(TYPE).set(type);
         final ModelNode response = execute(operation);
         final ModelNode result = response.get().get(RESULT);
         if (result.isDefined()) {
             for (final ModelNode metricsNode: result.asList()) {
-                final String nodeApplicationName = metricsNode.get(APPLICATION).asString();
+                final String nodeApplicationName = asString(metricsNode.get(APPLICATION));
                 if ((applicationName == null) || applicationName.equals(nodeApplicationName)) {
                     Map<String, BigDecimal> applicationMap = averageDurations.get(nodeApplicationName);
                     if (applicationMap == null) {
                         applicationMap = new TreeMap<String, BigDecimal>();
                         averageDurations.put(nodeApplicationName, applicationMap);
                     }
-                    final String nodeServiceName = metricsNode.get(NAME).asString();
+                    final String nodeServiceName = asString(metricsNode.get(NAME));
 
                     applicationMap.put(nodeServiceName, metricsNode.get(AVERAGE_TIME).asBigDecimal());
                 }
@@ -293,15 +362,15 @@ public class SwitchYardServicesServiceImpl implements IServicesServiceImpl {
         return averageDurations;
     }
 
-    private static ModelNode getServiceMetrics(final String applicationName, final String serviceName) throws UiException {
+    private static ModelNode getMetrics(final String applicationName, final String serviceName, final String type) throws UiException {
         final ModelNode operation = getBlankOperation(SHOW_METRICS);
         operation.get(SERVICE_NAME).set(serviceName);
-        operation.get(TYPE).set("service"); //$NON-NLS-1$
+        operation.get(TYPE).set(type);
         final ModelNode response = execute(operation);
         final ModelNode result = response.get().get(RESULT);
         if (result.isDefined()) {
             for (final ModelNode metricsNode: result.asList()) {
-                final String nodeApplicationName = metricsNode.get(APPLICATION).asString();
+                final String nodeApplicationName = asString(metricsNode.get(APPLICATION));
                 if (applicationName.equals(nodeApplicationName)) {
                     return metricsNode;
                 }
@@ -326,10 +395,10 @@ public class SwitchYardServicesServiceImpl implements IServicesServiceImpl {
     private static ServiceSummaryBean createServiceSummaryBean(final ModelNode serviceNode, final Map<String, Map<String, BigDecimal>> averageDurations) throws UiException {
         final ServiceSummaryBean result = new ServiceSummaryBean();
 
-        final String name = serviceNode.get(NAME).asString();
-        final String application = serviceNode.get(APPLICATION).asString();
-        final String intface = serviceNode.get(INTERFACE).asString();
-        final String promotedService = serviceNode.get(PROMOTED_SERVICE).asString();
+        final String name = asString(serviceNode.get(NAME));
+        final String application = asString(serviceNode.get(APPLICATION));
+        final String intface = asString(serviceNode.get(INTERFACE));
+        final String promotedService = asString(serviceNode.get(PROMOTED_SERVICE));
 
         result.setServiceId(generateId(application, name));
         result.setApplication(application);
@@ -340,7 +409,7 @@ public class SwitchYardServicesServiceImpl implements IServicesServiceImpl {
         if (!gateways.isEmpty()) {
             final StringBuilder sb = new StringBuilder();
             for(ModelNode gateway: gateways) {
-                final String type = gateway.get(TYPE).asString();
+                final String type = asString(gateway.get(TYPE));
                 if (type != null) {
                     sb.append(type).append(", "); //$NON-NLS-1$
                 }
@@ -356,6 +425,47 @@ public class SwitchYardServicesServiceImpl implements IServicesServiceImpl {
             final Map<String, BigDecimal> applicationMap = averageDurations.get(application);
             if (applicationMap != null) {
                 final BigDecimal averageDuration = applicationMap.get(promotedService);
+                if (averageDuration != null) {
+                    result.setAverageDuration(averageDuration.longValue());
+                }
+            }
+        }
+        return result;
+    }
+
+    private static ReferenceSummaryBean createReferenceSummaryBean(final ModelNode referenceNode, final Map<String, Map<String, BigDecimal>> averageDurations) throws UiException {
+        final ReferenceSummaryBean result = new ReferenceSummaryBean();
+
+        final String name = asString(referenceNode.get(NAME));
+        final String application = asString(referenceNode.get(APPLICATION));
+        final String intface = asString(referenceNode.get(INTERFACE));
+        final String promotedReference = asString(referenceNode.get(PROMOTED_REFERENCE));
+
+        result.setReferenceId(generateId(application, name));
+        result.setApplication(application);
+        result.setName(name);
+        result.setIface(intface);
+
+        final List<ModelNode> gateways = referenceNode.get(GATEWAYS).asList();
+        if (!gateways.isEmpty()) {
+            final StringBuilder sb = new StringBuilder();
+            for(ModelNode gateway: gateways) {
+                final String type = asString(gateway.get(TYPE));
+                if (type != null) {
+                    sb.append(type).append(", "); //$NON-NLS-1$
+                }
+            }
+            final int length = sb.length();
+            if (length > 0) {
+                sb.setLength(length-2);
+            }
+            result.setBindings(sb.toString());
+        }
+
+        if (promotedReference != null) {
+            final Map<String, BigDecimal> applicationMap = averageDurations.get(application);
+            if (applicationMap != null) {
+                final BigDecimal averageDuration = applicationMap.get(promotedReference);
                 if (averageDuration != null) {
                     result.setAverageDuration(averageDuration.longValue());
                 }
@@ -427,5 +537,13 @@ public class SwitchYardServicesServiceImpl implements IServicesServiceImpl {
     private static QName parseQName(final String value) {
         final javax.xml.namespace.QName qname = javax.xml.namespace.QName.valueOf(value);
         return new QName(qname.getNamespaceURI(), qname.getLocalPart());
+    }
+
+    private static boolean isSet(final String name) {
+        return ((name != null) && (name.length() > 0));
+    }
+
+    private static String asString(final ModelNode modelNode) {
+        return (modelNode.isDefined() ? modelNode.asString() : null);
     }
 }

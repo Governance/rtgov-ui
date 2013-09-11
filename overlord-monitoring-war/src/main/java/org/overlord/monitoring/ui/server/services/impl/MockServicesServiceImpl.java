@@ -100,7 +100,7 @@ public class MockServicesServiceImpl implements IServicesServiceImpl {
             String sortColumn, boolean ascending) throws UiException {
         ReferenceResultSetBean rval = new ReferenceResultSetBean();
         List<ReferenceSummaryBean> services = new ArrayList<ReferenceSummaryBean>();
-        rval.setServices(services);
+        rval.setReferences(services);
         rval.setItemsPerPage(20);
         rval.setStartIndex(0);
         rval.setTotalResults(2);
@@ -156,7 +156,7 @@ public class MockServicesServiceImpl implements IServicesServiceImpl {
         reference.setReferenceId("1"); //$NON-NLS-1$
         reference.setName(new QName("urn:jboss:demo:services", "CreateApplicationService")); //$NON-NLS-1$ //$NON-NLS-2$
         reference.setApplication(new QName("urn:jboss:demos:applications", "Contract")); //$NON-NLS-1$ //$NON-NLS-2$
-        reference.setServiceInterface("org.jboss.demos.services.ICreateApplication"); //$NON-NLS-1$
+        reference.setReferenceInterface("org.jboss.demos.services.ICreateApplication"); //$NON-NLS-1$
         reference.setSuccessCount(83);
         reference.setFaultCount(4);
         reference.setTotalTime(804);

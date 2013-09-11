@@ -44,14 +44,14 @@ public class ReferenceResultSetBean implements Serializable {
     /**
      * @return the references
      */
-    public List<ReferenceSummaryBean> getServices() {
+    public List<ReferenceSummaryBean> getReferences() {
         return references;
     }
 
     /**
      * @param references the referencess to set
      */
-    public void setServices(List<ReferenceSummaryBean> references) {
+    public void setReferences(List<ReferenceSummaryBean> references) {
         this.references = references;
     }
 
