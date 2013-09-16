@@ -36,7 +36,7 @@ public class ReferenceBean implements Serializable {
     private String referenceId;
     private QName name;
     private QName application;
-    private String serviceInterface;
+    private String referenceInterface;
     private long successCount;
     private long faultCount;
     private long totalTime;
@@ -52,7 +52,7 @@ public class ReferenceBean implements Serializable {
     }
 
     /**
-     * @return the serviceId
+     * @return the referenceId
      */
     public String getReferenceId() {
         return referenceId;
@@ -73,10 +73,10 @@ public class ReferenceBean implements Serializable {
     }
 
     /**
-     * @return the serviceInterface
+     * @return the referenceInterface
      */
-    public String getServiceInterface() {
-        return serviceInterface;
+    public String getReferenceInterface() {
+        return referenceInterface;
     }
 
     /**
@@ -122,10 +122,10 @@ public class ReferenceBean implements Serializable {
     }
 
     /**
-     * @param serviceId the serviceId to set
+     * @param referenceId the referenceId to set
      */
-    public void setReferenceId(String serviceId) {
-        this.referenceId = serviceId;
+    public void setReferenceId(String referenceId) {
+        this.referenceId = referenceId;
     }
 
     /**
@@ -143,10 +143,10 @@ public class ReferenceBean implements Serializable {
     }
 
     /**
-     * @param serviceInterface the serviceInterface to set
+     * @param referenceInterface the referenceInterface to set
      */
-    public void setServiceInterface(String serviceInterface) {
-        this.serviceInterface = serviceInterface;
+    public void setReferenceInterface(String referenceInterface) {
+        this.referenceInterface = referenceInterface;
     }
 
     /**
