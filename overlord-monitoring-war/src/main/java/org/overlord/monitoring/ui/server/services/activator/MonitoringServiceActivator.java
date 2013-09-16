@@ -32,6 +32,7 @@ import org.jboss.msc.service.StartContext;
 import org.jboss.msc.service.StartException;
 import org.jboss.msc.service.StopContext;
 import org.jboss.msc.value.InjectedValue;
+import org.overlord.monitoring.ui.server.i18n.Messages;
 
 /**
  * ServiceActivator to gain access to the ModelController, based on a post by John Mazz.
@@ -39,6 +40,7 @@ import org.jboss.msc.value.InjectedValue;
  * @author kconner@redhat.com
  */
 public class MonitoringServiceActivator  implements ServiceActivator {
+   private static volatile Messages i18n = new Messages();
    private static volatile ModelController controller;
    private static volatile ExecutorService executor;
 
@@ -53,7 +55,7 @@ public class MonitoringServiceActivator  implements ServiceActivator {
    @Override
    public void activate(ServiceActivatorContext context) throws ServiceRegistryException {
       final GetModelControllerService service = new GetModelControllerService();
-      LOG.info("Activating monitoring service") ;
+      LOG.info(i18n.format("MonitoringServiceActivator.Activating")); //$NON-NLS-1$
       context
           .getServiceTarget()
           .addService(ServiceName.of("management", "client", "getter"), service) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -73,7 +75,7 @@ public class MonitoringServiceActivator  implements ServiceActivator {
 
       @Override
       public void start(StartContext context) throws StartException {
-         LOG.info("Starting GetModelControllerService") ;
+         LOG.info(i18n.format("MonitoringServiceActivator.Starting")); //$NON-NLS-1$
          MonitoringServiceActivator.executor = Executors.newFixedThreadPool(5, new ThreadFactory() {
             @Override
             public Thread newThread(Runnable r) {
@@ -84,20 +86,20 @@ public class MonitoringServiceActivator  implements ServiceActivator {
             }
          });
          MonitoringServiceActivator.controller = modelControllerValue.getValue();
-         LOG.info("Started GetModelControllerService") ;
+         LOG.info(i18n.format("MonitoringServiceActivator.Started")); //$NON-NLS-1$
       }
 
 
       @Override
       public void stop(StopContext context) {
-         LOG.info("Stopping GetModelControllerService") ;
+         LOG.info(i18n.format("MonitoringServiceActivator.Stopping")); //$NON-NLS-1$
          try {
             MonitoringServiceActivator.executor.shutdownNow();
          } finally {
             MonitoringServiceActivator.executor = null;
             MonitoringServiceActivator.controller = null;
          }
-         LOG.info("Stopped GetModelControllerService") ;
+         LOG.info(i18n.format("MonitoringServiceActivator.Stopped")); //$NON-NLS-1$
       }
    }
 }

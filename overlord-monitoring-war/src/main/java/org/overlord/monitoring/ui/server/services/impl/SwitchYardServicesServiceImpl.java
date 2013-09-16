@@ -36,6 +36,7 @@ import org.overlord.monitoring.ui.client.shared.beans.ServiceResultSetBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServiceSummaryBean;
 import org.overlord.monitoring.ui.client.shared.beans.ServicesFilterBean;
 import org.overlord.monitoring.ui.client.shared.exceptions.UiException;
+import org.overlord.monitoring.ui.server.i18n.Messages;
 import org.overlord.monitoring.ui.server.services.IServicesServiceImpl;
 import org.overlord.monitoring.ui.server.services.activator.MonitoringServiceActivator;
 
@@ -47,6 +48,8 @@ import org.overlord.monitoring.ui.server.services.activator.MonitoringServiceAct
 @ApplicationScoped
 @Alternative
 public class SwitchYardServicesServiceImpl implements IServicesServiceImpl {
+    private static volatile Messages i18n = new Messages();
+
     private static final String SUBSYSTEM = "subsystem"; //$NON-NLS-1$
     private static final String SWITCHYARD = "switchyard"; //$NON-NLS-1$
 
@@ -368,7 +371,7 @@ public class SwitchYardServicesServiceImpl implements IServicesServiceImpl {
         try {
             return MonitoringServiceActivator.getClient().execute(operation);
         } catch (final IOException ioe) {
-            throw new UiException("Failed to execute DMR operation", ioe);
+            throw new UiException(i18n.format("SwitchYardServicesServiceImpl.DMROperationFailed"), ioe); //$NON-NLS-1$
         }
     }
 
