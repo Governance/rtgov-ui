@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title data-role="dummy">Overlord Monitoring - Situations</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+    <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap.min.css" rel="stylesheet" media="screen"></link>
+    <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen"></link>
+    <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap-datepicker.css" rel="stylesheet" media="screen"></link>
+    <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap-fileupload.min.css" rel="stylesheet" media="screen"></link>
+    <link href="../../../../../../../../webapp/css/overlord-monitoring.css" rel="stylesheet"></link>
+    <link href="../../../../../../../../webapp/css/overlord-monitoring-responsive.css" rel="stylesheet"></link>
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <script type="text/javascript" src="../../../../../../../../webapp/jquery-1.8.3/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="../../../../../../../../webapp/bootstrap-2.3.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../../../../../webapp/bootstrap-2.3.1/js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="../../../../../../../../webapp/bootstrap-2.3.1/js/bootstrap-fileupload.min.js"></script>
+    <script type="text/javascript" src="../../../../../../../../webapp/js/overlord-monitoring-responsive.js"></script>
+  </head>
+
+  <body>
+    <div id="page" data-field="page">
+
+      <!-- Content area with footer-->
+      <div id="page-content" class="container-fluid">
+
+        <!-- Breadcrumbs -->
+        <div class="row-fluid">
+          <ul class="breadcrumb">
+            <li><a data-field="back-to-dashboard" href="dashboard.html" data-i18n-key="breadcrumb.dashboard">Dashboard</a> <span class="divider">/<span data-role="dummy" /></span></li>
+            <li class="dropdown active">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                  <span data-i18n-key="breadcrumb.situations">Situations</span> <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a data-field="to-services" href="services.html" data-i18n-key="services">Services</a></li>
+                </ul>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Page content -->
+        <div class="row-fluid">
+          <!-- The Filter Sidebar -->
+          <div id="filter-sidebar" data-field="filter-sidebar" class="span3 filter-sidebar">
+            <div class="row-fluid filter-header">
+              <a class="span12" data-toggle="slide" data-target="#filters"><span data-i18n-key="deployment-filters">Filters</span> <span class="mobile-only caret pull-right"></span></a>
+            </div>
+            <!-- The Filters -->
+            <div id="filters" class="row-fluid close-on-mobile closed-on-mobile open-on-desktop">
+              <div class="span12">
+                <div class="filter-inner">
+                  <form class="" onSubmit="return false;">
+                    <div class="controls controls-row">
+                      <label class="filter-label" data-i18n-key="severity">Severity</label>
+                      <select data-field="severity" class="selectpicker span12">
+                        <option value="" data-i18n-key="any">Any</option>
+                        <option value="" data-i18n-key="low">Low</option>
+                        <option value="" data-i18n-key="medium">Medium</option>
+                        <option value="" data-i18n-key="high">High</option>
+                        <option value="" data-i18n-key="critical">Critical</option>
+                      </select>
+                    </div>
+                    <div class="controls controls-row">
+                      <label class="filter-label" data-i18n-key="type">Type</label>
+                      <input data-field="type" class="span12" type="text" placeholder="Any"></input>
+                    </div>
+                    <div class="controls controls-row">
+                      <label class="filter-label" data-i18n-key="timestamp">Timestamp</label>
+                      <input data-field="timestampFrom" class="span5 filter-date" type="text" placeholder="Any" readonly="readonly"></input>
+                      <span class="span2 desktop-only" style="padding-top: 4px; text-align: center" data-i18n-key="to">to</span>
+                      <input data-field="timestampTo" class="span5 filter-date" type="text" placeholder="Any" readonly="readonly"></input>
+                    </div>
+                    <div class="controls">
+                      <button data-field="clearFilters" class="btn btn-focus btn-clear" data-i18n-key="clear-all-filters">Clear All Filters</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- The Situations table -->
+          <div class="span9">
+            <div class="row-fluid faults">
+              <div class="span12 overlord-actions">
+                <button class="btn spacer" style="visibility:hidden"><i class="icon-refresh"></i></button>
+                <button data-field="btn-refresh" class="btn pull-right"><i class="icon-refresh"></i></button>
+                <div class="pull-right sp4n-label">
+                  <span data-i18n-key="displaying">Displaying</span>
+                  <span data-field="faults-range" data-role="dummy">1-11</span>
+                  <span data-i18n-key="of">of</span>
+                  <span data-field="faults-total" data-role="dummy">37</span>
+                </div>
+              </div>
+              <div data-field="faults-none" style="display:none" class="overlord-none">
+                <span data-i18n-key="none-found">No situations found.</span>
+              </div>
+              <div data-field="faults-searching" style="display:none" class="overlord-searching">
+                <span class="spinner" data-i18n-key="finding-situations">Finding situations, please wait...</span>
+              </div>
+              <table data-field="situations-table" class="overlord-table table table-striped table-condensed table-hover">
+              <thead>
+                <tr>
+                  <th data-i18n-key="severity-column"><!-- Severity (icon) -->!</th>
+                  <th data-i18n-key="type">Type</th>
+                  <th data-i18n-key="subject">Subject</th>
+                  <th data-i18n-key="timestamp">Timestamp</th>
+                  <th data-i18n-key="description">Description</th>
+                </tr>
+              </thead>
+              <tbody data-role="dummy">
+                <tr>
+                  <td><div class="icon icon-severity-critical"></div></td>
+                  <td><a href="#" data-toggle="popover" data-html="true" data-original-title="Properties" data-trigger="hover" data-content="&lt;table class='table table-condensed table-hover table-striped' style='border-right: 1px solid rgb(211, 211, 211); border-bottom: 1px solid rgb(211, 211, 211);'>&lt;tbody>&lt;tr>&lt;td>Property 1:&lt;/td>&lt;td>Property One Value&lt;/td>&lt;/tr>&lt;tr>&lt;td>Property 2:&lt;/td>&lt;td>Property Two Value&lt;/td>&lt;/tr>&lt;/tbody>&lt;/table>">Rate Limit Exceeded</a></td>
+                  <td>{urn:namespace}ImportantService|VeryImportantOperation</td>
+                  <td>08/20/2013 @ 5:22:47</td>
+                  <td>Some description of the Situation goes here in this column so that it can be read by the user.</td>
+                </tr>
+                <tr>
+                  <td><div class="icon icon-severity-high"></div></td>
+                  <td>SLA Violation</td>
+                  <td>{urn:namespace}ServiceA|OperationB</td>
+                  <td>08/19/2013 @ 14:33:47</td>
+                  <td>Some description of the Situation goes here in this column so that it can be read by the user.</td>
+                </tr>
+                <tr>
+                  <td><div class="icon icon-severity-high"></div></td>
+                  <td>SLA Violation</td>
+                  <td>{urn:namespace}ServiceA|OperationB</td>
+                  <td>08/19/2013 @ 14:35:47</td>
+                  <td>Some description of the Situation goes here in this column so that it can be read by the user.</td>
+                </tr>
+                <tr>
+                  <td><div class="icon icon-severity-low"></div></td>
+                  <td>Rate Limit Approaching</td>
+                  <td>{urn:namespace}SomeService|AnotherOperation</td>
+                  <td>08/15/2013 @ 12:11:42</td>
+                  <td>Some description of the Situation goes here in this column so that it can be read by the user.</td>
+                </tr>
+              </tbody>
+              </table>
+              <div data-field="faults-pager" class="pagination overlord-pager" data-role="dummy">
+                <ul>
+                  <li class="disabled"><a>&#x00AB;</a></li>
+                  <li class="active"><a>1</a></li>
+                  <li><a>2</a></li>
+                  <li><a>3</a></li>
+                  <li><a>4</a></li>
+                  <li><a>&#x00BB;</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+          <hr />
+          <p data-i18n-key="footer">&copy; JBoss Overlord 2013</p>
+        </footer>
+      </div> <!-- /container -->
+      
+    </div> <!-- /page -->
+
+
+    <!-- Some scripting to add functionality to the live template -->
+    <script>
+      $(document).ready(function() {
+          $("[data-toggle='tooltip']").tooltip();
+          $("[data-toggle='popover']").popover();
+          $('.filter-date').datepicker({
+              autoclose: true,
+              todayBtn: true,
+              todayHighlight: true
+          });
+      });
+    </script>
+
+  </body>
+</html>
