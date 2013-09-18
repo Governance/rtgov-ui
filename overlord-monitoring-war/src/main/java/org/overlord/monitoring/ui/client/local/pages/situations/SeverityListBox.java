@@ -41,10 +41,10 @@ public class SeverityListBox extends AbstractFilterListBox {
     @Override
     protected void configureItems() {
         this.addItem(i18n.format("any"), ""); //$NON-NLS-1$ //$NON-NLS-2$
-        this.addItem("Low", "low"); //$NON-NLS-2$
-        this.addItem("Medium", "medium"); //$NON-NLS-2$
-        this.addItem("High", "high"); //$NON-NLS-2$
-        this.addItem("Critical", "critical"); //$NON-NLS-2$
+        this.addItem(i18n.format("severity.low"), "low"); //$NON-NLS-1$ //$NON-NLS-2$
+        this.addItem(i18n.format("severity.medium"), "medium"); //$NON-NLS-1$ //$NON-NLS-2$
+        this.addItem(i18n.format("severity.high"), "high"); //$NON-NLS-1$ //$NON-NLS-2$
+        this.addItem(i18n.format("severity.critical"), "critical"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**

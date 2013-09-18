@@ -13,5 +13,10 @@
   "services.error-loading" : "Error loading services.",
   "situations.error-loading" : "Error loading situations.",
   "reference-details.error-getting-detail-info" : "Error getting component service detail information.",
-  "service-details.error-getting-detail-info" : "Error getting service detail information."
+  "service-details.error-getting-detail-info" : "Error getting service detail information.",
+  "severity.low" : "Low",
+  "severity.medium" : "Medium",
+  "severity.high" : "High",
+  "severity.critical" : "Critical",
+  "situation-table.properties" : "Properties"
 }

@@ -44,8 +44,6 @@ public class SituationTable extends TemplatedWidgetTable {
 
     @Inject
     protected ClientMessages i18n;
-//    @Inject
-//    protected TransitionAnchorFactory<ServiceDetailsPage> toDetailsPageLinkFactory;
 
     /**
      * Constructor.
@@ -92,7 +90,7 @@ public class SituationTable extends TemplatedWidgetTable {
             properties.getElement().setAttribute("data-toggle", "popover"); //$NON-NLS-1$ //$NON-NLS-2$
             properties.getElement().setAttribute("data-placement", "left"); //$NON-NLS-1$ //$NON-NLS-2$
             properties.getElement().setAttribute("data-html", "true"); //$NON-NLS-1$ //$NON-NLS-2$
-            properties.getElement().setAttribute("data-original-title", "Properties"); //$NON-NLS-1$
+            properties.getElement().setAttribute("data-original-title", i18n.format("situation-table.properties")); //$NON-NLS-1$ //$NON-NLS-2$
             properties.getElement().setAttribute("data-trigger", "hover"); //$NON-NLS-1$ //$NON-NLS-2$
             properties.getElement().setAttribute("data-content", createPropertiesTableHtml(situationSummaryBean.getProperties())); //$NON-NLS-1$
             properties.setHTML("<div class=\"icon icon-properties\"></div>"); //$NON-NLS-1$
