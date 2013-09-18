@@ -72,8 +72,8 @@ public class ServicesPage extends AbstractPage {
     // Breadcrumbs
     @Inject @DataField("back-to-dashboard")
     private TransitionAnchor<DashboardPage> toDashboardPage;
-    @Inject @DataField("to-faults")
-    private TransitionAnchor<FaultsPage> toFaultsPage;
+    @Inject @DataField("to-situations")
+    private TransitionAnchor<SituationsPage> toSituationsPage;
 
     @Inject @DataField("filter-sidebar")
     protected ServiceFilters filtersPanel;

@@ -21,20 +21,20 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 
 /**
- * Models the full details of a fault.
+ * Models the full details of a situation.
  *
  * @author eric.wittmann@redhat.com
  */
 @Portable
 @Bindable
-public class FaultBean extends FaultSummaryBean implements Serializable {
+public class SituationBean extends SituationSummaryBean implements Serializable {
 
-    private static final long serialVersionUID = FaultBean.class.hashCode();
+    private static final long serialVersionUID = SituationBean.class.hashCode();
 
     /**
      * Constructor.
      */
-    public FaultBean() {
+    public SituationBean() {
     }
 
 }

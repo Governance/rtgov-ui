@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.overlord.monitoring.ui.client.local.pages.faults;
+package org.overlord.monitoring.ui.client.local.pages.situations;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -21,7 +21,7 @@ import javax.inject.Inject;
 
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
-import org.overlord.monitoring.ui.client.shared.beans.FaultsFilterBean;
+import org.overlord.monitoring.ui.client.shared.beans.SituationsFilterBean;
 import org.overlord.sramp.ui.client.local.widgets.bootstrap.DateBox;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -31,39 +31,31 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.TextBox;
 
 /**
- * The faults filtersPanel sidebar.  Whenever the user changes any of the settings in
+ * The situations filtersPanel sidebar.  Whenever the user changes any of the settings in
  * the filter sidebar, a ValueChangeEvent will be fired.
  *
  * @author eric.wittmann@redhat.com
  */
-@Templated("/org/overlord/monitoring/ui/client/local/site/faults.html#filter-sidebar")
+@Templated("/org/overlord/monitoring/ui/client/local/site/situations.html#filter-sidebar")
 @Dependent
-public class FaultFilters extends Composite implements HasValueChangeHandlers<FaultsFilterBean> {
+public class SituationFilters extends Composite implements HasValueChangeHandlers<SituationsFilterBean> {
 
-    private FaultsFilterBean currentState = new FaultsFilterBean();
+    private SituationsFilterBean currentState = new SituationsFilterBean();
 
     // Owner, type, bundle name
     @Inject @DataField
-    protected ServiceNameListBox serviceName;
+    protected SeverityListBox severity;
     @Inject @DataField
-    protected TextBox faultReason;
-    @Inject @DataField
-    protected CheckBox archived;
+    protected TextBox type;
 
     @Inject @DataField
-    protected DateBox faultAfter;
+    protected DateBox timestampFrom;
     @Inject @DataField
-    protected TextBox serviceRetries;
-
-    @Inject @DataField
-    protected DateBox processingStartedFrom;
-    @Inject @DataField
-    protected DateBox processingStartedTo;
+    protected DateBox timestampTo;
 
     @Inject @DataField
     protected Anchor clearFilters;
@@ -71,7 +63,7 @@ public class FaultFilters extends Composite implements HasValueChangeHandlers<Fa
     /**
      * Constructor.
      */
-    public FaultFilters() {
+    public SituationFilters() {
     }
 
     /**
@@ -83,7 +75,7 @@ public class FaultFilters extends Composite implements HasValueChangeHandlers<Fa
         ClickHandler clearFilterHandler = new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                setValue(new FaultsFilterBean());
+                setValue(new SituationsFilterBean());
                 onFilterValueChange();
             }
         };
@@ -95,52 +87,43 @@ public class FaultFilters extends Composite implements HasValueChangeHandlers<Fa
                 onFilterValueChange();
             }
         };
-        serviceName.addValueChangeHandler(valueChangeHandler);
-        faultReason.addValueChangeHandler(valueChangeHandler);
-        archived.addValueChangeHandler(valueChangeHandler);
-        faultAfter.addValueChangeHandler(valueChangeHandler);
-        serviceRetries.addValueChangeHandler(valueChangeHandler);
-        processingStartedFrom.addValueChangeHandler(valueChangeHandler);
-        processingStartedTo.addValueChangeHandler(valueChangeHandler);
+        severity.addValueChangeHandler(valueChangeHandler);
+        type.addValueChangeHandler(valueChangeHandler);
+        timestampFrom.addValueChangeHandler(valueChangeHandler);
+        timestampTo.addValueChangeHandler(valueChangeHandler);
     }
 
     /**
      * Called whenever any filter value changes.
      */
     protected void onFilterValueChange() {
-        FaultsFilterBean newState = new FaultsFilterBean();
-        newState.setServiceName(serviceName.getValue())
-            .setFaultReason(faultReason.getValue())
-            .setArchived(archived.getValue())
-            .setFaultAfter(faultAfter.getDateValue())
-            .setServiceRetries(serviceRetries.getValue())
-            .setProcessingStartedFrom(processingStartedFrom.getDateValue())
-            .setProcessingStartedTo(processingStartedTo.getDateValue());
+        SituationsFilterBean newState = new SituationsFilterBean();
+        newState.setSeverity(severity.getValue())
+            .setType(type.getValue())
+            .setTimestampFrom(timestampFrom.getDateValue())
+            .setTimestampTo(timestampTo.getDateValue());
 
-        FaultsFilterBean oldState = this.currentState;
+        SituationsFilterBean oldState = this.currentState;
         this.currentState = newState;
         // Only fire a change event if something actually changed.
         ValueChangeEvent.fireIfNotEqual(this, oldState, currentState);
     }
 
-    /**
+    /**th
      * @return the current filter settings
      */
-    public FaultsFilterBean getValue() {
+    public SituationsFilterBean getValue() {
         return this.currentState;
     }
 
     /**
      * @param value the new filter settings
      */
-    public void setValue(FaultsFilterBean value) {
-        serviceName.setValue(value.getServiceName() == null ? "" : value.getServiceName()); //$NON-NLS-1$
-        faultReason.setValue(value.getFaultReason() == null ? "" : value.getFaultReason()); //$NON-NLS-1$
-        archived.setValue(value.isArchived());
-        faultAfter.setDateValue(value.getFaultAfter() == null ? null : value.getFaultAfter());
-        serviceRetries.setValue(value.getServiceRetries() == null ? "" : value.getServiceRetries()); //$NON-NLS-1$
-        processingStartedFrom.setDateValue(value.getProcessingStartedFrom() == null ? null : value.getProcessingStartedFrom());
-        processingStartedTo.setDateValue(value.getProcessingStartedTo() == null ? null : value.getProcessingStartedTo());
+    public void setValue(SituationsFilterBean value) {
+        severity.setValue(value.getSeverity() == null ? "" : value.getSeverity()); //$NON-NLS-1$
+        type.setValue(value.getType() == null ? "" : value.getType()); //$NON-NLS-1$
+        timestampFrom.setDateValue(value.getTimestampFrom() == null ? null : value.getTimestampFrom());
+        timestampTo.setDateValue(value.getTimestampTo() == null ? null : value.getTimestampTo());
         onFilterValueChange();
     }
 
@@ -154,7 +137,7 @@ public class FaultFilters extends Composite implements HasValueChangeHandlers<Fa
      * @see com.google.gwt.event.logical.shared.HasValueChangeHandlers#addValueChangeHandler(com.google.gwt.event.logical.shared.ValueChangeHandler)
      */
     @Override
-    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<FaultsFilterBean> handler) {
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<SituationsFilterBean> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
     }
 

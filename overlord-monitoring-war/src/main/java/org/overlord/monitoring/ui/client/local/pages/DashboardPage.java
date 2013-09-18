@@ -37,8 +37,8 @@ public class DashboardPage extends AbstractPage {
 
     @Inject @DataField("to-services-page")
     private TransitionAnchor<ServicesPage> toServicesPage;
-    @Inject @DataField("to-faults-page")
-    private TransitionAnchor<FaultsPage> toFaultsPage;
+    @Inject @DataField("to-situations-page")
+    private TransitionAnchor<SituationsPage> toSituationsPage;
 
     /**
      * Constructor.

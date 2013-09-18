@@ -369,6 +369,12 @@ footer hr {
 .icon-retry {
   background-image: url("../images/icon-retry.png");
 }
+.icon-context {
+  background-image: url("../images/icon-context.png");
+}
+.icon-properties {
+  background-image: url("../images/icon-properties.png");
+}
 
 .icon-severity-low {
   background-image: url("../images/icon-warning-low.png");

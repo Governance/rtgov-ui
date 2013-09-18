@@ -1,0 +1,144 @@
+/*
+ * Copyright 2013 JBoss Inc
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.overlord.monitoring.ui.client.local.pages.situations;
+
+import java.util.Map;
+import java.util.Map.Entry;
+
+import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
+
+import org.overlord.monitoring.ui.client.local.ClientMessages;
+import org.overlord.monitoring.ui.client.shared.beans.SituationSummaryBean;
+import org.overlord.sramp.ui.client.local.widgets.common.TemplatedWidgetTable;
+
+import com.google.gwt.event.logical.shared.AttachEvent;
+import com.google.gwt.event.logical.shared.AttachEvent.Handler;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.Widget;
+
+/**
+ * A table of deployments.
+ *
+ * @author eric.wittmann@redhat.com
+ */
+@Dependent
+public class SituationTable extends TemplatedWidgetTable {
+
+    @Inject
+    protected ClientMessages i18n;
+//    @Inject
+//    protected TransitionAnchorFactory<ServiceDetailsPage> toDetailsPageLinkFactory;
+
+    /**
+     * Constructor.
+     */
+    public SituationTable() {
+    }
+
+    /**
+     * Adds a single row to the table.
+     * @param situationSummaryBean
+     */
+    public void addRow(final SituationSummaryBean situationSummaryBean) {
+        int rowIdx = this.rowElements.size();
+        DateTimeFormat format = DateTimeFormat.getFormat(i18n.format("dateTime-format")); //$NON-NLS-1$
+
+        FlowPanel icon = new FlowPanel();
+        icon.getElement().setClassName("icon"); //$NON-NLS-1$
+        icon.getElement().addClassName("icon-severity-" + situationSummaryBean.getSeverity()); //$NON-NLS-1$
+        InlineLabel type = new InlineLabel(situationSummaryBean.getType());
+        InlineLabel subject = new InlineLabel(situationSummaryBean.getSubject());
+        InlineLabel description = new InlineLabel(situationSummaryBean.getDescription());
+        InlineLabel timestamp = new InlineLabel(format.format(situationSummaryBean.getTimestamp()));
+        Widget infoIcons = createInfoPanel(situationSummaryBean);
+
+        add(rowIdx, 0, icon);
+        add(rowIdx, 1, type);
+        add(rowIdx, 2, subject);
+        add(rowIdx, 3, timestamp);
+        add(rowIdx, 4, description);
+        add(rowIdx, 5, infoIcons);
+    }
+
+    /**
+     * Creates the action buttons.
+     * @param situationSummaryBean
+     */
+    private Widget createInfoPanel(SituationSummaryBean situationSummaryBean) {
+        FlowPanel infoPanel = new FlowPanel();
+        infoPanel.getElement().setClassName(""); //$NON-NLS-1$
+
+        if (!situationSummaryBean.getProperties().isEmpty()) {
+            final Anchor properties = new Anchor();
+            properties.setHref("#"); //$NON-NLS-1$
+            properties.getElement().setAttribute("data-toggle", "popover"); //$NON-NLS-1$ //$NON-NLS-2$
+            properties.getElement().setAttribute("data-placement", "left"); //$NON-NLS-1$ //$NON-NLS-2$
+            properties.getElement().setAttribute("data-html", "true"); //$NON-NLS-1$ //$NON-NLS-2$
+            properties.getElement().setAttribute("data-original-title", "Properties"); //$NON-NLS-1$
+            properties.getElement().setAttribute("data-trigger", "hover"); //$NON-NLS-1$ //$NON-NLS-2$
+            properties.getElement().setAttribute("data-content", createPropertiesTableHtml(situationSummaryBean.getProperties())); //$NON-NLS-1$
+            properties.setHTML("<div class=\"icon icon-properties\"></div>"); //$NON-NLS-1$
+            properties.addAttachHandler(new Handler() {
+                @Override
+                public void onAttachOrDetach(AttachEvent event) {
+                    if (event.isAttached()) {
+                        Element element2 = properties.getElement();
+                        activatePopover(element2);
+                    }
+                }
+            });
+            infoPanel.add(properties);
+        }
+
+//        infoPanel.add(downloadInitialActionButton);
+//        infoPanel.add(retryActionButton);
+        return infoPanel;
+    }
+
+    /**
+     * Creates the html for the table shown in the properties popover.
+     */
+    protected String createPropertiesTableHtml(Map<String, String> properties) {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("<table class='table table-condensed table-hover table-striped' style='border-right: 1px solid rgb(211, 211, 211); border-bottom: 1px solid rgb(211, 211, 211);'>"); //$NON-NLS-1$
+        builder.append("<tbody>"); //$NON-NLS-1$
+        for (Entry<String, String> entry : properties.entrySet()) {
+            builder.append("<tr>"); //$NON-NLS-1$
+            builder.append("<td>"); //$NON-NLS-1$
+            builder.append(entry.getKey());
+            builder.append("</td>"); //$NON-NLS-1$
+            builder.append("<td>"); //$NON-NLS-1$
+            builder.append(entry.getValue());
+            builder.append("</td>"); //$NON-NLS-1$
+            builder.append("</tr>"); //$NON-NLS-1$
+        }
+        builder.append("</tbody>"); //$NON-NLS-1$
+        builder.append("</table>"); //$NON-NLS-1$
+        return builder.toString();
+    }
+
+    public static native void activatePopover(Element elem) /*-{
+          $wnd.jQuery(elem).popover();
+    }-*/;
+
+
+}

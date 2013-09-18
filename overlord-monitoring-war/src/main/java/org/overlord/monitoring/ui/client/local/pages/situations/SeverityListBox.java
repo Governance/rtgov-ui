@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.overlord.monitoring.ui.client.local.pages.faults;
+package org.overlord.monitoring.ui.client.local.pages.situations;
 
 import javax.inject.Inject;
 
@@ -24,7 +24,7 @@ import org.overlord.monitoring.ui.client.local.widgets.common.AbstractFilterList
  * Injectable list box for the deployment type filter.
  * @author eric.wittmann@redhat.com
  */
-public class ServiceNameListBox extends AbstractFilterListBox {
+public class SeverityListBox extends AbstractFilterListBox {
 
     @Inject
     protected ClientMessages i18n;
@@ -32,7 +32,7 @@ public class ServiceNameListBox extends AbstractFilterListBox {
     /**
      * Constructor.
      */
-    public ServiceNameListBox() {
+    public SeverityListBox() {
     }
 
     /**
@@ -41,6 +41,10 @@ public class ServiceNameListBox extends AbstractFilterListBox {
     @Override
     protected void configureItems() {
         this.addItem(i18n.format("any"), ""); //$NON-NLS-1$ //$NON-NLS-2$
+        this.addItem("Low", "low"); //$NON-NLS-2$
+        this.addItem("Medium", "medium"); //$NON-NLS-2$
+        this.addItem("High", "high"); //$NON-NLS-2$
+        this.addItem("Critical", "critical"); //$NON-NLS-2$
     }
 
     /**
@@ -49,7 +53,7 @@ public class ServiceNameListBox extends AbstractFilterListBox {
     @Override
     public void clear() {
         super.clear();
-        this.addItem(i18n.format("any"), ""); //$NON-NLS-1$ //$NON-NLS-2$
+        configureItems();
     }
 
 }

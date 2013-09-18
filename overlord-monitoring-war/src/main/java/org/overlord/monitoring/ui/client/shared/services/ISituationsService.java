@@ -16,33 +16,33 @@
 package org.overlord.monitoring.ui.client.shared.services;
 
 import org.jboss.errai.bus.server.annotations.Remote;
-import org.overlord.monitoring.ui.client.shared.beans.FaultBean;
-import org.overlord.monitoring.ui.client.shared.beans.FaultResultSetBean;
-import org.overlord.monitoring.ui.client.shared.beans.FaultsFilterBean;
+import org.overlord.monitoring.ui.client.shared.beans.SituationBean;
+import org.overlord.monitoring.ui.client.shared.beans.SituationResultSetBean;
+import org.overlord.monitoring.ui.client.shared.beans.SituationsFilterBean;
 import org.overlord.monitoring.ui.client.shared.exceptions.UiException;
 
 /**
- * Provides a way to manage faults.
+ * Provides a way to manage situations.
  *
  * @author eric.wittmann@redhat.com
  */
 @Remote
-public interface IFaultsService {
+public interface ISituationsService {
 
     /**
-     * Search for services using the given filters and search text.
+     * Search for situations using the given filters and search text.
      * @param filters
      * @param searchText
      * @param page
      * @throws UiException
      */
-    public FaultResultSetBean search(FaultsFilterBean filters, int page) throws UiException;
+    public SituationResultSetBean search(SituationsFilterBean filters, int page) throws UiException;
 
     /**
-     * Fetches a full service by its name.
+     * Fetches a full situation by its name.
      * @param name
      * @throws UiException
      */
-    public FaultBean get(String name) throws UiException;
+    public SituationBean get(String name) throws UiException;
 
 }

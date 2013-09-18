@@ -11,7 +11,7 @@
   "option.oneway" : "OneWay/Request",
   "option.request-response" : "RequestResponse",
   "services.error-loading" : "Error loading services.",
-  "faults.error-loading" : "Error loading faults.",
+  "situations.error-loading" : "Error loading situations.",
   "reference-details.error-getting-detail-info" : "Error getting component service detail information.",
   "service-details.error-getting-detail-info" : "Error getting service detail information."
 }

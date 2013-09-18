@@ -56,7 +56,7 @@
                   <form class="" onSubmit="return false;">
                     <div class="controls controls-row">
                       <label class="filter-label" data-i18n-key="severity">Severity</label>
-                      <select data-field="severity" class="selectpicker span12">
+                      <select data-field="severity" class="selectpicker span12" data-role="dummy">
                         <option value="" data-i18n-key="any">Any</option>
                         <option value="" data-i18n-key="low">Low</option>
                         <option value="" data-i18n-key="medium">Medium</option>
@@ -85,21 +85,21 @@
 
           <!-- The Situations table -->
           <div class="span9">
-            <div class="row-fluid faults">
+            <div class="row-fluid situations">
               <div class="span12 overlord-actions">
                 <button class="btn spacer" style="visibility:hidden"><i class="icon-refresh"></i></button>
                 <button data-field="btn-refresh" class="btn pull-right"><i class="icon-refresh"></i></button>
                 <div class="pull-right sp4n-label">
                   <span data-i18n-key="displaying">Displaying</span>
-                  <span data-field="faults-range" data-role="dummy">1-11</span>
+                  <span data-field="situations-range" data-role="dummy">1-11</span>
                   <span data-i18n-key="of">of</span>
-                  <span data-field="faults-total" data-role="dummy">37</span>
+                  <span data-field="situations-total" data-role="dummy">37</span>
                 </div>
               </div>
-              <div data-field="faults-none" style="display:none" class="overlord-none">
+              <div data-field="situations-none" style="display:none" class="overlord-none">
                 <span data-i18n-key="none-found">No situations found.</span>
               </div>
-              <div data-field="faults-searching" style="display:none" class="overlord-searching">
+              <div data-field="situations-searching" style="display:none" class="overlord-searching">
                 <span class="spinner" data-i18n-key="finding-situations">Finding situations, please wait...</span>
               </div>
               <table data-field="situations-table" class="overlord-table table table-striped table-condensed table-hover">
@@ -110,15 +110,22 @@
                   <th data-i18n-key="subject">Subject</th>
                   <th data-i18n-key="timestamp">Timestamp</th>
                   <th data-i18n-key="description">Description</th>
+                  <th style="width: 38px"></th>
                 </tr>
               </thead>
               <tbody data-role="dummy">
                 <tr>
                   <td><div class="icon icon-severity-critical"></div></td>
-                  <td><a href="#" data-toggle="popover" data-html="true" data-original-title="Properties" data-trigger="hover" data-content="&lt;table class='table table-condensed table-hover table-striped' style='border-right: 1px solid rgb(211, 211, 211); border-bottom: 1px solid rgb(211, 211, 211);'>&lt;tbody>&lt;tr>&lt;td>Property 1:&lt;/td>&lt;td>Property One Value&lt;/td>&lt;/tr>&lt;tr>&lt;td>Property 2:&lt;/td>&lt;td>Property Two Value&lt;/td>&lt;/tr>&lt;/tbody>&lt;/table>">Rate Limit Exceeded</a></td>
+                  <td>Rate Limit Exceeded</td>
                   <td>{urn:namespace}ImportantService|VeryImportantOperation</td>
                   <td>08/20/2013 @ 5:22:47</td>
                   <td>Some description of the Situation goes here in this column so that it can be read by the user.</td>
+                  <td>
+                    <div>
+                      <a href="#" data-toggle="popover" data-placement="left" data-html="true" data-original-title="Properties" data-trigger="hover" data-content="&lt;table class='table table-condensed table-hover table-striped' style='border-right: 1px solid rgb(211, 211, 211); border-bottom: 1px solid rgb(211, 211, 211);'>&lt;tbody>&lt;tr>&lt;td>Property 1:&lt;/td>&lt;td>Property One Value&lt;/td>&lt;/tr>&lt;tr>&lt;td>Property 2:&lt;/td>&lt;td>Property Two Value&lt;/td>&lt;/tr>&lt;/tbody>&lt;/table>"><div class="icon icon-properties"></div></a>
+                      <a href="#" data-toggle="popover" data-placement="left" data-html="true" data-original-title="Context" data-trigger="hover" data-content="&lt;table class='table table-condensed table-hover table-striped' style='border-right: 1px solid rgb(211, 211, 211); border-bottom: 1px solid rgb(211, 211, 211);'>&lt;tbody>&lt;tr>&lt;td>Context 1:&lt;/td>&lt;td>Context One Value&lt;/td>&lt;/tr>&lt;tr>&lt;td>Context 2:&lt;/td>&lt;td>Context Two Value&lt;/td>&lt;/tr>&lt;/tbody>&lt;/table>"><div class="icon icon-context"></div></a>
+                    </div>
+                  </td>
                 </tr>
                 <tr>
                   <td><div class="icon icon-severity-high"></div></td>
@@ -143,7 +150,7 @@
                 </tr>
               </tbody>
               </table>
-              <div data-field="faults-pager" class="pagination overlord-pager" data-role="dummy">
+              <div data-field="situations-pager" class="pagination overlord-pager" data-role="dummy">
                 <ul>
                   <li class="disabled"><a>&#x00AB;</a></li>
                   <li class="active"><a>1</a></li>

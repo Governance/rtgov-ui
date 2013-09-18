@@ -24,11 +24,11 @@ import org.jboss.errai.common.client.api.RemoteCallback;
 import org.overlord.monitoring.ui.client.local.services.rpc.DelegatingErrorCallback;
 import org.overlord.monitoring.ui.client.local.services.rpc.DelegatingRemoteCallback;
 import org.overlord.monitoring.ui.client.local.services.rpc.IRpcServiceInvocationHandler;
-import org.overlord.monitoring.ui.client.shared.beans.FaultBean;
-import org.overlord.monitoring.ui.client.shared.beans.FaultResultSetBean;
-import org.overlord.monitoring.ui.client.shared.beans.FaultsFilterBean;
+import org.overlord.monitoring.ui.client.shared.beans.SituationBean;
+import org.overlord.monitoring.ui.client.shared.beans.SituationResultSetBean;
+import org.overlord.monitoring.ui.client.shared.beans.SituationsFilterBean;
 import org.overlord.monitoring.ui.client.shared.exceptions.UiException;
-import org.overlord.monitoring.ui.client.shared.services.IFaultsService;
+import org.overlord.monitoring.ui.client.shared.services.ISituationsService;
 
 /**
  * Client-side service for making RPC calls to the remote deployments service.
@@ -36,42 +36,42 @@ import org.overlord.monitoring.ui.client.shared.services.IFaultsService;
  * @author eric.wittmann@redhat.com
  */
 @ApplicationScoped
-public class FaultsRpcService {
+public class SituationsRpcService {
 
     @Inject
-    private Caller<IFaultsService> remoteFaultsService;
+    private Caller<ISituationsService> remoteSituationsService;
 
     /**
      * Constructor.
      */
-    public FaultsRpcService() {
+    public SituationsRpcService() {
     }
 
     /**
-     * @see org.overlord.monitoring.ui.client.shared.services.IFaultsService#search(FaultsFilterBean, int)
+     * @see org.overlord.monitoring.ui.client.shared.services.ISituationsService#search(SituationsFilterBean, int)
      */
-    public void search(FaultsFilterBean filters, int page,
-            final IRpcServiceInvocationHandler<FaultResultSetBean> handler) {
+    public void search(SituationsFilterBean filters, int page,
+            final IRpcServiceInvocationHandler<SituationResultSetBean> handler) {
         // TODO only allow one search at a time.  If another search comes in before the previous one
         // finished, cancel the previous one.  In other words, only return the results of the *last*
         // search performed.
-        RemoteCallback<FaultResultSetBean> successCallback = new DelegatingRemoteCallback<FaultResultSetBean>(handler);
+        RemoteCallback<SituationResultSetBean> successCallback = new DelegatingRemoteCallback<SituationResultSetBean>(handler);
         ErrorCallback<?> errorCallback = new DelegatingErrorCallback(handler);
         try {
-            remoteFaultsService.call(successCallback, errorCallback).search(filters, page);
+            remoteSituationsService.call(successCallback, errorCallback).search(filters, page);
         } catch (UiException e) {
             errorCallback.error(null, e);
         }
     }
 
     /**
-     * @see org.overlord.monitoring.ui.client.shared.services.IFaultsService#get(String)
+     * @see org.overlord.monitoring.ui.client.shared.services.ISituationsService#get(String)
      */
-    public void get(String uuid, IRpcServiceInvocationHandler<FaultBean> handler) {
-        RemoteCallback<FaultBean> successCallback = new DelegatingRemoteCallback<FaultBean>(handler);
+    public void get(String situationId, IRpcServiceInvocationHandler<SituationBean> handler) {
+        RemoteCallback<SituationBean> successCallback = new DelegatingRemoteCallback<SituationBean>(handler);
         ErrorCallback<?> errorCallback = new DelegatingErrorCallback(handler);
         try {
-            remoteFaultsService.call(successCallback, errorCallback).get(uuid);
+            remoteSituationsService.call(successCallback, errorCallback).get(situationId);
         } catch (UiException e) {
             errorCallback.error(null, e);
         }

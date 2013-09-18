@@ -26,14 +26,14 @@ import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.overlord.monitoring.ui.client.local.ClientMessages;
-import org.overlord.monitoring.ui.client.local.pages.faults.FaultFilters;
-import org.overlord.monitoring.ui.client.local.pages.faults.FaultTable;
-import org.overlord.monitoring.ui.client.local.services.FaultsRpcService;
+import org.overlord.monitoring.ui.client.local.pages.situations.SituationFilters;
+import org.overlord.monitoring.ui.client.local.pages.situations.SituationTable;
 import org.overlord.monitoring.ui.client.local.services.NotificationService;
+import org.overlord.monitoring.ui.client.local.services.SituationsRpcService;
 import org.overlord.monitoring.ui.client.local.services.rpc.IRpcServiceInvocationHandler;
-import org.overlord.monitoring.ui.client.shared.beans.FaultResultSetBean;
-import org.overlord.monitoring.ui.client.shared.beans.FaultSummaryBean;
-import org.overlord.monitoring.ui.client.shared.beans.FaultsFilterBean;
+import org.overlord.monitoring.ui.client.shared.beans.SituationResultSetBean;
+import org.overlord.monitoring.ui.client.shared.beans.SituationSummaryBean;
+import org.overlord.monitoring.ui.client.shared.beans.SituationsFilterBean;
 import org.overlord.sramp.ui.client.local.widgets.bootstrap.Pager;
 import org.overlord.sramp.ui.client.local.widgets.common.HtmlSnippet;
 
@@ -45,19 +45,19 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.Button;
 
 /**
- * The "Faults" page.
+ * The "Situations" page.
  *
  * @author eric.wittmann@redhat.com
  */
-@Templated("/org/overlord/monitoring/ui/client/local/site/faults.html#page")
-@Page(path="faults")
+@Templated("/org/overlord/monitoring/ui/client/local/site/situations.html#page")
+@Page(path="situations")
 @Dependent
-public class FaultsPage extends AbstractPage {
+public class SituationsPage extends AbstractPage {
 
     @Inject
     protected ClientMessages i18n;
     @Inject
-    protected FaultsRpcService faultsService;
+    protected SituationsRpcService situationsService;
     @Inject
     protected NotificationService notificationService;
 
@@ -68,23 +68,23 @@ public class FaultsPage extends AbstractPage {
     private TransitionAnchor<ServicesPage> toServicesPage;
 
     @Inject @DataField("filter-sidebar")
-    protected FaultFilters filtersPanel;
+    protected SituationFilters filtersPanel;
 
     @Inject @DataField("btn-refresh")
     protected Button refreshButton;
 
-    @Inject @DataField("faults-none")
+    @Inject @DataField("situations-none")
     protected HtmlSnippet noDataMessage;
-    @Inject @DataField("faults-searching")
+    @Inject @DataField("situations-searching")
     protected HtmlSnippet searchInProgressMessage;
-    @Inject @DataField("faults-table")
-    protected FaultTable faultsTable;
+    @Inject @DataField("situations-table")
+    protected SituationTable situationsTable;
 
-    @Inject @DataField("faults-pager")
+    @Inject @DataField("situations-pager")
     protected Pager pager;
-    @DataField("faults-range")
+    @DataField("situations-range")
     protected SpanElement rangeSpan = Document.get().createSpanElement();
-    @DataField("faults-total")
+    @DataField("situations-total")
     protected SpanElement totalSpan = Document.get().createSpanElement();
 
     private int currentPage = 1;
@@ -92,7 +92,7 @@ public class FaultsPage extends AbstractPage {
     /**
      * Constructor.
      */
-    public FaultsPage() {
+    public SituationsPage() {
     }
 
     /**
@@ -107,9 +107,9 @@ public class FaultsPage extends AbstractPage {
      */
     @PostConstruct
     protected void postConstruct() {
-        filtersPanel.addValueChangeHandler(new ValueChangeHandler<FaultsFilterBean>() {
+        filtersPanel.addValueChangeHandler(new ValueChangeHandler<SituationsFilterBean>() {
             @Override
-            public void onValueChange(ValueChangeEvent<FaultsFilterBean> event) {
+            public void onValueChange(ValueChangeEvent<SituationsFilterBean> event) {
                 doSearch();
             }
         });
@@ -121,7 +121,7 @@ public class FaultsPage extends AbstractPage {
         });
 
         // Hide column 1 when in mobile mode.
-        faultsTable.setColumnClasses(1, "desktop-only"); //$NON-NLS-1$
+        situationsTable.setColumnClasses(1, "desktop-only"); //$NON-NLS-1$
 
         this.rangeSpan.setInnerText("?"); //$NON-NLS-1$
         this.totalSpan.setInnerText("?"); //$NON-NLS-1$
@@ -156,21 +156,21 @@ public class FaultsPage extends AbstractPage {
     }
 
     /**
-     * Search for faults based on the current filter settings.
+     * Search for situations based on the current filter settings.
      * @param page
      */
     protected void doSearch(int page) {
         onSearchStarting();
         currentPage = page;
-        faultsService.search(filtersPanel.getValue(), page, new IRpcServiceInvocationHandler<FaultResultSetBean>() {
+        situationsService.search(filtersPanel.getValue(), page, new IRpcServiceInvocationHandler<SituationResultSetBean>() {
             @Override
-            public void onReturn(FaultResultSetBean data) {
+            public void onReturn(SituationResultSetBean data) {
                 updateTable(data);
                 updatePager(data);
             }
             @Override
             public void onError(Throwable error) {
-                notificationService.sendErrorNotification(i18n.format("faults.error-loading"), error); //$NON-NLS-1$
+                notificationService.sendErrorNotification(i18n.format("situations.error-loading"), error); //$NON-NLS-1$
                 noDataMessage.setVisible(true);
                 searchInProgressMessage.setVisible(false);
             }
@@ -183,24 +183,24 @@ public class FaultsPage extends AbstractPage {
     protected void onSearchStarting() {
         this.pager.setVisible(false);
         this.searchInProgressMessage.setVisible(true);
-        this.faultsTable.setVisible(false);
+        this.situationsTable.setVisible(false);
         this.noDataMessage.setVisible(false);
         this.rangeSpan.setInnerText("?"); //$NON-NLS-1$
         this.totalSpan.setInnerText("?"); //$NON-NLS-1$
     }
 
     /**
-     * Updates the table of faults with the given data.
+     * Updates the table of situations with the given data.
      * @param data
      */
-    protected void updateTable(FaultResultSetBean data) {
-        this.faultsTable.clear();
+    protected void updateTable(SituationResultSetBean data) {
+        this.situationsTable.clear();
         this.searchInProgressMessage.setVisible(false);
-        if (data.getFaults().size() > 0) {
-            for (FaultSummaryBean summaryBean : data.getFaults()) {
-                this.faultsTable.addRow(summaryBean);
+        if (data.getSituations().size() > 0) {
+            for (SituationSummaryBean summaryBean : data.getSituations()) {
+                this.situationsTable.addRow(summaryBean);
             }
-            this.faultsTable.setVisible(true);
+            this.situationsTable.setVisible(true);
         } else {
             this.noDataMessage.setVisible(true);
         }
@@ -210,7 +210,7 @@ public class FaultsPage extends AbstractPage {
      * Updates the pager with the given data.
      * @param data
      */
-    protected void updatePager(FaultResultSetBean data) {
+    protected void updatePager(SituationResultSetBean data) {
         int numPages = ((int) (data.getTotalResults() / data.getItemsPerPage())) + (data.getTotalResults() % data.getItemsPerPage() == 0 ? 0 : 1);
         int thisPage = (data.getStartIndex() / data.getItemsPerPage()) + 1;
         this.pager.setNumPages(numPages);
@@ -219,7 +219,7 @@ public class FaultsPage extends AbstractPage {
             this.pager.setVisible(true);
 
         int startIndex = data.getStartIndex() + 1;
-        int endIndex = startIndex + data.getFaults().size() - 1;
+        int endIndex = startIndex + data.getSituations().size() - 1;
         String rangeText = "" + startIndex + "-" + endIndex; //$NON-NLS-1$ //$NON-NLS-2$
         String totalText = String.valueOf(data.getTotalResults());
         this.rangeSpan.setInnerText(rangeText);

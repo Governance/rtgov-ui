@@ -21,16 +21,16 @@ import java.util.List;
 import org.jboss.errai.common.client.api.annotations.Portable;
 
 /**
- * Models the set of Fault summary objects returned by a Faults search.
+ * Models the set of Situation summary objects returned by a Situations search.
  *
  * @author eric.wittmann@redhat.com
  */
 @Portable
-public class FaultResultSetBean implements Serializable {
+public class SituationResultSetBean implements Serializable {
 
-    private static final long serialVersionUID = FaultResultSetBean.class.hashCode();
+    private static final long serialVersionUID = SituationResultSetBean.class.hashCode();
 
-    private List<FaultSummaryBean> services;
+    private List<SituationSummaryBean> services;
     private long totalResults;
     private int itemsPerPage;
     private int startIndex;
@@ -38,20 +38,20 @@ public class FaultResultSetBean implements Serializable {
     /**
      * Constructor.
      */
-    public FaultResultSetBean() {
+    public SituationResultSetBean() {
     }
 
     /**
      * @return the services
      */
-    public List<FaultSummaryBean> getFaults() {
+    public List<SituationSummaryBean> getSituations() {
         return services;
     }
 
     /**
      * @param services the servicess to set
      */
-    public void setFaults(List<FaultSummaryBean> services) {
+    public void setSituations(List<SituationSummaryBean> services) {
         this.services = services;
     }
 
