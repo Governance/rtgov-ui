@@ -6,7 +6,7 @@
       http://java.sun.com/xml/ns/javaee/beans_1_0.xsd">
 
     <alternatives>
-        <class>org.overlord.monitoring.ui.server.services.impl.MockFaultsServiceImpl</class>
+        <class>org.overlord.monitoring.ui.server.services.impl.MockSituationsServiceImpl</class>
         <class>org.overlord.monitoring.ui.server.services.impl.SwitchYardServicesServiceImpl</class>
     </alternatives>
 </beans>
