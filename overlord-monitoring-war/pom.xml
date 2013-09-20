@@ -34,6 +34,19 @@
       <artifactId>s-ramp-ui-widgets</artifactId>
       <version>${s-ramp-ui.version}</version>
     </dependency>
+    <!-- RTGov dependencies -->
+	<dependency>
+		<groupId>org.overlord.rtgov.active-queries</groupId>
+		<artifactId>active-collection</artifactId>
+		<version>${rtgov.version}</version>
+		<scope>provided</scope>
+	</dependency>
+	<dependency>
+		<groupId>org.overlord.rtgov.activity-analysis</groupId>
+		<artifactId>analytics</artifactId>
+		<version>${rtgov.version}</version>
+		<scope>provided</scope>
+	</dependency>
 
     <!-- Third Party Dependencies -->
     <dependency>

@@ -48,6 +48,7 @@
     <maven.deploy.plugin.version>2.5</maven.deploy.plugin.version>
     <maven.clean.plugin.version>2.4.1</maven.clean.plugin.version>
 
+    <rtgov.version>1.0.0.Final</rtgov.version>
     <s-ramp-ui.version>0.4.0-SNAPSHOT</s-ramp-ui.version>
 
     <!-- Third party libraries -->

@@ -148,4 +148,9 @@ public class SituationsFilterBean {
         return true;
     }
 
+    @Override
+    public String toString() {
+    	return ("SituationsFilter[severity="+severity+",type="+type
+    			+",from="+timestampFrom+",to="+timestampTo+"]");
+    }
 }
