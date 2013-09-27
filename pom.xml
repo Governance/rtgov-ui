@@ -11,6 +11,12 @@
   <url>http://www.jboss.org/overlord</url>
   <inceptionYear>2013</inceptionYear>
 
+  <parent>
+    <groupId>org.jboss</groupId>
+    <artifactId>jboss-parent</artifactId>
+    <version>10</version>
+  </parent>
+
   <organization>
     <name>JBoss, a division of Red Hat</name>
     <url>http://www.jboss.org</url>
@@ -65,7 +71,9 @@
     <jetty.version>6.1.25</jetty.version>
     <uel.impl.version>2.1.2-b04</uel.impl.version>
     <servlet-api.version>3.0.1</servlet-api.version>
+    <javaee-api.version>6.0</javaee-api.version>
     <jsp-api.version>2.0</jsp-api.version>
+    <jbossas.version>7.2.0.Final</jbossas.version>
     <jboss-ejb3-api.version>3.1.0</jboss-ejb3-api.version>
     <cdi-api.version>1.0-SP4</cdi-api.version>
     <jboss-logging.version>3.0.0.Beta4</jboss-logging.version>
@@ -106,6 +114,28 @@
       </roles>
     </developer>
   </developers>
+
+  <dependencyManagement>
+    <dependencies>
+
+      <!-- Imported dependencies -->
+      <dependency>
+        <groupId>org.jboss.as</groupId>
+        <artifactId>jboss-as-parent</artifactId>
+        <version>${jbossas.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+<!--
+      <dependency>
+        <groupId>javax</groupId>
+        <artifactId>javaee-api</artifactId>
+        <version>${javaee-api.version}</version>
+      </dependency>
+-->
+    </dependencies>
+  </dependencyManagement>
 
   <build>
     <pluginManagement>

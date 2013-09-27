@@ -47,6 +47,7 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
 	
 	private ActiveCollectionManager _acmManager=null;
 	private ActiveList _situations=null;
+	private SituationRepository _repository=null;
 	
     /**
      * Constructor.
@@ -57,6 +58,8 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
     	// Get 'situations' active collection
     	_situations = (ActiveList)
                 _acmManager.getActiveCollection(SITUATIONS);
+    	
+    	_repository = new SituationRepository();
     }
 
     
@@ -68,14 +71,10 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
         SituationResultSetBean rval = new SituationResultSetBean();
         ArrayList<SituationSummaryBean> situations = new ArrayList<SituationSummaryBean>();
         
-        Predicate predicate=new SituationsFilterPredicate(filters);
-        
-        ActiveCollection acol=_acmManager.create(filters.toString(), _situations, predicate, null);
-        
-        for (Object item : acol) {
-        	if (item instanceof Situation) {
-        		situations.add(getSummaryBean((Situation)item));
-        	}
+        try {
+        	getHistorySituationList(filters, situations);
+        } catch (Exception e) {
+        	throw new UiException("Failed to get situation list", e); //$NON-NLS-1$
         }
         
         rval.setSituations(situations);
@@ -85,13 +84,63 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
         
         return (rval);
     }
+    
+    /**
+     * This method builds a list of situations, associated with the supplied filter,
+     * from the 'situations' database.
+     * 
+     * @param filters The filter
+     * @param situations The result list
+     * @throws Exception Failed to get situations list
+     */
+    protected void getHistorySituationList(SituationsFilterBean filters, java.util.List<SituationSummaryBean> situations) throws Exception {        
+    	java.util.List<Situation> results=_repository.getSituations(filters);
+    	
+    	for (Situation item : results) {
+        	situations.add(getSituationBean(item));
+        }
+    }
+
+    /**
+     * This method builds a list of situations, associated with the supplied filter,
+     * from the 'situations' active collection.
+     * 
+     * @param filters The filter
+     * @param situations The result list
+     * @throws Exception Failed to get situations list
+     */
+    protected void getActiveSituationList(SituationsFilterBean filters, java.util.List<SituationSummaryBean> situations) throws Exception {
+        Predicate predicate=new SituationsFilterPredicate(filters);
+        
+        ActiveCollection acol=_acmManager.create(filters.toString(), _situations, predicate, null);
+        
+        for (Object item : acol) {
+        	if (item instanceof Situation) {
+        		situations.add(getSituationBean((Situation)item));
+        	}
+        }
+    }
 
     /**
      * @see org.overlord.monitoring.ui.server.services.ISituationsServiceImpl#getService(java.lang.String)
      */
     @Override
     public SituationBean get(String situationId) throws UiException {
-        throw new UiException("Not implemented."); //$NON-NLS-1$
+    	try {
+	    	Situation situation=_repository.getSituation(situationId);
+	    	
+	    	if (situation == null) {
+	            throw new UiException("Situation with id '"+situationId+"' not found"); //$NON-NLS-1$    		
+	    	}
+	    	
+	    	return (getSituationBean(situation));
+    	
+    	} catch (UiException uie) {
+    		throw uie;
+    		
+    	} catch (Exception e) {
+    		throw new UiException("Failed to retrieve situation", e); //$NON-NLS-1$ 
+    	}
     }
 
     /**
@@ -100,8 +149,8 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
      * @param situation The situation
      * @return The summary
      */
-    protected static SituationSummaryBean getSummaryBean(Situation situation) {
-    	SituationSummaryBean ret=new SituationSummaryBean();
+    protected static SituationBean getSituationBean(Situation situation) {
+    	SituationBean ret=new SituationBean();
     	
     	ret.setSeverity(situation.getSeverity().name().toLowerCase());
     	ret.setType(situation.getType());
@@ -113,7 +162,7 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
     	return (ret);
     }
 
-    /**
+	/**
      * This class provides the 'situations filter' based predicate implementation.
      *
      */
@@ -174,4 +223,5 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
 		}
     	
     }
+
 }
