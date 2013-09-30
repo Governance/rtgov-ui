@@ -162,13 +162,17 @@ public class SituationRepository {
             ret = (java.util.List<Situation>)query.getResultList();
             
             // TODO: Temporary workaround until Situation model changed to use eager fetch
-            for (Situation sit : ret) {
-            	for (Context c : sit.getContext()) {
-            		
-            	}
-            	for (Object val : sit.getProperties().values()) {
-            		
-            	}
+            try {
+	            for (Situation sit : ret) {
+	            	for (Context c : sit.getContext()) {
+	            		
+	            	}
+	            	for (Object val : sit.getProperties().values()) {
+	            		
+	            	}
+	            }
+            } catch (Throwable t) {
+            	// Ignore - may be due to change in API post ER4
             }
             		
             if (LOG.isLoggable(Level.FINEST)) {
