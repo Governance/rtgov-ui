@@ -23,6 +23,11 @@ body {
   font-style: italic;
 }
 
+.divider-20 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 a {
   cursor: pointer;
   text-decoration: none;
@@ -150,6 +155,10 @@ input.filter-date {
   background-image: url("../images/gradient-bg.png");
   background-position: bottom left;
   background-repeat: repeat-x;
+}
+
+.breadcrumb .active {
+  font-weight: bold;
 }
 
 .table-striped tbody tr:nth-child(2n) td, .table-striped tbody tr:nth-child(2n) th {
@@ -308,6 +317,12 @@ footer hr {
   color: rgb(0, 85, 128);
 }
 
+.details-icon {
+  margin-left: 10px;
+  margin-top: 5px;
+  float: left;
+}
+
 .details-title {
   font-weight: bold;
   font-size: 16px;
@@ -338,12 +353,19 @@ footer hr {
   float: left;
 }
 
-.reference-details, .service-details {
+.reference-details, .service-details, .situation-details {
   border-left: 1px solid rgb(211, 211, 211);
   border-bottom: 1px solid rgb(211, 211, 211);
   border-right: 1px solid rgb(211, 211, 211);
   background-color: white;
   padding-bottom: 15px;
+}
+
+.situation-details .tab-content {
+  padding-top: 0px;
+}
+.situation-details .nav-tabs {
+  margin-bottom: 0px;
 }
 
 .controls-checkbox {
