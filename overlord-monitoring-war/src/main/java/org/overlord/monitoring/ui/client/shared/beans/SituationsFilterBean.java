@@ -150,7 +150,7 @@ public class SituationsFilterBean {
 
     @Override
     public String toString() {
-    	return ("SituationsFilter[severity="+severity+",type="+type
-    			+",from="+timestampFrom+",to="+timestampTo+"]");
+        return (String.format("SituationsFilter[severity=$1%s,type=$2%s,from=$3%s,to=$3%s]", severity, type, //$NON-NLS-1$
+                String.valueOf(timestampFrom), String.valueOf(timestampTo)));
     }
 }

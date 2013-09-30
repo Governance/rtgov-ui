@@ -198,7 +198,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>${maven.compiler.plugin.version}</version>
         <configuration>
           <source>1.6</source>
           <target>1.6</target>
@@ -210,7 +209,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
-        <version>${maven.source.plugin.version}</version>
         <executions>
           <execution>
             <id>attach-sources</id>
@@ -224,7 +222,6 @@
       </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>${maven.surefire.plugin.version}</version>
         <configuration>
           <includes>
             <include>**/*TestCase.java</include>

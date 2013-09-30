@@ -19,7 +19,7 @@ public class RTGovSituationsServiceImplTest {
 		Situation situation=new Situation();
 		
 		if (!predicate.evaluate(null, situation)) {
-			fail("Empty filter should have passed");
+			fail("Empty filter should have passed"); //$NON-NLS-1$
 		}
 		
 	}
@@ -36,7 +36,7 @@ public class RTGovSituationsServiceImplTest {
 		situation.setSeverity(Severity.Critical);
 		
 		if (!predicate.evaluate(null, situation)) {
-			fail("Severity filter should have passed");
+			fail("Severity filter should have passed"); //$NON-NLS-1$
 		}
 		
 	}
@@ -53,7 +53,7 @@ public class RTGovSituationsServiceImplTest {
 		situation.setSeverity(Severity.High);
 		
 		if (predicate.evaluate(null, situation)) {
-			fail("Severity filter should have failed");
+			fail("Severity filter should have failed"); //$NON-NLS-1$
 		}
 		
 	}
@@ -61,16 +61,16 @@ public class RTGovSituationsServiceImplTest {
 	@Test
 	public void testPredicateTypeFilterPass() {
 		SituationsFilterBean filter=new SituationsFilterBean();
-		filter.setType("TestType");
+		filter.setType("TestType"); //$NON-NLS-1$
 		
 		RTGovSituationsServiceImpl.SituationsFilterPredicate predicate=
 				new RTGovSituationsServiceImpl.SituationsFilterPredicate(filter);
 		
 		Situation situation=new Situation();
-		situation.setType("TestType");
+		situation.setType("TestType"); //$NON-NLS-1$
 		
 		if (!predicate.evaluate(null, situation)) {
-			fail("Type filter should have passed");
+			fail("Type filter should have passed"); //$NON-NLS-1$
 		}
 		
 	}
@@ -78,16 +78,16 @@ public class RTGovSituationsServiceImplTest {
 	@Test
 	public void testPredicateTypeFilterFail() {
 		SituationsFilterBean filter=new SituationsFilterBean();
-		filter.setType("TestType");
+		filter.setType("TestType"); //$NON-NLS-1$
 		
 		RTGovSituationsServiceImpl.SituationsFilterPredicate predicate=
 				new RTGovSituationsServiceImpl.SituationsFilterPredicate(filter);
 		
 		Situation situation=new Situation();
-		situation.setType("NotTestType");
+		situation.setType("NotTestType"); //$NON-NLS-1$
 		
 		if (predicate.evaluate(null, situation)) {
-			fail("Type filter should have failed");
+			fail("Type filter should have failed"); //$NON-NLS-1$
 		}
 		
 	}
@@ -106,7 +106,7 @@ public class RTGovSituationsServiceImplTest {
 		situation.setTimestamp(refTime+100);
 		
 		if (!predicate.evaluate(null, situation)) {
-			fail("TimestampFrom filter should have passed");
+			fail("TimestampFrom filter should have passed"); //$NON-NLS-1$
 		}
 		
 	}
@@ -125,7 +125,7 @@ public class RTGovSituationsServiceImplTest {
 		situation.setTimestamp(refTime-100);
 		
 		if (predicate.evaluate(null, situation)) {
-			fail("TimestampFrom filter should have failed");
+			fail("TimestampFrom filter should have failed"); //$NON-NLS-1$
 		}
 		
 	}
@@ -144,7 +144,7 @@ public class RTGovSituationsServiceImplTest {
 		situation.setTimestamp(refTime-100);
 		
 		if (!predicate.evaluate(null, situation)) {
-			fail("TimestampTo filter should have passed");
+			fail("TimestampTo filter should have passed"); //$NON-NLS-1$
 		}
 		
 	}
@@ -163,7 +163,7 @@ public class RTGovSituationsServiceImplTest {
 		situation.setTimestamp(refTime+100);
 		
 		if (predicate.evaluate(null, situation)) {
-			fail("TimestampTo filter should have failed");
+			fail("TimestampTo filter should have failed"); //$NON-NLS-1$
 		}
 		
 	}

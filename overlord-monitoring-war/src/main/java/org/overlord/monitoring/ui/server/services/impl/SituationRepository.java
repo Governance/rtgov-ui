@@ -24,6 +24,7 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 
 import org.overlord.monitoring.ui.client.shared.beans.SituationsFilterBean;
+import org.overlord.monitoring.ui.server.i18n.Messages;
 import org.overlord.rtgov.activity.model.Context;
 import org.overlord.rtgov.analytics.situation.Situation;
 import org.overlord.rtgov.analytics.situation.Situation.Severity;
@@ -34,38 +35,39 @@ import org.overlord.rtgov.analytics.situation.Situation.Severity;
  */
 public class SituationRepository {
 
-    private static final String OVERLORD_RTGOV_SITUATIONS = "overlord-rtgov-situations";
+    private static final String OVERLORD_RTGOV_SITUATIONS = "overlord-rtgov-situations"; //$NON-NLS-1$
+    private static volatile Messages i18n = new Messages();
 
     private EntityManagerFactory _entityManagerFactory=null;
-        
+
     private static final Logger LOG=Logger.getLogger(SituationRepository.class.getName());
-    
+
     /**
      * The situation repository constructor.
      */
     public SituationRepository() {
     	init();
     }
-    
+
     /**
      * Initialize the situation repository.
      */
     protected void init() {
         _entityManagerFactory = Persistence.createEntityManagerFactory(OVERLORD_RTGOV_SITUATIONS);
     }
-    
+
     /**
      * This method returns an entity manager.
-     * 
+     *
      * @return The entity manager
      */
     protected EntityManager getEntityManager() {
         return (_entityManagerFactory.createEntityManager());
     }
-    
+
     /**
      * This method closes the supplied entity manager.
-     * 
+     *
      * @param em The entity manager
      */
     protected void closeEntityManager(EntityManager em) {
@@ -73,30 +75,30 @@ public class SituationRepository {
             em.close();
         }
     }
-    
+
     /**
      * This method returns the situation associated with the supplied id.
-     * 
+     *
      * @param id The id
      * @return The situation, or null if not found
      * @throws Exception Failed to get situation
      */
     public Situation getSituation(String id) throws Exception {
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Get situation with id="+id);
+            LOG.finest(i18n.format("SituationsRepository.GetSit", id)); //$NON-NLS-1$
         }
 
         EntityManager em=getEntityManager();
-        
+
         Situation ret=null;
-        
+
         try {
-            ret=(Situation)em.createQuery("SELECT sit FROM Situation sit "
-                                +"WHERE sit.id = '"+id+"'")
+            ret=(Situation)em.createQuery("SELECT sit FROM Situation sit " //$NON-NLS-1$
+                                +"WHERE sit.id = '"+id+"'") //$NON-NLS-1$ //$NON-NLS-2$
                                 .getSingleResult();
-            
+
             if (LOG.isLoggable(Level.FINEST)) {
-                LOG.finest("Result="+ret);
+                LOG.finest(i18n.format("SituationsRepository.Result", ret)); //$NON-NLS-1$
             }
         } finally {
             closeEntityManager(em);
@@ -111,78 +113,77 @@ public class SituationRepository {
     @SuppressWarnings("unchecked")
     public java.util.List<Situation> getSituations(SituationsFilterBean filter) throws Exception {
         java.util.List<Situation> ret=null;
-        
+
         EntityManager em=getEntityManager();
-        
+
         try {
         	// Build the query string
         	StringBuffer queryString=new StringBuffer();
-        	
+
         	if (filter.getSeverity() != null && filter.getSeverity().trim().length() > 0) {
-        		queryString.append("sit.severity = :severity ");
+        		queryString.append("sit.severity = :severity "); //$NON-NLS-1$
         	}
-        	
+
         	if (filter.getType() != null && filter.getType().trim().length() > 0) {
         		if (queryString.length() > 0) {
-        			queryString.append("AND ");
+        			queryString.append("AND "); //$NON-NLS-1$
         		}
-        		queryString.append("sit.type = '"+filter.getType()+"' ");
+        		queryString.append("sit.type = '"+filter.getType()+"' ");  //$NON-NLS-1$//$NON-NLS-2$
         	}
-        	
+
         	if (filter.getTimestampFrom() != null) {
         		if (queryString.length() > 0) {
-        			queryString.append("AND ");
+        			queryString.append("AND "); //$NON-NLS-1$
         		}
-        		queryString.append("sit.timestamp >= "+filter.getTimestampFrom().getTime()+" ");
+        		queryString.append("sit.timestamp >= "+filter.getTimestampFrom().getTime()+" ");  //$NON-NLS-1$//$NON-NLS-2$
         	}
-        	
+
         	if (filter.getTimestampTo() != null) {
         		if (queryString.length() > 0) {
-        			queryString.append("AND ");
+        			queryString.append("AND "); //$NON-NLS-1$
         		}
-        		queryString.append("sit.timestamp <= "+filter.getTimestampTo().getTime()+" ");
+        		queryString.append("sit.timestamp <= "+filter.getTimestampTo().getTime()+" ");  //$NON-NLS-1$//$NON-NLS-2$
         	}
-        	
+
         	if (queryString.length() > 0) {
-        		queryString.insert(0, "WHERE ");
+        		queryString.insert(0, "WHERE "); //$NON-NLS-1$
         	}
-        	
-        	queryString.insert(0, "SELECT sit from Situation sit ");
-        	
+
+        	queryString.insert(0, "SELECT sit from Situation sit "); //$NON-NLS-1$
+
         	Query query=em.createQuery(queryString.toString());
-        	
+
         	if (filter.getSeverity() != null && filter.getSeverity().trim().length() > 0) {
         		String severityName=Character.toUpperCase(filter.getSeverity().charAt(0))
         						+filter.getSeverity().substring(1);
         		Severity severity=Severity.valueOf(severityName);
-        		
-        		query.setParameter("severity", severity);
+
+        		query.setParameter("severity", severity); //$NON-NLS-1$
         	}
-        	
-            ret = (java.util.List<Situation>)query.getResultList();
-            
+
+            ret = query.getResultList();
+
             // TODO: Temporary workaround until Situation model changed to use eager fetch
             try {
 	            for (Situation sit : ret) {
-	            	for (Context c : sit.getContext()) {
-	            		
+	            	for (@SuppressWarnings("unused") Context c : sit.getContext()) {
 	            	}
-	            	for (Object val : sit.getProperties().values()) {
-	            		
+	            	for (@SuppressWarnings("unused") Object val : sit.getProperties().values()) {
+
 	            	}
 	            }
             } catch (Throwable t) {
             	// Ignore - may be due to change in API post ER4
             }
-            		
+
             if (LOG.isLoggable(Level.FINEST)) {
-                LOG.finest("Situations result="+ret);
+                LOG.finest(i18n.format("SituationsRepository.SitResult", ret)); //$NON-NLS-1$
             }
         } finally {
             closeEntityManager(em);
         }
 
-        return (ret);        
+        return (ret);
     }
 
 }

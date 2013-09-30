@@ -18,12 +18,10 @@
     <dependency>
       <groupId>org.jboss.logging</groupId>
       <artifactId>jboss-logging</artifactId>
-      <version>3.1.0.GA</version>
     </dependency>
     <dependency>
       <groupId>xerces</groupId>
       <artifactId>xercesImpl</artifactId>
-      <version>2.11.0</version>
     </dependency>
 
     <!-- Overlord Commons UI Header -->
@@ -37,13 +35,11 @@
     <dependency>
       <groupId>org.jboss.msc</groupId>
       <artifactId>jboss-msc</artifactId>
-      <version>${jboss.msc.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.jboss.as</groupId>
       <artifactId>jboss-as-server</artifactId>
-      <version>${jboss.as.server.version}</version>
       <scope>provided</scope>
     </dependency>
 

@@ -82,7 +82,6 @@
       <groupId>javax.enterprise</groupId>
       <artifactId>cdi-api</artifactId>
       <scope>provided</scope>
-      <version>${cdi-api.version}</version>
     </dependency>
     <dependency>
       <groupId>org.overlord</groupId>
@@ -196,25 +195,21 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>${slf4j.api.version}</version>
     </dependency>
     <dependency>
       <groupId>org.jboss.logging</groupId>
       <artifactId>jboss-logging</artifactId>
-      <version>${jboss-logging.version}</version>
     </dependency>
 
     <!-- ServiceActivator/dmr -->
     <dependency>
       <groupId>org.jboss.msc</groupId>
       <artifactId>jboss-msc</artifactId>
-      <version>${jboss.msc.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.jboss.as</groupId>
       <artifactId>jboss-as-server</artifactId>
-      <version>${jboss.as.server.version}</version>
       <scope>provided</scope>
     </dependency>
     

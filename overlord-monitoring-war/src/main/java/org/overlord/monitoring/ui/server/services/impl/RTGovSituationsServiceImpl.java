@@ -26,6 +26,7 @@ import org.overlord.monitoring.ui.client.shared.beans.SituationResultSetBean;
 import org.overlord.monitoring.ui.client.shared.beans.SituationSummaryBean;
 import org.overlord.monitoring.ui.client.shared.beans.SituationsFilterBean;
 import org.overlord.monitoring.ui.client.shared.exceptions.UiException;
+import org.overlord.monitoring.ui.server.i18n.Messages;
 import org.overlord.monitoring.ui.server.services.ISituationsServiceImpl;
 import org.overlord.rtgov.active.collection.ActiveCollection;
 import org.overlord.rtgov.active.collection.ActiveCollectionContext;
@@ -43,26 +44,27 @@ import org.overlord.rtgov.analytics.situation.Situation;
 @Alternative
 public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
 
-	private static final String SITUATIONS = "Situations";
-	
+	private static final String SITUATIONS = "Situations"; //$NON-NLS-1$
+	private static volatile Messages i18n = new Messages();
+
 	private ActiveCollectionManager _acmManager=null;
 	private ActiveList _situations=null;
 	private SituationRepository _repository=null;
-	
+
     /**
      * Constructor.
      */
     public RTGovSituationsServiceImpl() {
     	_acmManager = ActiveCollectionManagerAccessor.getActiveCollectionManager();
-    	
+
     	// Get 'situations' active collection
     	_situations = (ActiveList)
                 _acmManager.getActiveCollection(SITUATIONS);
-    	
+
     	_repository = new SituationRepository();
     }
 
-    
+
     /**
      * @see org.overlord.monitoring.ui.server.services.ISituationsServiceImpl#search(org.overlord.monitoring.ui.client.shared.beans.SituationsFilterBean, int)
      */
@@ -70,32 +72,32 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
     public SituationResultSetBean search(SituationsFilterBean filters, int page) throws UiException {
         SituationResultSetBean rval = new SituationResultSetBean();
         ArrayList<SituationSummaryBean> situations = new ArrayList<SituationSummaryBean>();
-        
+
         try {
         	getHistorySituationList(filters, situations);
         } catch (Exception e) {
         	throw new UiException("Failed to get situation list", e); //$NON-NLS-1$
         }
-        
+
         rval.setSituations(situations);
         rval.setItemsPerPage(situations.size());
         rval.setStartIndex(0);
         rval.setTotalResults(situations.size());
-        
+
         return (rval);
     }
-    
+
     /**
      * This method builds a list of situations, associated with the supplied filter,
      * from the 'situations' database.
-     * 
+     *
      * @param filters The filter
      * @param situations The result list
      * @throws Exception Failed to get situations list
      */
-    protected void getHistorySituationList(SituationsFilterBean filters, java.util.List<SituationSummaryBean> situations) throws Exception {        
+    protected void getHistorySituationList(SituationsFilterBean filters, java.util.List<SituationSummaryBean> situations) throws Exception {
     	java.util.List<Situation> results=_repository.getSituations(filters);
-    	
+
     	for (Situation item : results) {
         	situations.add(getSituationBean(item));
         }
@@ -104,16 +106,16 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
     /**
      * This method builds a list of situations, associated with the supplied filter,
      * from the 'situations' active collection.
-     * 
+     *
      * @param filters The filter
      * @param situations The result list
      * @throws Exception Failed to get situations list
      */
     protected void getActiveSituationList(SituationsFilterBean filters, java.util.List<SituationSummaryBean> situations) throws Exception {
         Predicate predicate=new SituationsFilterPredicate(filters);
-        
+
         ActiveCollection acol=_acmManager.create(filters.toString(), _situations, predicate, null);
-        
+
         for (Object item : acol) {
         	if (item instanceof Situation) {
         		situations.add(getSituationBean((Situation)item));
@@ -128,37 +130,37 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
     public SituationBean get(String situationId) throws UiException {
     	try {
 	    	Situation situation=_repository.getSituation(situationId);
-	    	
+
 	    	if (situation == null) {
-	            throw new UiException("Situation with id '"+situationId+"' not found"); //$NON-NLS-1$    		
+	            throw new UiException(i18n.format("RTGovSituationsServiceImpl.SitNotFound", situationId)); //$NON-NLS-1$
 	    	}
-	    	
+
 	    	return (getSituationBean(situation));
-    	
+
     	} catch (UiException uie) {
     		throw uie;
-    		
+
     	} catch (Exception e) {
-    		throw new UiException("Failed to retrieve situation", e); //$NON-NLS-1$ 
+    		throw new UiException("Failed to retrieve situation", e); //$NON-NLS-1$
     	}
     }
 
     /**
      * Get situation summary from the original situation.
-     * 
+     *
      * @param situation The situation
      * @return The summary
      */
     protected static SituationBean getSituationBean(Situation situation) {
     	SituationBean ret=new SituationBean();
-    	
+
     	ret.setSeverity(situation.getSeverity().name().toLowerCase());
     	ret.setType(situation.getType());
     	ret.setSubject(situation.getSubject());
     	ret.setTimestamp(new Date(situation.getTimestamp()));
     	ret.setDescription(situation.getDescription());
     	ret.getProperties().putAll(situation.getProperties());
-    	
+
     	return (ret);
     }
 
@@ -167,12 +169,12 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
      *
      */
     public static class SituationsFilterPredicate extends Predicate {
-    	
+
     	private SituationsFilterBean _filter=null;
-    	
+
     	/**
     	 * The situations filter predicate constructor.
-    	 * 
+    	 *
     	 * @param filter The filter
     	 */
     	public SituationsFilterPredicate(SituationsFilterBean filter) {
@@ -184,10 +186,10 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
     	 */
 		@Override
 		public boolean evaluate(ActiveCollectionContext context, Object item) {
-			
+
 			if (item instanceof Situation) {
 				Situation situation=(Situation)item;
-				
+
 				if (_filter != null) {
 					// Check severity
 					if (_filter.getSeverity() != null
@@ -195,20 +197,20 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
 							&& !_filter.getSeverity().equalsIgnoreCase(situation.getSeverity().name())) {
 						return (false);
 					}
-					
+
 					// Check type
 					if (_filter.getType() != null
 							&& _filter.getType().trim().length() > 0
 							&& !_filter.getType().equals(situation.getType())) {
 						return (false);
 					}
-										
+
 					// Check start date/time
 					if (_filter.getTimestampFrom() != null
 							&& situation.getTimestamp() < _filter.getTimestampFrom().getTime()) {
 						return (false);
 					}
-					
+
 					// Check end date/time
 					if (_filter.getTimestampTo() != null
 							&& situation.getTimestamp() > _filter.getTimestampTo().getTime()) {
@@ -218,10 +220,10 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
 
 				return (true);
 			}
-			
+
 			return (false);
 		}
-    	
+
     }
 
 }
