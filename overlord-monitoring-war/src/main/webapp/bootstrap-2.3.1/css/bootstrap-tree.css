@@ -41,9 +41,25 @@
   padding: 2px 4px;
   text-decoration: none;
   background-color: white;
+  border-color: #444;
+}
+.tree li span.Success {
+  background-color: #349654;
+  color: white;
+  border-color: #444;
+}
+.tree li span.Warning {
+  background-color: #def12f;
+  color: #444;
+}
+.tree li span.Fail {
+  background-color: #db4747;
+  color: white;
 }
 .tree li.parent_li > span {
   cursor: pointer;
+}
+.tree li.leaf_li > span {
 }
 /*Time for some hover effects*/
 .tree li.parent_li > span:hover {

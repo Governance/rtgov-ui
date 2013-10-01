@@ -159,22 +159,33 @@
               <!-- Situation Properties -->
               <div class="span12 details-meta-data-section">
                 <div class="tree well" data-toggle="tree">
-                  <ul role="tree">
+                  <ul data-field="call-trace" role="tree" data-role="dummy">
                     <li class="parent_li" role="treeitem">
-                        <span><i class="icon-minus-sign"></i> submitOrder:{urn:switchyard:parent}</span> [47ms] (100%)
+                        <span class="Success"><i class="icon-minus-sign"></i> submitOrder:{urn:switchyard:parent}</span> [47ms] (100%)
                         <ul role="group">
                             <li class="parent_li" role="treeitem">
-                                <span><i class="icon-minus-sign"></i> lookupItem:{urn:switchyard:app}</span> [10ms] (55%)
+                                <span class="Success"><i class="icon-minus-sign"></i> lookupItem:{urn:switchyard:app}</span> [10ms] (55%)
                                 <ul role="group">
-                                    <li style="display: list-item;">
+                                    <li class="leaf_li">
                                         <span><i class="icon-leaf"></i> Information: Found the item.</span> [4ms] (100%)
+                                    </li>
+                                    <li class="leaf_li">
+                                        <span><i class="icon-leaf"></i> Information: Another info item.</span> [4ms] (100%)
                                     </li>
                                 </ul>
                             </li>
                             <li class="parent_li" role="treeitem">
-                                <span><i class="icon-minus-sign"></i> deliver:{urn:switchyard-q:app-q}</span> [8ms] (44%)
+                                <span class="Warning"><i class="icon-minus-sign"></i> deliver:{urn:switchyard-q:app-q}</span> [8ms] (44%)
                                 <ul role="group">
-                                    <li style="display: list-item;">
+                                    <li class="leaf_li">
+                                        <span><i class="icon-leaf"></i> Information: Delivering the order</span> [3ms] (100%)
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="parent_li" role="treeitem">
+                                <span class="Fail"><i class="icon-minus-sign"></i> deliver:{urn:switchyard-q:app-q}</span> [8ms] (44%)
+                                <ul role="group">
+                                    <li>
                                         <span><i class="icon-leaf"></i> Information: Delivering the order</span> [3ms] (100%)
                                     </li>
                                 </ul>

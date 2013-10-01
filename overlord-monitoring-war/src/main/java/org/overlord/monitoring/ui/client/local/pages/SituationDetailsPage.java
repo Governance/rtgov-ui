@@ -29,6 +29,7 @@ import org.jboss.errai.ui.shared.api.annotations.Bound;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.overlord.monitoring.ui.client.local.ClientMessages;
+import org.overlord.monitoring.ui.client.local.pages.situations.CallTraceWidget;
 import org.overlord.monitoring.ui.client.local.pages.situations.SituationPropertiesTable;
 import org.overlord.monitoring.ui.client.local.services.NotificationService;
 import org.overlord.monitoring.ui.client.local.services.SituationsRpcService;
@@ -92,6 +93,9 @@ public class SituationDetailsPage extends AbstractPage {
     SituationPropertiesTable propertiesTable;
     @Inject @DataField("context-table") @Bound(property="context")
     SituationPropertiesTable contextTable;
+
+    @Inject @DataField("call-trace") @Bound(property="callTrace")
+    CallTraceWidget callTrace;
 
     @Inject @DataField("situation-details-loading-spinner")
     protected HtmlSnippet loading;

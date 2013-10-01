@@ -21,10 +21,12 @@ import java.util.Date;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
 
+import org.overlord.monitoring.ui.client.shared.beans.CallTraceBean;
 import org.overlord.monitoring.ui.client.shared.beans.SituationBean;
 import org.overlord.monitoring.ui.client.shared.beans.SituationResultSetBean;
 import org.overlord.monitoring.ui.client.shared.beans.SituationSummaryBean;
 import org.overlord.monitoring.ui.client.shared.beans.SituationsFilterBean;
+import org.overlord.monitoring.ui.client.shared.beans.TraceNodeBean;
 import org.overlord.monitoring.ui.client.shared.exceptions.UiException;
 import org.overlord.monitoring.ui.server.services.ISituationsServiceImpl;
 
@@ -116,7 +118,51 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
         situation.getProperties().put("Property-3", "Property three Value"); //$NON-NLS-1$ //$NON-NLS-2$
         situation.getContext().put("Context-1", "This is the value of the context 1 property."); //$NON-NLS-1$ //$NON-NLS-2$
         situation.getContext().put("Context-2", "This is the value of the context 2 property."); //$NON-NLS-1$ //$NON-NLS-2$
+
+        CallTraceBean callTrace = createMockCallTrace();
+        situation.setCallTrace(callTrace);
+
         return situation;
+    }
+
+    /**
+     * Creates a mock call trace!
+     */
+    protected CallTraceBean createMockCallTrace() {
+        CallTraceBean callTrace = new CallTraceBean();
+
+        TraceNodeBean rootNode = createTraceNode("Success", "urn:switchyard:parent", "submitOrder", 47, 100); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        callTrace.getTasks().add(rootNode);
+
+        TraceNodeBean childNode = createTraceNode("Success", "urn:switchyard:application", "lookupItem", 10, 55); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        rootNode.getTasks().add(childNode);
+        TraceNodeBean leafNode = createTraceNode("Success", null, null, 3, 30); //$NON-NLS-1$
+        leafNode.setDescription("Information: Found the item."); //$NON-NLS-1$
+        childNode.getTasks().add(leafNode);
+        leafNode = createTraceNode("Success", null, null, 7, 70); //$NON-NLS-1$
+        leafNode.setDescription("Information: Secured the item."); //$NON-NLS-1$
+        childNode.getTasks().add(leafNode);
+
+        childNode = createTraceNode("Success", "urn:switchyard:application", "deliver", 8, 44); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        rootNode.getTasks().add(childNode);
+        leafNode = createTraceNode("Success", null, null, 4, 100); //$NON-NLS-1$
+        leafNode.setDescription("Information: Delivering the order."); //$NON-NLS-1$
+        childNode.getTasks().add(leafNode);
+
+        return callTrace;
+    }
+
+    /**
+     * Creates a single trace node.
+     */
+    protected TraceNodeBean createTraceNode(String status, String iface, String op, long duration, int percentage) {
+        TraceNodeBean rootNode = new TraceNodeBean();
+        rootNode.setStatus(status);
+        rootNode.setIface(iface);
+        rootNode.setOperation(op);
+        rootNode.setDuration(duration);
+        rootNode.setPercentage(percentage);
+        return rootNode;
     }
 
 }
