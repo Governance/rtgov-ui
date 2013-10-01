@@ -19,5 +19,5 @@
   "severity.medium" : "Medium",
   "severity.high" : "High",
   "severity.critical" : "Critical",
-  "situation-table.properties" : "Properties"
+  "situation-table.properties" : "Properties Preview"
 }

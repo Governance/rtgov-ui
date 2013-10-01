@@ -125,12 +125,20 @@ public class SituationTable extends TemplatedWidgetTable {
         builder.append("<table class='table table-condensed table-hover table-striped' style='border-right: 1px solid rgb(211, 211, 211); border-bottom: 1px solid rgb(211, 211, 211);'>"); //$NON-NLS-1$
         builder.append("<tbody>"); //$NON-NLS-1$
         for (Entry<String, String> entry : properties.entrySet()) {
+            String key = entry.getKey();
+            if (key != null && key.length() > 32) {
+                key = key.substring(0, 31) + "..."; //$NON-NLS-1$
+            }
+            String value = entry.getValue();
+            if (value != null && value.length() > 128) {
+                value = value.substring(0, 127) + "..."; //$NON-NLS-1$
+            }
             builder.append("<tr>"); //$NON-NLS-1$
             builder.append("<td>"); //$NON-NLS-1$
-            builder.append(entry.getKey());
+            builder.append(key);
             builder.append("</td>"); //$NON-NLS-1$
             builder.append("<td>"); //$NON-NLS-1$
-            builder.append(entry.getValue());
+            builder.append(value);
             builder.append("</td>"); //$NON-NLS-1$
             builder.append("</tr>"); //$NON-NLS-1$
         }
