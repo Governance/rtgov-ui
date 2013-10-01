@@ -40,6 +40,7 @@
   line-height: 14px;
   padding: 2px 4px;
   text-decoration: none;
+  background-color: white;
 }
 .tree li.parent_li > span {
   cursor: pointer;
@@ -50,8 +51,8 @@
   border: 1px solid #c67605;
   color: #fff;
 }
-.tree li.parent_li > span:hover+ul li::after { border-top-color: @orange; }
-.tree li.parent_li > span:hover+ul li::before { border-left-color: @orange; }
+.tree li.parent_li > span:hover+ul li::after { border-top-color: #c67605; }
+.tree li.parent_li > span:hover+ul li::before { border-left-color: #c67605; }
 .tree li.parent_li > span:hover+ul li span {
   background: #fddfb3;
   border: 1px solid #faa937;

@@ -21,7 +21,9 @@ import java.util.Map.Entry;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
+import org.jboss.errai.ui.nav.client.local.TransitionAnchorFactory;
 import org.overlord.monitoring.ui.client.local.ClientMessages;
+import org.overlord.monitoring.ui.client.local.pages.SituationDetailsPage;
 import org.overlord.monitoring.ui.client.shared.beans.SituationSummaryBean;
 import org.overlord.sramp.ui.client.local.widgets.common.TemplatedWidgetTable;
 
@@ -44,6 +46,8 @@ public class SituationTable extends TemplatedWidgetTable {
 
     @Inject
     protected ClientMessages i18n;
+    @Inject
+    protected TransitionAnchorFactory<SituationDetailsPage> toDetailsPageLinkFactory;
 
     /**
      * Constructor.
@@ -62,7 +66,8 @@ public class SituationTable extends TemplatedWidgetTable {
         FlowPanel icon = new FlowPanel();
         icon.getElement().setClassName("icon"); //$NON-NLS-1$
         icon.getElement().addClassName("icon-severity-" + situationSummaryBean.getSeverity()); //$NON-NLS-1$
-        InlineLabel type = new InlineLabel(situationSummaryBean.getType());
+        Anchor type = toDetailsPageLinkFactory.get("id", situationSummaryBean.getSituationId()); //$NON-NLS-1$
+        type.setText(situationSummaryBean.getType());
         InlineLabel subject = new InlineLabel(situationSummaryBean.getSubject());
         InlineLabel description = new InlineLabel(situationSummaryBean.getDescription());
         InlineLabel timestamp = new InlineLabel(format.format(situationSummaryBean.getTimestamp()));

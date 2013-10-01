@@ -48,6 +48,14 @@ public class ClientMessages {
         }
         return dateFormat;
     }
+    public static DateTimeFormat dateTimeFormat = null;
+    public final static DateTimeFormat getDateTimeFormat() {
+        if (dateTimeFormat == null) {
+            String dFormat = translationService.getTranslation("dateTime-format"); //$NON-NLS-1$
+            dateTimeFormat = DateTimeFormat.getFormat(dFormat);
+        }
+        return dateTimeFormat;
+    }
     public static DateTimeFormat timeFormat = null;
     public final static DateTimeFormat getTimeFormat() {
         if (timeFormat == null) {

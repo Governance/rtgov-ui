@@ -42,6 +42,25 @@
       <artifactId>jboss-as-server</artifactId>
       <scope>provided</scope>
     </dependency>
+    
+    <!-- RTGov -->
+    <dependency>
+      <groupId>org.overlord.rtgov.active-queries</groupId>
+      <artifactId>active-collection</artifactId>
+      <version>${rtgov.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.overlord.rtgov.activity-analysis</groupId>
+      <artifactId>analytics</artifactId>
+      <version>${rtgov.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.persistence</groupId>
+      <artifactId>persistence-api</artifactId>
+      <version>1.0.2</version>
+    </dependency>
 
     <dependency>
       <groupId>org.overlord.monitoring</groupId>

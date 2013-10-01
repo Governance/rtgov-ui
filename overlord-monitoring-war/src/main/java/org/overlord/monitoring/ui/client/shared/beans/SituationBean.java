@@ -16,6 +16,8 @@
 package org.overlord.monitoring.ui.client.shared.beans;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
@@ -31,10 +33,26 @@ public class SituationBean extends SituationSummaryBean implements Serializable 
 
     private static final long serialVersionUID = SituationBean.class.hashCode();
 
+    private Map<String, String> context = new HashMap<String, String>();
+
     /**
      * Constructor.
      */
     public SituationBean() {
+    }
+
+    /**
+     * @return the context
+     */
+    public Map<String, String> getContext() {
+        return context;
+    }
+
+    /**
+     * @param context the context to set
+     */
+    public void setContext(Map<String, String> context) {
+        this.context = context;
     }
 
 }

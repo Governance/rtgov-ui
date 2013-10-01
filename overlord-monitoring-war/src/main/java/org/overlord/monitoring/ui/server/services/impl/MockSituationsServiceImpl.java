@@ -48,21 +48,6 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
      */
     @Override
     public SituationResultSetBean search(SituationsFilterBean filters, int page) throws UiException {
-        return createMockResponse();
-    }
-
-    /**
-     * @see org.overlord.monitoring.ui.server.services.ISituationsServiceImpl#getService(java.lang.String)
-     */
-    @Override
-    public SituationBean get(String situationId) throws UiException {
-        throw new UiException("Not implemented."); //$NON-NLS-1$
-    }
-
-    /**
-     * Mock response data.
-     */
-    protected SituationResultSetBean createMockResponse() {
         SituationResultSetBean rval = new SituationResultSetBean();
         ArrayList<SituationSummaryBean> situations = new ArrayList<SituationSummaryBean>();
         rval.setSituations(situations);
@@ -112,6 +97,26 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
         situations.add(situation);
 
         return rval;
+    }
+
+    /**
+     * @see org.overlord.monitoring.ui.server.services.ISituationsServiceImpl#getService(java.lang.String)
+     */
+    @Override
+    public SituationBean get(String situationId) throws UiException {
+        SituationBean situation = new SituationBean();
+        situation.setSituationId("1"); //$NON-NLS-1$
+        situation.setSeverity("critical"); //$NON-NLS-1$
+        situation.setType("Rate Limit Exceeded"); //$NON-NLS-1$
+        situation.setSubject("{urn:namespace}ImportantService|VeryImportantOperation"); //$NON-NLS-1$
+        situation.setTimestamp(new Date());
+        situation.setDescription("Some description of the Situation goes here in this column so that it can be read by the user."); //$NON-NLS-1$
+        situation.getProperties().put("Property-1", "Property one Value"); //$NON-NLS-1$ //$NON-NLS-2$
+        situation.getProperties().put("Property-2", "Property two Value"); //$NON-NLS-1$ //$NON-NLS-2$
+        situation.getProperties().put("Property-3", "Property three Value"); //$NON-NLS-1$ //$NON-NLS-2$
+        situation.getContext().put("Context-1", "This is the value of the context 1 property."); //$NON-NLS-1$ //$NON-NLS-2$
+        situation.getContext().put("Context-2", "This is the value of the context 2 property."); //$NON-NLS-1$ //$NON-NLS-2$
+        return situation;
     }
 
 }

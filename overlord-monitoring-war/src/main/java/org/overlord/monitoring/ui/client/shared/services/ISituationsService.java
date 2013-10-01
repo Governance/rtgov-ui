@@ -40,9 +40,9 @@ public interface ISituationsService {
 
     /**
      * Fetches a full situation by its name.
-     * @param name
+     * @param situationId
      * @throws UiException
      */
-    public SituationBean get(String name) throws UiException;
+    public SituationBean get(String situationId) throws UiException;
 
 }
