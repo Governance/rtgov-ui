@@ -419,3 +419,51 @@ footer hr {
   margin-left: 4px;
 }
 
+.sitwatch-notification {
+  text-align: center;
+  border-radius: 4px 4px 4px 4px;
+  min-height: 30px;
+  padding: 8px 15px;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.sitwatch-events {
+  position: absolute;
+  width: 350px;
+  height: 500px;
+  right: 20px;
+  top: 55px;
+  background-color: #fffff0;
+  border: 1px solid rgb(211, 211, 211);
+  border-radius: 2px;
+  padding: 0px;
+  box-shadow: 2px 2px 2px #AAA;
+  overflow: auto;
+}
+
+.sitwatch-event {
+  font-size: 11px;
+  border-bottom: 1px solid rgb(211,211,211);
+  overflow: hidden;
+  padding: 10px;
+}
+.sitwatch-event:hover {
+  background-color: #f6f6e8;
+}
+.sitwatch-event span {
+  float: left;
+}
+.sitwatch-event .title {
+  font-weight: bold;
+}
+.sitwatch-event .timestamp {
+  float: right;
+}
+.sitwatch-event .icon {
+  float: left;
+  margin-right: 5px;
+}
+.sitwatch-event .subject {
+  line-height: 12px; 
+}

@@ -19,7 +19,10 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
+import org.jboss.errai.bus.client.api.messaging.Message;
+import org.jboss.errai.bus.client.api.messaging.MessageCallback;
 import org.jboss.errai.ui.nav.client.local.Page;
+import org.jboss.errai.ui.nav.client.local.PageHiding;
 import org.jboss.errai.ui.nav.client.local.PageShown;
 import org.jboss.errai.ui.nav.client.local.TransitionAnchor;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
@@ -28,20 +31,25 @@ import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.overlord.monitoring.ui.client.local.ClientMessages;
 import org.overlord.monitoring.ui.client.local.pages.situations.SituationFilters;
 import org.overlord.monitoring.ui.client.local.pages.situations.SituationTable;
+import org.overlord.monitoring.ui.client.local.pages.situations.SituationWatcherEvents;
 import org.overlord.monitoring.ui.client.local.services.NotificationService;
 import org.overlord.monitoring.ui.client.local.services.SituationsRpcService;
 import org.overlord.monitoring.ui.client.local.services.rpc.IRpcServiceInvocationHandler;
+import org.overlord.monitoring.ui.client.shared.beans.SituationEventBean;
 import org.overlord.monitoring.ui.client.shared.beans.SituationResultSetBean;
 import org.overlord.monitoring.ui.client.shared.beans.SituationSummaryBean;
 import org.overlord.monitoring.ui.client.shared.beans.SituationsFilterBean;
 import org.overlord.sramp.ui.client.local.widgets.bootstrap.Pager;
 import org.overlord.sramp.ui.client.local.widgets.common.HtmlSnippet;
 
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 
 /**
@@ -87,7 +95,13 @@ public class SituationsPage extends AbstractPage {
     @DataField("situations-total")
     protected SpanElement totalSpan = Document.get().createSpanElement();
 
+    @Inject @DataField("sitwatch-btn")
+    protected Anchor sitWatchButton;
+    @Inject @DataField("sitwatch-events")
+    protected SituationWatcherEvents sitWatchEvents;
+
     private int currentPage = 1;
+    private int numEvents = 0;
 
     /**
      * Constructor.
@@ -100,6 +114,49 @@ public class SituationsPage extends AbstractPage {
      */
     @PageShown
     public void onPageShown() {
+        GWT.log("Subscribing to SitWatch topic."); //$NON-NLS-1$
+        bus.subscribe("SitWatch", new MessageCallback() { //$NON-NLS-1$
+            @Override
+            public void callback(Message message) {
+                SituationEventBean sitEvent = message.get(SituationEventBean.class, "situation"); //$NON-NLS-1$
+                onNewSituation(sitEvent);
+            }
+        });
+    }
+
+    /**
+     * Called when the user navigates away from the page.
+     */
+    @PageHiding
+    public void onPageHiding() {
+        GWT.log("Unsubscribing *from* SitWatch topic."); //$NON-NLS-1$
+        bus.unsubscribeAll("SitWatch"); //$NON-NLS-1$
+    }
+
+    /**
+     * Called when a new situation event is received from the server.
+     * @param sitEvent
+     */
+    protected void onNewSituation(SituationEventBean sitEvent) {
+        GWT.log("Situation event: " + sitEvent.getType()); //$NON-NLS-1$
+        this.numEvents++;
+        this.sitWatchEvents.add(sitEvent);
+        String btnHtml = "<i class=\"icon-warning-sign\"></i> <span>(" + this.numEvents + ")</span>"; //$NON-NLS-1$ //$NON-NLS-2$
+        this.sitWatchButton.setHTML(btnHtml);
+        sitWatchButton.setVisible(true);
+    }
+
+    /**
+     * Event handler that fires when the user clicks the situation watcher button.
+     * @param event
+     */
+    @EventHandler("sitwatch-btn")
+    public void onSitWatchClick(ClickEvent event) {
+        int p = this.sitWatchButton.getAbsoluteTop() + this.sitWatchButton.getOffsetHeight() + 10;
+        this.sitWatchEvents.getElement().getStyle().setTop(p, Unit.PX);
+        this.sitWatchEvents.setVisible(!this.sitWatchEvents.isVisible());
+        this.sitWatchButton.setFocus(false);
+        this.sitWatchEvents.getElement().focus();
     }
 
     /**
@@ -125,6 +182,9 @@ public class SituationsPage extends AbstractPage {
 
         this.rangeSpan.setInnerText("?"); //$NON-NLS-1$
         this.totalSpan.setInnerText("?"); //$NON-NLS-1$
+
+        sitWatchButton.setVisible(false);
+        sitWatchEvents.setVisible(false);
     }
 
     /**
@@ -167,6 +227,7 @@ public class SituationsPage extends AbstractPage {
             public void onReturn(SituationResultSetBean data) {
                 updateTable(data);
                 updatePager(data);
+                resetSituationWatcher();
             }
             @Override
             public void onError(Throwable error) {
@@ -224,6 +285,16 @@ public class SituationsPage extends AbstractPage {
         String totalText = String.valueOf(data.getTotalResults());
         this.rangeSpan.setInnerText(rangeText);
         this.totalSpan.setInnerText(totalText);
+    }
+
+    /**
+     * Resets the situation watcher widget.
+     */
+    protected void resetSituationWatcher() {
+        this.numEvents = 0;
+        sitWatchButton.setVisible(false);
+        this.sitWatchEvents.setVisible(false);
+        this.sitWatchEvents.clear();
     }
 
 }

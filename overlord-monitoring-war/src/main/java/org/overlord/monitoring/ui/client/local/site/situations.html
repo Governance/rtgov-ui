@@ -29,7 +29,7 @@
 
         <!-- Breadcrumbs -->
         <div class="row-fluid">
-          <ul class="breadcrumb">
+          <ul class="breadcrumb span11">
             <li><a data-field="back-to-dashboard" href="dashboard.html" data-i18n-key="breadcrumb.dashboard">Dashboard</a> <span class="divider">/<span data-role="dummy" /></span></li>
             <li class="dropdown active">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -40,6 +40,21 @@
                 </ul>
             </li>
           </ul>
+          <a data-field="sitwatch-btn" onclick="$(this).blur();" class="btn span1 sitwatch-notification" data-toggle="dropdown"><i class="icon-warning-sign"></i> <span>(3)</span></a>
+          <div data-field="sitwatch-events" class="sitwatch-events" data-role="dummy">
+            <div class="sitwatch-event">
+              <div class="icon icon-severity-critical"></div>
+              <a class="title" href="#">Rate Limit Exceeded</a>
+              <span class="timestamp">9:16 AM</span>
+              <span class="subject">{urn:namespace}ImportantService|VeryImportantOperation</span>
+            </div>
+            <div class="sitwatch-event">
+              <i class="icon icon-severity-high"></i>
+              <span class="title"><a href="#">SLA Violation</a></span>
+              <span class="timestamp">8:53 AM</span>
+              <span class="subject">{urn:namespace}ImportantService|VeryImportantOperation</span>
+            </div>
+          </div>
         </div>
 
         <!-- Page content -->

@@ -8,5 +8,6 @@
     <alternatives>
         <class>org.overlord.monitoring.ui.server.services.impl.MockSituationsServiceImpl</class>
         <class>org.overlord.monitoring.ui.server.services.impl.MockServicesServiceImpl</class>
+        <class>org.overlord.monitoring.ui.server.services.impl.MockSituationEventGenerator</class>
     </alternatives>
 </beans>

@@ -55,7 +55,7 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
         rval.setSituations(situations);
         rval.setItemsPerPage(20);
         rval.setStartIndex(0);
-        rval.setTotalResults(2);
+        rval.setTotalResults(4);
 
         SituationSummaryBean situation = new SituationSummaryBean();
         situation.setSituationId("1"); //$NON-NLS-1$
