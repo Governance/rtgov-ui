@@ -8,6 +8,6 @@
     <alternatives>
         <class>org.overlord.monitoring.ui.server.services.impl.RTGovSituationsServiceImpl</class>
         <class>org.overlord.monitoring.ui.server.services.impl.SwitchYardServicesServiceImpl</class>
-        <class>org.overlord.monitoring.ui.server.services.impl.MockSituationEventGenerator</class>
+        <class>org.overlord.monitoring.ui.server.services.impl.RTGovSituationEventGenerator</class>
     </alternatives>
 </beans>

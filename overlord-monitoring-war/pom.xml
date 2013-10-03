@@ -53,6 +53,28 @@
 		<version>${rtgov.version}</version>
 		<scope>provided</scope>
 	</dependency>
+	<dependency>
+		<groupId>org.overlord.rtgov.activity-analysis</groupId>
+		<artifactId>call-trace</artifactId>
+		<version>${rtgov.version}</version>
+	</dependency>
+	<!--
+	<dependency>
+		<groupId>org.overlord.rtgov.activity-management</groupId>
+		<artifactId>activity-server-jee</artifactId>
+		<version>${rtgov.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>org.overlord.rtgov.activity-management</groupId>
+		<artifactId>activity-store-jpa</artifactId>
+		<version>${rtgov.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>org.overlord.rtgov.integration</groupId>
+		<artifactId>rtgov-jbossas</artifactId>
+		<version>${rtgov.version}</version>
+	</dependency>
+	-->
 
     <!-- Third Party Dependencies -->
     <dependency>
