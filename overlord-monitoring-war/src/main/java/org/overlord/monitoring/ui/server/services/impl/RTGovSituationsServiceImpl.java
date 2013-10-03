@@ -20,21 +20,22 @@ import java.util.Date;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
+import javax.inject.Inject;
 
+import org.overlord.monitoring.ui.client.shared.beans.CallTraceBean;
 import org.overlord.monitoring.ui.client.shared.beans.SituationBean;
 import org.overlord.monitoring.ui.client.shared.beans.SituationResultSetBean;
 import org.overlord.monitoring.ui.client.shared.beans.SituationSummaryBean;
 import org.overlord.monitoring.ui.client.shared.beans.SituationsFilterBean;
+import org.overlord.monitoring.ui.client.shared.beans.TraceNodeBean;
 import org.overlord.monitoring.ui.client.shared.exceptions.UiException;
 import org.overlord.monitoring.ui.server.i18n.Messages;
 import org.overlord.monitoring.ui.server.services.ISituationsServiceImpl;
-import org.overlord.rtgov.active.collection.ActiveCollection;
 import org.overlord.rtgov.active.collection.ActiveCollectionContext;
-import org.overlord.rtgov.active.collection.ActiveCollectionManager;
-import org.overlord.rtgov.active.collection.ActiveCollectionManagerAccessor;
-import org.overlord.rtgov.active.collection.ActiveList;
 import org.overlord.rtgov.active.collection.predicate.Predicate;
+//import org.overlord.rtgov.activity.server.ActivityServer;
 import org.overlord.rtgov.analytics.situation.Situation;
+import org.overlord.rtgov.call.trace.CallTraceService;
 
 /**
  * Concrete implementation of the faults service using RTGov situations.
@@ -44,24 +45,22 @@ import org.overlord.rtgov.analytics.situation.Situation;
 @Alternative
 public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
 
-	private static final String SITUATIONS = "Situations"; //$NON-NLS-1$
 	private static volatile Messages i18n = new Messages();
 
-	private ActiveCollectionManager _acmManager=null;
-	private ActiveList _situations=null;
 	private SituationRepository _repository=null;
+	
+	@Inject
+	private CallTraceService _callTraceService=null;
+	
+	//@Inject
+	//private ActivityServer _activityServer=null;
 
     /**
      * Constructor.
      */
     public RTGovSituationsServiceImpl() {
-    	_acmManager = ActiveCollectionManagerAccessor.getActiveCollectionManager();
-
-    	// Get 'situations' active collection
-    	_situations = (ActiveList)
-                _acmManager.getActiveCollection(SITUATIONS);
-
     	_repository = new SituationRepository();
+    	//_callTraceService.setActivityServer(_activityServer);
     }
 
 
@@ -104,30 +103,12 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
     }
 
     /**
-     * This method builds a list of situations, associated with the supplied filter,
-     * from the 'situations' active collection.
-     *
-     * @param filters The filter
-     * @param situations The result list
-     * @throws Exception Failed to get situations list
-     */
-    protected void getActiveSituationList(SituationsFilterBean filters, java.util.List<SituationSummaryBean> situations) throws Exception {
-        Predicate predicate=new SituationsFilterPredicate(filters);
-
-        ActiveCollection acol=_acmManager.create(filters.toString(), _situations, predicate, null);
-
-        for (Object item : acol) {
-        	if (item instanceof Situation) {
-        		situations.add(getSituationBean((Situation)item));
-        	}
-        }
-    }
-
-    /**
      * @see org.overlord.monitoring.ui.server.services.ISituationsServiceImpl#getService(java.lang.String)
      */
     @Override
     public SituationBean get(String situationId) throws UiException {
+    	SituationBean ret=null;
+    	
     	try {
 	    	Situation situation=_repository.getSituation(situationId);
 
@@ -135,7 +116,10 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
 	            throw new UiException(i18n.format("RTGovSituationsServiceImpl.SitNotFound", situationId)); //$NON-NLS-1$
 	    	}
 
-	    	return (getSituationBean(situation));
+	    	ret = getSituationBean(situation);
+	    	
+	        CallTraceBean callTrace = createMockCallTrace();
+	        ret.setCallTrace(callTrace);
 
     	} catch (UiException uie) {
     		throw uie;
@@ -143,6 +127,62 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
     	} catch (Exception e) {
     		throw new UiException("Failed to retrieve situation", e); //$NON-NLS-1$
     	}
+    	
+    	return (ret);
+    }
+
+    /**
+     * This method retrieves the call trace for the supplied situation.
+     * 
+     * @param situation The situation
+     * @return The call trace
+     */
+    protected CallTraceBean getCallTrace(Situation situation) {
+        CallTraceBean ret = new CallTraceBean();
+    	
+        return (ret);
+    }
+    
+    /**
+     * Creates a mock call trace!
+     */
+    protected CallTraceBean createMockCallTrace() {
+        CallTraceBean callTrace = new CallTraceBean();
+
+        /*
+        TraceNodeBean rootNode = createTraceNode("Success", "urn:switchyard:parent", "submitOrder", 47, 100); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        callTrace.getTasks().add(rootNode);
+
+        TraceNodeBean childNode = createTraceNode("Success", "urn:switchyard:application", "lookupItem", 10, 55); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        rootNode.getTasks().add(childNode);
+        TraceNodeBean leafNode = createTraceNode("Success", null, null, 3, 30); //$NON-NLS-1$
+        leafNode.setDescription("Information: Found the item."); //$NON-NLS-1$
+        childNode.getTasks().add(leafNode);
+        leafNode = createTraceNode("Success", null, null, 7, 70); //$NON-NLS-1$
+        leafNode.setDescription("Information: Secured the item."); //$NON-NLS-1$
+        childNode.getTasks().add(leafNode);
+
+        childNode = createTraceNode("Success", "urn:switchyard:application", "deliver", 8, 44); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        rootNode.getTasks().add(childNode);
+        leafNode = createTraceNode("Success", null, null, 4, 100); //$NON-NLS-1$
+        leafNode.setDescription("Information: Delivering the order."); //$NON-NLS-1$
+        childNode.getTasks().add(leafNode);
+*/
+
+        return callTrace;
+    }
+
+    /**
+     * Creates a single trace node.
+     */
+    protected TraceNodeBean createTraceNode(String status, String iface, String op, long duration, int percentage) {
+        TraceNodeBean rootNode = new TraceNodeBean();
+        rootNode.setStatus(status);
+        rootNode.setIface(iface);
+        rootNode.setOperation(op);
+        rootNode.setDuration(duration);
+        rootNode.setPercentage(percentage);
+        return rootNode;
     }
 
     /**
@@ -154,6 +194,7 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
     protected static SituationBean getSituationBean(Situation situation) {
     	SituationBean ret=new SituationBean();
 
+    	ret.setSituationId(situation.getId());
     	ret.setSeverity(situation.getSeverity().name().toLowerCase());
     	ret.setType(situation.getType());
     	ret.setSubject(situation.getSubject());
