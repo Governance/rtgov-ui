@@ -48,10 +48,10 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
 	private static volatile Messages i18n = new Messages();
 
 	private SituationRepository _repository=null;
-	
+
 	@Inject
 	private CallTraceService _callTraceService=null;
-	
+
 	//@Inject
 	//private ActivityServer _activityServer=null;
 
@@ -108,7 +108,7 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
     @Override
     public SituationBean get(String situationId) throws UiException {
     	SituationBean ret=null;
-    	
+
     	try {
 	    	Situation situation=_repository.getSituation(situationId);
 
@@ -117,7 +117,7 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
 	    	}
 
 	    	ret = getSituationBean(situation);
-	    	
+
 	        CallTraceBean callTrace = createMockCallTrace();
 	        ret.setCallTrace(callTrace);
 
@@ -127,22 +127,22 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
     	} catch (Exception e) {
     		throw new UiException("Failed to retrieve situation", e); //$NON-NLS-1$
     	}
-    	
+
     	return (ret);
     }
 
     /**
      * This method retrieves the call trace for the supplied situation.
-     * 
+     *
      * @param situation The situation
      * @return The call trace
      */
     protected CallTraceBean getCallTrace(Situation situation) {
         CallTraceBean ret = new CallTraceBean();
-    	
+
         return (ret);
     }
-    
+
     /**
      * Creates a mock call trace!
      */
@@ -194,7 +194,7 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
     protected static SituationBean getSituationBean(Situation situation) {
     	SituationBean ret=new SituationBean();
 
-    	ret.setSituationId(situation.getId());
+//    	ret.setSituationId(situation.getId());
     	ret.setSeverity(situation.getSeverity().name().toLowerCase());
     	ret.setType(situation.getType());
     	ret.setSubject(situation.getSubject());

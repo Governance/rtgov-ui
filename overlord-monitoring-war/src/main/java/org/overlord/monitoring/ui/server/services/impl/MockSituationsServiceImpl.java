@@ -149,7 +149,7 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
         leafNode.setDescription("Information: Delivering the order."); //$NON-NLS-1$
         childNode.getTasks().add(leafNode);
 
-        return callTrace;
+        return null;
     }
 
     /**

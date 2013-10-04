@@ -42,7 +42,7 @@ public class RTGovSituationsUtil {
     public static SituationBean getSituationBean(Situation situation) {
     	SituationBean ret=new SituationBean();
 
-    	ret.setSituationId(situation.getId());
+//    	ret.setSituationId(situation.getId());
     	ret.setSeverity(situation.getSeverity().name().toLowerCase());
     	ret.setType(situation.getType());
     	ret.setSubject(situation.getSubject());
@@ -52,7 +52,7 @@ public class RTGovSituationsUtil {
 
     	return (ret);
     }
-    
+
     /**
      * Get situation event from the original situation.
      *
@@ -62,7 +62,7 @@ public class RTGovSituationsUtil {
     public static SituationEventBean getSituationEventBean(Situation situation) {
     	SituationEventBean ret=new SituationEventBean();
 
-    	ret.setSituationId(situation.getId());
+//    	ret.setSituationId(situation.getId());
     	ret.setSeverity(situation.getSeverity().name().toLowerCase());
     	ret.setType(situation.getType());
     	ret.setSubject(situation.getSubject());
