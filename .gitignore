@@ -1,6 +1,7 @@
 .settings
 .project
 target
+bin
 .metadata
 RemoteSystemsTempFiles
 .errai

@@ -16,8 +16,8 @@
 package org.overlord.monitoring.ui.server.services.impl;
 
 import java.util.ArrayList;
-import java.util.Date;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
@@ -33,9 +33,14 @@ import org.overlord.monitoring.ui.server.i18n.Messages;
 import org.overlord.monitoring.ui.server.services.ISituationsServiceImpl;
 import org.overlord.rtgov.active.collection.ActiveCollectionContext;
 import org.overlord.rtgov.active.collection.predicate.Predicate;
-//import org.overlord.rtgov.activity.server.ActivityServer;
+import org.overlord.rtgov.activity.model.Context;
+import org.overlord.rtgov.activity.server.ActivityServer;
 import org.overlord.rtgov.analytics.situation.Situation;
 import org.overlord.rtgov.call.trace.CallTraceService;
+import org.overlord.rtgov.call.trace.model.Call;
+import org.overlord.rtgov.call.trace.model.CallTrace;
+import org.overlord.rtgov.call.trace.model.Task;
+import org.overlord.rtgov.call.trace.model.TraceNode;
 
 /**
  * Concrete implementation of the faults service using RTGov situations.
@@ -52,17 +57,20 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
 	@Inject
 	private CallTraceService _callTraceService=null;
 
-	//@Inject
-	//private ActivityServer _activityServer=null;
+	@Inject
+	private ActivityServer _activityServer=null;
 
     /**
      * Constructor.
      */
     public RTGovSituationsServiceImpl() {
-    	_repository = new SituationRepository();
-    	//_callTraceService.setActivityServer(_activityServer);
     }
 
+    @PostConstruct
+    public void init() {
+    	_repository = new SituationRepository();
+    	_callTraceService.setActivityServer(_activityServer);    	
+    }
 
     /**
      * @see org.overlord.monitoring.ui.server.services.ISituationsServiceImpl#search(org.overlord.monitoring.ui.client.shared.beans.SituationsFilterBean, int)
@@ -98,7 +106,7 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
     	java.util.List<Situation> results=_repository.getSituations(filters);
 
     	for (Situation item : results) {
-        	situations.add(getSituationBean(item));
+        	situations.add(RTGovSituationsUtil.getSituationBean(item));
         }
     }
 
@@ -116,9 +124,9 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
 	            throw new UiException(i18n.format("RTGovSituationsServiceImpl.SitNotFound", situationId)); //$NON-NLS-1$
 	    	}
 
-	    	ret = getSituationBean(situation);
+	    	ret = RTGovSituationsUtil.getSituationBean(situation);
 
-	        CallTraceBean callTrace = createMockCallTrace();
+	        CallTraceBean callTrace = getCallTrace(situation);
 	        ret.setCallTrace(callTrace);
 
     	} catch (UiException uie) {
@@ -137,71 +145,81 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
      * @param situation The situation
      * @return The call trace
      */
-    protected CallTraceBean getCallTrace(Situation situation) {
+    protected CallTraceBean getCallTrace(Situation situation) throws UiException {
         CallTraceBean ret = new CallTraceBean();
+        
+        // Obtain call trace
+        Context context=null;
+        
+        for (Context c : situation.getContext()) {
+        	if (c.getType() == Context.Type.Conversation) {
+        		context = c;
+        		break;
+        	}
+        }
+        
+        if (context == null && situation.getContext().size() > 0) {
+        	// If no conversation context available, then use any other
+        	context = situation.getContext().iterator().next();
+        }
+        
+        if (context != null) {
+        	try {
+        		CallTrace ct=_callTraceService.createCallTrace(context);
+        		
+        		if (ct != null) {
+        			for (TraceNode tn : ct.getTasks()) {
+        				ret.getTasks().add(createTraceNode(tn));
+        			}
+        			
+        		}
+        	} catch (Exception e) {
+        		throw new UiException("Failed to get call trace for context '"+context+"'", e);
+        	}
+        }
 
         return (ret);
     }
-
+    
     /**
-     * Creates a mock call trace!
+     * This method creates a UI bean from the supplied trace node.
+     * 
+     * @param node The trace node
+     * @return The trace node bean
      */
-    protected CallTraceBean createMockCallTrace() {
-        CallTraceBean callTrace = new CallTraceBean();
-
-        /*
-        TraceNodeBean rootNode = createTraceNode("Success", "urn:switchyard:parent", "submitOrder", 47, 100); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        callTrace.getTasks().add(rootNode);
-
-        TraceNodeBean childNode = createTraceNode("Success", "urn:switchyard:application", "lookupItem", 10, 55); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        rootNode.getTasks().add(childNode);
-        TraceNodeBean leafNode = createTraceNode("Success", null, null, 3, 30); //$NON-NLS-1$
-        leafNode.setDescription("Information: Found the item."); //$NON-NLS-1$
-        childNode.getTasks().add(leafNode);
-        leafNode = createTraceNode("Success", null, null, 7, 70); //$NON-NLS-1$
-        leafNode.setDescription("Information: Secured the item."); //$NON-NLS-1$
-        childNode.getTasks().add(leafNode);
-
-        childNode = createTraceNode("Success", "urn:switchyard:application", "deliver", 8, 44); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        rootNode.getTasks().add(childNode);
-        leafNode = createTraceNode("Success", null, null, 4, 100); //$NON-NLS-1$
-        leafNode.setDescription("Information: Delivering the order."); //$NON-NLS-1$
-        childNode.getTasks().add(leafNode);
-*/
-
-        return callTrace;
-    }
-
-    /**
-     * Creates a single trace node.
-     */
-    protected TraceNodeBean createTraceNode(String status, String iface, String op, long duration, int percentage) {
-        TraceNodeBean rootNode = new TraceNodeBean();
-        rootNode.setStatus(status);
-        rootNode.setIface(iface);
-        rootNode.setOperation(op);
-        rootNode.setDuration(duration);
-        rootNode.setPercentage(percentage);
-        return rootNode;
-    }
-
-    /**
-     * Get situation summary from the original situation.
-     *
-     * @param situation The situation
-     * @return The summary
-     */
-    protected static SituationBean getSituationBean(Situation situation) {
-    	SituationBean ret=new SituationBean();
-
-//    	ret.setSituationId(situation.getId());
-    	ret.setSeverity(situation.getSeverity().name().toLowerCase());
-    	ret.setType(situation.getType());
-    	ret.setSubject(situation.getSubject());
-    	ret.setTimestamp(new Date(situation.getTimestamp()));
-    	ret.setDescription(situation.getDescription());
-    	ret.getProperties().putAll(situation.getProperties());
-
+    protected TraceNodeBean createTraceNode(TraceNode node) {
+    	TraceNodeBean ret=new TraceNodeBean();
+    	
+    	ret.setType(node.getClass().getSimpleName());
+    	ret.setStatus(node.getStatus().name());
+    	
+    	if (node instanceof Task) {
+    		Task task=(Task)node;
+    		
+    		ret.setDescription(task.getDescription());
+    		
+    	} else if (node instanceof Call) {
+    		Call call=(Call)node;
+    		
+        	ret.setIface(call.getInterface());
+            ret.setOperation(call.getOperation());
+            ret.setDuration(call.getDuration());
+            ret.setPercentage(call.getPercentage());
+            ret.setComponent(call.getComponent());
+            ret.setFault(call.getFault());
+            ret.setPrincipal(call.getPrincipal());
+            ret.setRequest(call.getRequest());
+            ret.setResponse(call.getResponse());
+            ret.setRequestLatency(call.getRequestLatency());
+            ret.setResponseLatency(call.getResponseLatency());
+            
+            ret.setProperties(call.getProperties());
+        	
+        	for (TraceNode child : call.getTasks()) {
+				ret.getTasks().add(createTraceNode(child));
+        	}
+    	}
+    	
     	return (ret);
     }
 
