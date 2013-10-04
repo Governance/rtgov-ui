@@ -29,6 +29,7 @@ import org.jboss.errai.ui.shared.api.annotations.Bound;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.overlord.monitoring.ui.client.local.ClientMessages;
+import org.overlord.monitoring.ui.client.local.pages.situations.CallTraceDetails;
 import org.overlord.monitoring.ui.client.local.pages.situations.CallTraceWidget;
 import org.overlord.monitoring.ui.client.local.pages.situations.SituationPropertiesTable;
 import org.overlord.monitoring.ui.client.local.services.NotificationService;
@@ -37,9 +38,12 @@ import org.overlord.monitoring.ui.client.local.services.rpc.IRpcServiceInvocatio
 import org.overlord.monitoring.ui.client.local.util.DOMUtil;
 import org.overlord.monitoring.ui.client.local.util.DataBindingDateTimeConverter;
 import org.overlord.monitoring.ui.client.shared.beans.SituationBean;
+import org.overlord.monitoring.ui.client.shared.beans.TraceNodeBean;
 import org.overlord.sramp.ui.client.local.widgets.common.HtmlSnippet;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 
@@ -96,6 +100,8 @@ public class SituationDetailsPage extends AbstractPage {
 
     @Inject @DataField("call-trace") @Bound(property="callTrace")
     CallTraceWidget callTrace;
+    @Inject @DataField("call-trace-detail")
+    CallTraceDetails callTraceDetail;
 
     @Inject @DataField("situation-details-loading-spinner")
     protected HtmlSnippet loading;
@@ -114,6 +120,13 @@ public class SituationDetailsPage extends AbstractPage {
     protected void onPostConstruct() {
         pageContent = DOMUtil.findElementById(getElement(), "situation-details-content-wrapper"); //$NON-NLS-1$
         pageContent.addClassName("hide"); //$NON-NLS-1$
+        callTraceDetail.setVisible(false);
+        callTrace.addSelectionHandler(new SelectionHandler<TraceNodeBean>() {
+            @Override
+            public void onSelection(SelectionEvent<TraceNodeBean> event) {
+                onCallTraceNodeSelected(event.getSelectedItem());
+            }
+        });
     }
 
     /**
@@ -146,6 +159,15 @@ public class SituationDetailsPage extends AbstractPage {
         severity.addStyleName("icon-severity-" + situation.getSeverity()); //$NON-NLS-1$
         loading.getElement().addClassName("hide"); //$NON-NLS-1$
         pageContent.removeClassName("hide"); //$NON-NLS-1$
+    }
+
+    /**
+     * Event handler called when the user clicks an item in the call trace widget.
+     * @param event
+     */
+    public void onCallTraceNodeSelected(TraceNodeBean node) {
+        callTraceDetail.setValue(node);
+        callTraceDetail.setVisible(true);
     }
 
 }

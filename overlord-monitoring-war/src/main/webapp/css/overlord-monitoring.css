@@ -467,3 +467,22 @@ footer hr {
 .sitwatch-event .subject {
   line-height: 12px; 
 }
+
+.call-trace-detail {
+  padding: 19px;
+  background-color: rgb(251, 250, 241);
+  border: 1px solid rgb(227, 227, 227);
+  border-radius: 4px 4px 4px 4px;
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.05) inset;
+  margin-bottom: 10px;
+}
+
+.call-trace .tree li.leaf_li > span {
+  cursor: pointer;
+}
+.call-trace .tree li.leaf_li > span:hover {
+  background-color: #df8505;
+  border: 1px solid #c67605;
+  color: #fff;
+}
+

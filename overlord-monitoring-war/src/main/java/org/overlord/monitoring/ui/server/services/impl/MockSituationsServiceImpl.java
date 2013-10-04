@@ -131,38 +131,51 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
     protected CallTraceBean createMockCallTrace() {
         CallTraceBean callTrace = new CallTraceBean();
 
-        TraceNodeBean rootNode = createTraceNode("Success", "urn:switchyard:parent", "submitOrder", 47, 100); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        TraceNodeBean rootNode = createTraceNode("Call", "Success", "urn:switchyard:parent", "submitOrder", 47, 100); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         callTrace.getTasks().add(rootNode);
 
-        TraceNodeBean childNode = createTraceNode("Success", "urn:switchyard:application", "lookupItem", 10, 55); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        TraceNodeBean childNode = createTraceNode("Call", "Success", "urn:switchyard:application", "lookupItem", 10, 55); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         rootNode.getTasks().add(childNode);
-        TraceNodeBean leafNode = createTraceNode("Success", null, null, 3, 30); //$NON-NLS-1$
+        TraceNodeBean leafNode = createTraceNode("Task", "Success", null, null, 3, 30); //$NON-NLS-1$ //$NON-NLS-2$
         leafNode.setDescription("Information: Found the item."); //$NON-NLS-1$
         childNode.getTasks().add(leafNode);
-        leafNode = createTraceNode("Success", null, null, 7, 70); //$NON-NLS-1$
+        leafNode = createTraceNode("Task", "Success", null, null, 7, 70); //$NON-NLS-1$ //$NON-NLS-2$
         leafNode.setDescription("Information: Secured the item."); //$NON-NLS-1$
         childNode.getTasks().add(leafNode);
 
-        childNode = createTraceNode("Success", "urn:switchyard:application", "deliver", 8, 44); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        childNode = createTraceNode("Call", "Success", "urn:switchyard:application", "deliver", 8, 44); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        childNode.setIface("org.overlord.public.interface.Application"); //$NON-NLS-1$
+        childNode.setOperation("doIt"); //$NON-NLS-1$
+        childNode.getProperties().put("property-1", "Value for property 1"); //$NON-NLS-1$ //$NON-NLS-2$
+        childNode.getProperties().put("property-2", "Value for property 2"); //$NON-NLS-1$ //$NON-NLS-2$
+        childNode.getProperties().put("property-3", "Value for property 3"); //$NON-NLS-1$ //$NON-NLS-2$
+        childNode.getProperties().put("property-4", "Value for property 4"); //$NON-NLS-1$ //$NON-NLS-2$
         rootNode.getTasks().add(childNode);
-        leafNode = createTraceNode("Success", null, null, 4, 100); //$NON-NLS-1$
+        leafNode = createTraceNode("Task", "Success", null, null, 4, 100); //$NON-NLS-1$ //$NON-NLS-2$
         leafNode.setDescription("Information: Delivering the order."); //$NON-NLS-1$
         childNode.getTasks().add(leafNode);
 
-        return null;
+        return callTrace;
     }
 
     /**
      * Creates a single trace node.
+     * @param type
+     * @param status
+     * @param component
+     * @param op
+     * @param duration
+     * @param percentage
      */
-    protected TraceNodeBean createTraceNode(String status, String iface, String op, long duration, int percentage) {
-        TraceNodeBean rootNode = new TraceNodeBean();
-        rootNode.setStatus(status);
-        rootNode.setIface(iface);
-        rootNode.setOperation(op);
-        rootNode.setDuration(duration);
-        rootNode.setPercentage(percentage);
-        return rootNode;
+    protected TraceNodeBean createTraceNode(String type, String status, String component, String op, long duration, int percentage) {
+        TraceNodeBean node = new TraceNodeBean();
+        node.setType(type);
+        node.setStatus(status);
+        node.setComponent(component);
+        node.setOperation(op);
+        node.setDuration(duration);
+        node.setPercentage(percentage);
+        return node;
     }
 
 }

@@ -23,12 +23,14 @@ import java.util.Map;
 import org.jboss.errai.common.client.api.annotations.Portable;
 
 /**
+ * Models a single node in a call trace.
  *
  * @author eric.wittmann@redhat.com
  */
 @Portable
 public class TraceNodeBean {
 
+    private String type;
     private String iface;
     private String operation;
     private String fault;
@@ -36,11 +38,11 @@ public class TraceNodeBean {
     private String request;
     private String response;
     private String principal;
-    private long requestLatency;
-    private long responseLatency;
+    private long requestLatency = -1;
+    private long responseLatency = -1;
 
-    private long duration;
-    private int percentage;
+    private long duration = -1;
+    private int percentage = -1;
     private String status;
     private Map<String, String> properties = new HashMap<String, String>();
     private String description;
@@ -260,5 +262,19 @@ public class TraceNodeBean {
      */
     public void setResponseLatency(long responseLatency) {
         this.responseLatency = responseLatency;
+    }
+
+    /**
+     * @return the type
+     */
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * @param type the type to set
+     */
+    public void setType(String type) {
+        this.type = type;
     }
 }

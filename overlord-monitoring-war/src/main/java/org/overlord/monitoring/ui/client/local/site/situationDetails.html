@@ -156,8 +156,9 @@
           <div class="container-fluid tab-pane fade" id="calltrace">
             <!-- Call Trace Graph -->
             <div class="row-fluid">
-              <!-- Call Trace-->
-              <div class="span7 details-meta-data-section">
+              <!-- Left hand side of call trace (master) -->
+              <div class="span6 details-meta-data-section call-trace">
+                <!-- tree -->
                 <div class="tree well" data-toggle="tree">
                   <ul data-field="call-trace" role="tree" data-role="dummy">
                     <li class="parent_li" role="treeitem">
@@ -194,11 +195,32 @@
                     </li>
                   </ul>
                 </div>
-              <!-- /tree -->
+                <!-- /tree -->
               </div>
-              <div class="span5 details-meta-data-section">
-                Details go here!
+              <!-- /left hand side of call trace (master) -->
+
+              <!-- Right hand side of call trace (detail) -->
+              <div data-field="call-trace-detail" class="span6 details-meta-data-section call-trace-detail" data-role="dummy">
+                <div class="details-meta-data-section-header">Node</div>
+                <div class="clearfix"></div>
+                <div class="details-meta-data-section-value">submitOrder:{urn:switchyard:parent}</div>
+                <div class="clearfix"></div>
+                <div class="divider-20"></div>
+
+                <div class="details-meta-data-section-header">Summary</div>
+                <div class="clearfix"></div>
+                <div class="details-meta-data-section-label">Type:</div>
+                <div class="details-meta-data-section-value">Task</div>
+                <div class="clearfix"></div>
+                <div class="divider-20"></div>
+
+                <div class="details-meta-data-section-header">Properties</div>
+                <div class="clearfix"></div>
+                <div class="details-meta-data-section-label">Message:</div>
+                <div class="details-meta-data-section-value">Delivering the goods.</div>
+                <div class="clearfix"></div>
               </div>
+              <!-- /Right hand side of call trace (detail) -->
             </div>
           </div>
           <!-- /Tab:CallTrace -->
