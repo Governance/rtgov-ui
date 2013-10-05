@@ -9,18 +9,18 @@
   <packaging>war</packaging>
   <name>overlord-monitoring-war-eap61</name>
   <dependencies>
+    <dependency>
+      <groupId>org.overlord.monitoring</groupId>
+      <artifactId>overlord-monitoring-war</artifactId>
+      <version>${project.version}</version>
+      <classifier>classes</classifier>
+    </dependency>
     <!-- The base WAR being extended -->
     <dependency>
       <groupId>org.overlord.monitoring</groupId>
       <artifactId>overlord-monitoring-war</artifactId>
       <version>${project.version}</version>
       <type>war</type>
-    </dependency>
-    <dependency>
-      <groupId>org.overlord.monitoring</groupId>
-      <artifactId>overlord-monitoring-war</artifactId>
-      <version>${project.version}</version>
-      <classifier>classes</classifier>
     </dependency>
     
     <!-- Third Party libs -->
@@ -99,6 +99,21 @@
         <artifactId>call-trace</artifactId>
         <version>${rtgov.version}</version>
     </dependency>
+    <dependency>
+        <groupId>org.overlord.rtgov.activity-management</groupId>
+        <artifactId>activity-store-jpa</artifactId>
+        <version>${rtgov.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.overlord.rtgov.activity-management</groupId>
+        <artifactId>activity-server-jee</artifactId>
+        <version>${rtgov.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.overlord.rtgov.integration</groupId>
+        <artifactId>rtgov-jbossas</artifactId>
+        <version>${rtgov.version}</version>
+    </dependency>
 
     <!-- ServiceActivator/dmr -->
     <dependency>
@@ -132,6 +147,7 @@
         <artifactId>maven-war-plugin</artifactId>
         <configuration>
           <warName>overlord-monitoring</warName>
+          <packagingExcludes>WEB-INF/lib/jetty*.jar</packagingExcludes>
           <overlays>
             <overlay>
               <groupId>${project.groupId}</groupId>
