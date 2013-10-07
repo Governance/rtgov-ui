@@ -292,4 +292,14 @@
       <url>${jboss.snapshots.repo.url}</url>
     </snapshotRepository>
   </distributionManagement>
+
+  <profiles>
+    <!-- temporary until product changes are back in community -->
+    <profile>
+      <id>product</id>
+      <properties>
+        <rtgov.version>1.0.0.Final</rtgov.version>
+      </properties>
+    </profile>
+  </profiles>
 </project>
