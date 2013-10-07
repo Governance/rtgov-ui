@@ -97,6 +97,11 @@ public class SituationRepository {
                                 +"WHERE sit.id = '"+id+"'") //$NON-NLS-1$ //$NON-NLS-2$
                                 .getSingleResult();
 
+            // TODO: Temporary workaround until Situation model changed to use eager fetch
+            if (ret != null) {
+                loadSituation(ret);
+            }
+
             if (LOG.isLoggable(Level.FINEST)) {
                 LOG.finest(i18n.format("SituationsRepository.Result", ret)); //$NON-NLS-1$
             }
@@ -164,16 +169,8 @@ public class SituationRepository {
             ret = query.getResultList();
 
             // TODO: Temporary workaround until Situation model changed to use eager fetch
-            try {
-	            for (Situation sit : ret) {
-	            	for (@SuppressWarnings("unused") Context c : sit.getContext()) {
-	            	}
-	            	for (@SuppressWarnings("unused") Object val : sit.getProperties().values()) {
-
-	            	}
-	            }
-            } catch (Throwable t) {
-            	// Ignore - may be due to change in API post ER4
+            for (Situation sit : ret) {
+                loadSituation(sit);
             }
 
             if (LOG.isLoggable(Level.FINEST)) {
@@ -184,6 +181,17 @@ public class SituationRepository {
         }
 
         return (ret);
+    }
+
+    private void loadSituation(final Situation sit) {
+        try {
+                for (@SuppressWarnings("unused") Context c : sit.getContext()) {
+                }
+                for (@SuppressWarnings("unused") Object val : sit.getProperties().values()) {
+                }
+        } catch (Throwable t) {
+                // Ignore - may be due to change in API post ER4
+        }
     }
 
 }
