@@ -16,6 +16,10 @@
 package org.overlord.monitoring.ui.client.local.pages.situations;
 
 import java.util.Map.Entry;
+
+import javax.inject.Inject;
+
+import org.overlord.monitoring.ui.client.local.ClientMessages;
 import org.overlord.monitoring.ui.client.shared.beans.TraceNodeBean;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -30,6 +34,9 @@ import com.google.gwt.user.client.ui.Label;
  * @author eric.wittmann@redhat.com
  */
 public class CallTraceDetails extends FlowPanel implements HasValue<TraceNodeBean> {
+
+    @Inject
+    ClientMessages i18n;
 
     /**
      * Constructor.
@@ -75,7 +82,7 @@ public class CallTraceDetails extends FlowPanel implements HasValue<TraceNodeBea
         Label label = null;
 
         if (isCall) {
-            label = new Label("Selected Node");
+            label = new Label(i18n.format("call-trace-details.selected-node")); //$NON-NLS-1$
             label.setStyleName("details-meta-data-section-header"); //$NON-NLS-1$
             add(label);
             addClearFix();
@@ -86,30 +93,30 @@ public class CallTraceDetails extends FlowPanel implements HasValue<TraceNodeBea
             addDivider();
         }
 
-        label = new Label("Summary");
+        label = new Label(i18n.format("call-trace-details.summary")); //$NON-NLS-1$
         label.setStyleName("details-meta-data-section-header"); //$NON-NLS-1$
         add(label);
         addClearFix();
 
-        addProperty("Type", value.getType());
-        addProperty("Component", value.getComponent());
-        addProperty("Interface", value.getIface());
-        addProperty("Operation", value.getOperation());
-        addProperty("Request", value.getRequest());
-        addProperty("Response", value.getResponse());
-        addProperty("Fault", value.getFault());
+        addProperty(i18n.format("call-trace-details.type"), value.getType()); //$NON-NLS-1$
+        addProperty(i18n.format("call-trace-details.component"), value.getComponent()); //$NON-NLS-1$
+        addProperty(i18n.format("call-trace-details.interface"), value.getIface()); //$NON-NLS-1$
+        addProperty(i18n.format("call-trace-details.operation"), value.getOperation()); //$NON-NLS-1$
+        addProperty(i18n.format("call-trace-details.request"), value.getRequest()); //$NON-NLS-1$
+        addProperty(i18n.format("call-trace-details.response"), value.getResponse()); //$NON-NLS-1$
+        addProperty(i18n.format("call-trace-details.fault"), value.getFault()); //$NON-NLS-1$
         if (value.getRequestLatency() != -1)
-            addProperty("Request Latency", String.valueOf(value.getRequestLatency()) + "ms"); //$NON-NLS-2$
+            addProperty(i18n.format("call-trace-details.request-latency"), String.valueOf(value.getRequestLatency()) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
         if (value.getResponseLatency() != -1)
-            addProperty("Response Latency", String.valueOf(value.getResponseLatency()) + "ms"); //$NON-NLS-2$
+            addProperty(i18n.format("call-trace-details.response-latency"), String.valueOf(value.getResponseLatency()) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
         if (value.getDuration() != -1)
-            addProperty("Duration", String.valueOf(value.getDuration()) + "ms"); //$NON-NLS-2$
+            addProperty(i18n.format("call-trace-details.duration"), String.valueOf(value.getDuration()) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
         if (value.getPercentage() != -1)
-            addProperty("Percentage", String.valueOf(value.getPercentage()) + "ms"); //$NON-NLS-2$
+            addProperty(i18n.format("call-trace-details.percentage"), String.valueOf(value.getPercentage()) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
 
         if (!value.getProperties().isEmpty()) {
             addDivider();
-            label = new Label("Properties");
+            label = new Label(i18n.format("call-trace-details.properties")); //$NON-NLS-1$
             label.setStyleName("details-meta-data-section-header"); //$NON-NLS-1$
             add(label);
             addClearFix();

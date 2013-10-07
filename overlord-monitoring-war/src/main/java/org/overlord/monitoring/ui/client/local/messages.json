@@ -19,5 +19,19 @@
   "severity.medium" : "Medium",
   "severity.high" : "High",
   "severity.critical" : "Critical",
-  "situation-table.properties" : "Properties Preview"
+  "situation-table.properties" : "Properties Preview",
+  "call-trace-details.selected-node" : "Selected Node",
+  "call-trace-details.summary" : "Summary",
+  "call-trace-details.type" : "Type",
+  "call-trace-details.component" : "Component",
+  "call-trace-details.interface" : "Interface",
+  "call-trace-details.operation" : "Operation",
+  "call-trace-details.request" : "Request",
+  "call-trace-details.response" : "Response",
+  "call-trace-details.fault" : "Fault",
+  "call-trace-details.request-latency" : "Request Latency",
+  "call-trace-details.response-latency" : "Response Latency",
+  "call-trace-details.duration" : "Duration",
+  "call-trace-details.percentage" : "Percentage",
+  "call-trace-details.properties" : "Properties"
 }
