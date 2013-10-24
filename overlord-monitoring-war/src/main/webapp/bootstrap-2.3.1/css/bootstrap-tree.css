@@ -56,6 +56,11 @@
   background-color: #db4747;
   color: white;
 }
+.tree li span.active {
+  background-color: #df8505;
+  border: 1px solid #c67605;
+  color: white;
+}
 .tree li.parent_li > span {
   cursor: pointer;
 }

@@ -11,3 +11,11 @@ $(document).on('click.tree.data-api', '.tree[data-toggle="tree"] span i', functi
   }
   e.stopPropagation();
 });
+
+
+$(document).on('click.tree.data-api', '.tree[data-toggle="tree"] span', function (e) {
+	  e.preventDefault();
+	  $(this).closest('div.tree').find('li span').removeClass('active');
+	  $(this).addClass('active');
+	  e.stopPropagation();
+});
