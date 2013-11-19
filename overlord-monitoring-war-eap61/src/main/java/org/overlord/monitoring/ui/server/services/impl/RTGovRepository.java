@@ -25,27 +25,30 @@ import javax.persistence.Query;
 
 import org.overlord.monitoring.ui.client.shared.beans.SituationsFilterBean;
 import org.overlord.monitoring.ui.server.i18n.Messages;
+import org.overlord.rtgov.activity.model.ActivityType;
+import org.overlord.rtgov.activity.model.ActivityTypeId;
+import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.activity.model.Context;
 import org.overlord.rtgov.analytics.situation.Situation;
 import org.overlord.rtgov.analytics.situation.Situation.Severity;
 
 /**
- * This class provides access to the situations db.
+ * This class provides access to the RTGov db.
  *
  */
-public class SituationRepository {
+public class RTGovRepository {
 
-    private static final String OVERLORD_RTGOV_SITUATIONS = "overlord-rtgov-situations"; //$NON-NLS-1$
+    private static final String OVERLORD_RTGOV_DB = "overlord-rtgov-situations"; //$NON-NLS-1$
     private static volatile Messages i18n = new Messages();
 
     private EntityManagerFactory _entityManagerFactory=null;
 
-    private static final Logger LOG=Logger.getLogger(SituationRepository.class.getName());
+    private static final Logger LOG=Logger.getLogger(RTGovRepository.class.getName());
 
     /**
      * The situation repository constructor.
      */
-    public SituationRepository() {
+    public RTGovRepository() {
     	init();
     }
 
@@ -53,7 +56,7 @@ public class SituationRepository {
      * Initialize the situation repository.
      */
     protected void init() {
-        _entityManagerFactory = Persistence.createEntityManagerFactory(OVERLORD_RTGOV_SITUATIONS);
+        _entityManagerFactory = Persistence.createEntityManagerFactory(OVERLORD_RTGOV_DB);
     }
 
     /**
@@ -85,7 +88,7 @@ public class SituationRepository {
      */
     public Situation getSituation(String id) throws Exception {
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest(i18n.format("SituationsRepository.GetSit", id)); //$NON-NLS-1$
+            LOG.finest(i18n.format("RTGovRepository.GetSit", id)); //$NON-NLS-1$
         }
 
         EntityManager em=getEntityManager();
@@ -103,7 +106,7 @@ public class SituationRepository {
             }
 
             if (LOG.isLoggable(Level.FINEST)) {
-                LOG.finest(i18n.format("SituationsRepository.Result", ret)); //$NON-NLS-1$
+                LOG.finest(i18n.format("RTGovRepository.Result", ret)); //$NON-NLS-1$
             }
         } finally {
             closeEntityManager(em);
@@ -174,7 +177,7 @@ public class SituationRepository {
             }
 
             if (LOG.isLoggable(Level.FINEST)) {
-                LOG.finest(i18n.format("SituationsRepository.SitResult", ret)); //$NON-NLS-1$
+                LOG.finest(i18n.format("RTGovRepository.SitResult", ret)); //$NON-NLS-1$
             }
         } finally {
             closeEntityManager(em);
@@ -192,6 +195,64 @@ public class SituationRepository {
         } catch (Throwable t) {
                 // Ignore - may be due to change in API post ER4
         }
+    }
+
+    /**
+     * This method returns the situation associated with the supplied id.
+     *
+     * @param id The id
+     * @return The situation, or null if not found
+     * @throws Exception Failed to get situation
+     */
+    public ActivityUnit getActivityUnit(String id) throws Exception {
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest(i18n.format("RTGovRepository.GetAU", id)); //$NON-NLS-1$
+        }
+
+        EntityManager em=getEntityManager();
+
+        ActivityUnit ret=null;
+
+        try {
+            ret=(ActivityUnit)em.createQuery("SELECT au FROM ActivityUnit au " //$NON-NLS-1$
+                                +"WHERE au.id = '"+id+"'") //$NON-NLS-1$ //$NON-NLS-2$
+                                .getSingleResult();
+
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest(i18n.format("RTGovRepository.Result", ret)); //$NON-NLS-1$
+            }
+        } finally {
+            closeEntityManager(em);
+        }
+
+        return (ret);
+    }
+
+    /**
+     * This method returns the situation associated with the supplied id.
+     *
+     * @param id The id
+     * @return The situation, or null if not found
+     * @throws Exception Failed to get situation
+     */
+    public ActivityType getActivityType(ActivityTypeId id) throws Exception {
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest(i18n.format("RTGovRepository.GetAT", id)); //$NON-NLS-1$
+        }
+
+        ActivityType ret=null;
+        
+        ActivityUnit au=getActivityUnit(id.getUnitId());
+        
+        if (au != null && id.getUnitIndex() < au.getActivityTypes().size()) {
+        	ret = au.getActivityTypes().get(id.getUnitIndex());
+        }
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest(i18n.format("RTGovRepository.Result", ret)); //$NON-NLS-1$
+        }
+
+        return (ret);
     }
 
 }
