@@ -45,4 +45,12 @@ public interface ISituationsServiceImpl {
      */
     public SituationBean get(String name) throws UiException;
 
+    /**
+     * Resubmits a message.
+     * @param situationId
+     * @param message
+     * @throws UiException
+     */
+    public void resubmit(String situationId, String message) throws UiException;
+
 }

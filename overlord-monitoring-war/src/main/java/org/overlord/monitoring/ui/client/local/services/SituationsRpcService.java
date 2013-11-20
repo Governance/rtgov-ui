@@ -77,4 +77,17 @@ public class SituationsRpcService {
         }
     }
 
+    /**
+     * @see org.overlord.monitoring.ui.client.shared.services.ISituationsService#resubmit(String,String)
+     */
+    public void resubmit(String situationId, String message, IRpcServiceInvocationHandler<Void> handler) {
+        RemoteCallback<Void> successCallback = new DelegatingRemoteCallback<Void>(handler);
+        ErrorCallback<?> errorCallback = new DelegatingErrorCallback(handler);
+        try {
+            remoteSituationsService.call(successCallback, errorCallback).resubmit(situationId, message);
+        } catch (UiException e) {
+            errorCallback.error(null, e);
+        }
+    }
+
 }

@@ -320,5 +320,13 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
 		}
 
     }
+    
+    /**
+     * @see org.overlord.monitoring.ui.server.services.ISituationsServiceImpl#resubmit(java.lang.String, java.lang.String)
+     */
+    @Override
+    public void resubmit(String situationId, String message) throws UiException {
+        // TODO Implement me!
+    }
 
 }

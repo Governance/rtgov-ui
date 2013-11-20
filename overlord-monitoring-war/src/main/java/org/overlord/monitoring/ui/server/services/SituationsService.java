@@ -55,5 +55,13 @@ public class SituationsService implements ISituationsService {
     public SituationBean get(String situationId) throws UiException {
         return impl.get(situationId);
     }
+    
+    /**
+     * @see org.overlord.monitoring.ui.client.shared.services.ISituationsService#resubmit(java.lang.String, java.lang.String)
+     */
+    @Override
+    public void resubmit(String situationId, String message) throws UiException {
+        impl.resubmit(situationId, message);
+    }
 
 }

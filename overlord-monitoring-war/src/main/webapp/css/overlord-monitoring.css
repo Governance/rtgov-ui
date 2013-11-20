@@ -203,6 +203,56 @@ footer hr {
   border-bottom: 1px solid #bbb;
 }
 
+.situation-details .nav-tabs {
+  border-left: 1px solid rgb(221, 221, 221);
+  border-right: 1px solid rgb(221, 221, 221);
+}
+.situation-details .nav-tabs li a {
+  color: #666;
+  border-radius: 0px;
+  border-top: 0px;
+  border-left: 0px;
+  border-right: 1px solid rgb(221, 221, 221);
+  border-bottom: 1px solid rgb(221, 221, 221);
+  margin-right: 0px;
+  background-color: rgb(234, 234, 234);
+}
+.situation-details .nav-tabs li a:hover {
+  border-right: 1px solid rgb(221, 221, 221);
+  background-color: rgb(234, 234, 234);
+  color: #007ca3;
+}
+.situation-details .nav-tabs li.active a, .situation-details .nav-tabs li.active a:hover, .situation-details .nav-tabs li.active a:focus {
+  border-top: 0px;
+  border-left: 0px;
+  border-right: 1px solid rgb(221, 221, 221);
+  background-color: white;
+}
+.situation-details .nav-tabs li.active a {
+  border-bottom: 1px solid white;
+}
+
+.source-editor-wrapper {
+  margin-top: 15px;
+  background-color: #fff8f8;
+  position: relative;
+  height: 350px;
+  border: 1px solid rgb(221, 221, 221);
+  margin-bottom: 15px;
+}
+
+.source-editor {
+  left: 0px;
+  top: 0px;
+  bottom: 1px;
+  right: 1px;
+  background: white;
+}
+
+.situation-details #message {
+  padding-bottom: 15px;
+}
+
 .modal-header {
   padding: 1px 15px;
   background-color: #f5f5f5;
@@ -353,12 +403,15 @@ footer hr {
   float: left;
 }
 
-.reference-details, .service-details, .situation-details {
+.reference-details, .service-details {
   border-left: 1px solid rgb(211, 211, 211);
   border-bottom: 1px solid rgb(211, 211, 211);
   border-right: 1px solid rgb(211, 211, 211);
   background-color: white;
   padding-bottom: 15px;
+}
+.situation-details {
+  background-color: white;
 }
 
 .situation-details .tab-content {

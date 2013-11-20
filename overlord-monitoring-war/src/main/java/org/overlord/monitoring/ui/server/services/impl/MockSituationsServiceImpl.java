@@ -22,6 +22,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
 
 import org.overlord.monitoring.ui.client.shared.beans.CallTraceBean;
+import org.overlord.monitoring.ui.client.shared.beans.MessageBean;
 import org.overlord.monitoring.ui.client.shared.beans.SituationBean;
 import org.overlord.monitoring.ui.client.shared.beans.SituationResultSetBean;
 import org.overlord.monitoring.ui.client.shared.beans.SituationSummaryBean;
@@ -119,10 +120,47 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
         situation.getContext().put("Context-1", "This is the value of the context 1 property."); //$NON-NLS-1$ //$NON-NLS-2$
         situation.getContext().put("Context-2", "This is the value of the context 2 property."); //$NON-NLS-1$ //$NON-NLS-2$
 
+        MessageBean message = createMockMessage();
+        situation.setMessage(message);
+        
         CallTraceBean callTrace = createMockCallTrace();
         situation.setCallTrace(callTrace);
 
         return situation;
+    }
+
+    /**
+     * Creates a mock message.
+     */
+    private MessageBean createMockMessage() {
+        String msgContent = "<collection>\r\n" +  //$NON-NLS-1$
+                "<asset>\r\n" +  //$NON-NLS-1$
+                "  <author>krisv</author>\r\n" +  //$NON-NLS-1$
+                "  <binaryContentAttachmentFileName></binaryContentAttachmentFileName>\r\n" +  //$NON-NLS-1$
+                "  <binaryLink>http://localhost:8080/drools-guvnor/rest/packages/srampPackage/assets/Evaluation/binary\r\n" +  //$NON-NLS-1$
+                "  </binaryLink>\r\n" +  //$NON-NLS-1$
+                "  <description></description>\r\n" +  //$NON-NLS-1$
+                "  <metadata>\r\n" +  //$NON-NLS-1$
+                "   <checkInComment>&lt;content from webdav&gt;</checkInComment>\r\n" +  //$NON-NLS-1$
+                "   <created>2012-10-05T14:34:14.970-04:00</created>\r\n" +  //$NON-NLS-1$
+                "   <disabled>false</disabled>\r\n" +  //$NON-NLS-1$
+                "   <format>bpmn</format>\r\n" +  //$NON-NLS-1$
+                "   <note>&lt;![CDATA[ &lt;content from webdav&gt; ]]&gt;</note>\r\n" +  //$NON-NLS-1$
+                "   <state>Draft</state>\r\n" +  //$NON-NLS-1$
+                "   <uuid>09512d48-585d-4393-86e2-39418369f066</uuid>\r\n" +  //$NON-NLS-1$
+                "   <versionNumber>9</versionNumber>\r\n" +  //$NON-NLS-1$
+                "  </metadata>\r\n" +  //$NON-NLS-1$
+                "  <published>2012-10-05T15:11:32.923-04:00</published>\r\n" +  //$NON-NLS-1$
+                "  <refLink>http://localhost:8080/drools-guvnor/rest/packages/srampPackage/assets/Evaluation\r\n" +  //$NON-NLS-1$
+                "  </refLink>\r\n" +  //$NON-NLS-1$
+                "  <sourceLink>http://localhost:8080/drools-guvnor/rest/packages/srampPackage/assets/Evaluation/source\r\n" +  //$NON-NLS-1$
+                "  </sourceLink>\r\n" +  //$NON-NLS-1$
+                "  <title>Evaluation</title>\r\n" +  //$NON-NLS-1$
+                " </asset>\r\n" +  //$NON-NLS-1$
+                "</asset>"; //$NON-NLS-1$
+        MessageBean msg = new MessageBean();
+        msg.setContent(msgContent);
+        return msg;
     }
 
     /**
@@ -176,6 +214,16 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
         node.setDuration(duration);
         node.setPercentage(percentage);
         return node;
+    }
+    
+    /**
+     * @see org.overlord.monitoring.ui.server.services.ISituationsServiceImpl#resubmit(java.lang.String, java.lang.String)
+     */
+    @Override
+    public void resubmit(String situationId, String message) throws UiException {
+        // Do nothing!
+        System.out.println("Resubmitted message for situation: " + situationId); //$NON-NLS-1$
+        System.out.println(message);
     }
 
 }

@@ -74,6 +74,13 @@ public class SituationBean extends SituationSummaryBean implements Serializable 
     public void setMessage(MessageBean mesg) {
     	this.message = mesg;
     }
+    
+    /**
+     * @return true if this situation has a message associated with it
+     */
+    public boolean hasMessage() {
+        return this.message != null;
+    }
 
     /**
      * @return the callTrace
