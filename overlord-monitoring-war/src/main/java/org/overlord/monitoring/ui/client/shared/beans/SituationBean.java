@@ -34,6 +34,7 @@ public class SituationBean extends SituationSummaryBean implements Serializable 
     private static final long serialVersionUID = SituationBean.class.hashCode();
 
     private Map<String, String> context = new HashMap<String, String>();
+    private MessageBean message;
     private CallTraceBean callTrace;
 
     /**
@@ -54,6 +55,24 @@ public class SituationBean extends SituationSummaryBean implements Serializable 
      */
     public void setContext(Map<String, String> context) {
         this.context = context;
+    }
+    
+    /**
+     * This method returns the optional request message associated with the situation.
+     * 
+     * @return The optional request message
+     */
+    public MessageBean getMessage() {
+    	return message;
+    }
+    
+    /**
+     * This method sets the optional request message.
+     * 
+     * @param mesg The optional request message
+     */
+    public void setMessage(MessageBean mesg) {
+    	this.message = mesg;
     }
 
     /**

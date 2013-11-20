@@ -23,6 +23,7 @@ import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
 
 import org.overlord.monitoring.ui.client.shared.beans.CallTraceBean;
+import org.overlord.monitoring.ui.client.shared.beans.MessageBean;
 import org.overlord.monitoring.ui.client.shared.beans.SituationBean;
 import org.overlord.monitoring.ui.client.shared.beans.SituationResultSetBean;
 import org.overlord.monitoring.ui.client.shared.beans.SituationSummaryBean;
@@ -33,7 +34,10 @@ import org.overlord.monitoring.ui.server.i18n.Messages;
 import org.overlord.monitoring.ui.server.services.ISituationsServiceImpl;
 import org.overlord.rtgov.active.collection.ActiveCollectionContext;
 import org.overlord.rtgov.active.collection.predicate.Predicate;
+import org.overlord.rtgov.activity.model.ActivityType;
+import org.overlord.rtgov.activity.model.ActivityTypeId;
 import org.overlord.rtgov.activity.model.Context;
+import org.overlord.rtgov.activity.model.soa.RPCActivityType;
 import org.overlord.rtgov.activity.server.ActivityServer;
 import org.overlord.rtgov.analytics.situation.Situation;
 import org.overlord.rtgov.call.trace.CallTraceService;
@@ -52,7 +56,7 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
 
 	private static volatile Messages i18n = new Messages();
 
-	private SituationRepository _repository=null;
+	private RTGovRepository _repository=null;
 
 	@Inject
 	private CallTraceService _callTraceService=null;
@@ -68,7 +72,7 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
 
     @PostConstruct
     public void init() {
-    	_repository = new SituationRepository();
+    	_repository = new RTGovRepository();
     	_callTraceService.setActivityServer(_activityServer);    	
     }
 
@@ -125,6 +129,9 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
 	    	}
 
 	    	ret = RTGovSituationsUtil.getSituationBean(situation);
+	    	
+	    	MessageBean message = getMessage(situation);
+	    	ret.setMessage(message);
 
 	        CallTraceBean callTrace = getCallTrace(situation);
 	        ret.setCallTrace(callTrace);
@@ -139,6 +146,35 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
     	return (ret);
     }
 
+    /**
+     * This method checks whether a request message exists for the supplied
+     * situation and if so, returns a MessageBean to represent it's content.
+     * 
+     * @param situation The situation
+     * @return The message, or null if not found
+     * @throws UiException Failed to get message
+     */
+    protected MessageBean getMessage(Situation situation) throws UiException {
+    	MessageBean ret=null;
+    	
+		for (ActivityTypeId id : situation.getActivityTypeIds()) {
+			try {
+    			ActivityType at=_repository.getActivityType(id);
+    			
+    			if (at instanceof RPCActivityType && ((RPCActivityType)at).isRequest()
+    					&& ((RPCActivityType)at).getContent() != null) {
+    				ret = new MessageBean();
+    				ret.setContent(((RPCActivityType)at).getContent());
+    				break;
+    			}
+			} catch (Exception e) {
+	    		throw new UiException("Failed to get message for activity type id '"+id+"'", e);
+			}
+		}
+		
+    	return (ret);
+    }
+    
     /**
      * This method retrieves the call trace for the supplied situation.
      *
