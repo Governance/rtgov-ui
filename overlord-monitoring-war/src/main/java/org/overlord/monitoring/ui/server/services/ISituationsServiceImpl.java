@@ -32,11 +32,13 @@ public interface ISituationsServiceImpl {
     /**
      * Search for services using the given filters and search text.
      * @param filters
-     * @param searchText
      * @param page
+     * @param sortColumn
+     * @param ascending
      * @throws UiException
      */
-    public SituationResultSetBean search(SituationsFilterBean filters, int page) throws UiException;
+    public SituationResultSetBean search(SituationsFilterBean filters, int page, String sortColumn,
+            boolean ascending) throws UiException;
 
     /**
      * Fetches a full service by its name.

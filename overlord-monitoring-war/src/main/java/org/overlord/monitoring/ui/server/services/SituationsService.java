@@ -39,13 +39,14 @@ public class SituationsService implements ISituationsService {
      */
     public SituationsService() {
     }
-
+    
     /**
-     * @see org.overlord.monitoring.ui.client.shared.services.ISituationsService#search(org.overlord.monitoring.ui.client.shared.beans.SituationsFilterBean, int)
+     * @see org.overlord.monitoring.ui.client.shared.services.ISituationsService#search(org.overlord.monitoring.ui.client.shared.beans.SituationsFilterBean, int, java.lang.String, boolean)
      */
     @Override
-    public SituationResultSetBean search(SituationsFilterBean filters, int page) throws UiException {
-        return impl.search(filters, page);
+    public SituationResultSetBean search(SituationsFilterBean filters, int page, String sortColumn,
+            boolean ascending) throws UiException {
+        return impl.search(filters, page, sortColumn, ascending);
     }
 
     /**

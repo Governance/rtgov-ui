@@ -77,10 +77,17 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
     }
 
     /**
-     * @see org.overlord.monitoring.ui.server.services.ISituationsServiceImpl#search(org.overlord.monitoring.ui.client.shared.beans.SituationsFilterBean, int)
+     * @see org.overlord.monitoring.ui.server.services.ISituationsServiceImpl#search(org.overlord.monitoring.ui.client.shared.beans.SituationsFilterBean, int, java.lang.String, boolean)
      */
     @Override
-    public SituationResultSetBean search(SituationsFilterBean filters, int page) throws UiException {
+    public SituationResultSetBean search(SituationsFilterBean filters, int page, String sortColumn,
+            boolean ascending) throws UiException {
+        
+        // ******************************************************************************************
+        // TODO implement sorting.  The value of sortColumn will be one of the values listed in
+        // org.overlord.monitoring.ui.client.shared.beans.Constants
+        // ******************************************************************************************
+        
         SituationResultSetBean rval = new SituationResultSetBean();
         ArrayList<SituationSummaryBean> situations = new ArrayList<SituationSummaryBean>();
 

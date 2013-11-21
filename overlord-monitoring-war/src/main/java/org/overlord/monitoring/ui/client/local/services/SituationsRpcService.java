@@ -48,9 +48,9 @@ public class SituationsRpcService {
     }
 
     /**
-     * @see org.overlord.monitoring.ui.client.shared.services.ISituationsService#search(SituationsFilterBean, int)
+     * @see org.overlord.monitoring.ui.client.shared.services.ISituationsService#search(SituationsFilterBean, int, String, boolean)
      */
-    public void search(SituationsFilterBean filters, int page,
+    public void search(SituationsFilterBean filters, int page, String sortColumn, boolean ascending,
             final IRpcServiceInvocationHandler<SituationResultSetBean> handler) {
         // TODO only allow one search at a time.  If another search comes in before the previous one
         // finished, cancel the previous one.  In other words, only return the results of the *last*
@@ -58,7 +58,7 @@ public class SituationsRpcService {
         RemoteCallback<SituationResultSetBean> successCallback = new DelegatingRemoteCallback<SituationResultSetBean>(handler);
         ErrorCallback<?> errorCallback = new DelegatingErrorCallback(handler);
         try {
-            remoteSituationsService.call(successCallback, errorCallback).search(filters, page);
+            remoteSituationsService.call(successCallback, errorCallback).search(filters, page, sortColumn, ascending);
         } catch (UiException e) {
             errorCallback.error(null, e);
         }

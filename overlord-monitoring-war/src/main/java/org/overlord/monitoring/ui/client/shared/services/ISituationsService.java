@@ -32,11 +32,12 @@ public interface ISituationsService {
     /**
      * Search for situations using the given filters and search text.
      * @param filters
-     * @param searchText
      * @param page
+     * @param sortColumn
+     * @param ascending
      * @throws UiException
      */
-    public SituationResultSetBean search(SituationsFilterBean filters, int page) throws UiException;
+    public SituationResultSetBean search(SituationsFilterBean filters, int page, String sortColumn, boolean ascending) throws UiException;
 
     /**
      * Fetches a full situation by its name.

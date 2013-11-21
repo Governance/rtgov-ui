@@ -29,12 +29,14 @@ import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.overlord.monitoring.ui.client.local.ClientMessages;
+import org.overlord.monitoring.ui.client.local.events.TableSortEvent;
 import org.overlord.monitoring.ui.client.local.pages.situations.SituationFilters;
 import org.overlord.monitoring.ui.client.local.pages.situations.SituationTable;
 import org.overlord.monitoring.ui.client.local.pages.situations.SituationWatcherEvents;
 import org.overlord.monitoring.ui.client.local.services.NotificationService;
 import org.overlord.monitoring.ui.client.local.services.SituationsRpcService;
 import org.overlord.monitoring.ui.client.local.services.rpc.IRpcServiceInvocationHandler;
+import org.overlord.monitoring.ui.client.local.widgets.common.SortableTemplatedWidgetTable.SortColumn;
 import org.overlord.monitoring.ui.client.shared.beans.SituationEventBean;
 import org.overlord.monitoring.ui.client.shared.beans.SituationResultSetBean;
 import org.overlord.monitoring.ui.client.shared.beans.SituationSummaryBean;
@@ -176,6 +178,12 @@ public class SituationsPage extends AbstractPage {
                 doSearch(event.getValue());
             }
         });
+        situationsTable.addTableSortHandler(new TableSortEvent.Handler() {
+            @Override
+            public void onTableSort(TableSortEvent event) {
+                doSearch(currentPage);
+            }
+        });
 
         // Hide column 1 when in mobile mode.
         situationsTable.setColumnClasses(1, "desktop-only"); //$NON-NLS-1$
@@ -222,7 +230,9 @@ public class SituationsPage extends AbstractPage {
     protected void doSearch(int page) {
         onSearchStarting();
         currentPage = page;
-        situationsService.search(filtersPanel.getValue(), page, new IRpcServiceInvocationHandler<SituationResultSetBean>() {
+        SortColumn currentSortColumn = this.situationsTable.getCurrentSortColumn();
+        situationsService.search(filtersPanel.getValue(), page, currentSortColumn.columnId,
+                currentSortColumn.ascending, new IRpcServiceInvocationHandler<SituationResultSetBean>() {
             @Override
             public void onReturn(SituationResultSetBean data) {
                 updateTable(data);

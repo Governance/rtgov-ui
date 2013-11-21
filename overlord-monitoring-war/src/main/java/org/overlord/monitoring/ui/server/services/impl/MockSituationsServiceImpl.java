@@ -16,12 +16,15 @@
 package org.overlord.monitoring.ui.server.services.impl;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.TreeSet;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
 
 import org.overlord.monitoring.ui.client.shared.beans.CallTraceBean;
+import org.overlord.monitoring.ui.client.shared.beans.Constants;
 import org.overlord.monitoring.ui.client.shared.beans.MessageBean;
 import org.overlord.monitoring.ui.client.shared.beans.SituationBean;
 import org.overlord.monitoring.ui.client.shared.beans.SituationResultSetBean;
@@ -45,12 +48,13 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
      */
     public MockSituationsServiceImpl() {
     }
-
+    
     /**
-     * @see org.overlord.monitoring.ui.server.services.ISituationsServiceImpl#search(org.overlord.monitoring.ui.client.shared.beans.SituationsFilterBean, int)
+     * @see org.overlord.monitoring.ui.server.services.ISituationsServiceImpl#search(SituationsFilterBean, int, String, boolean)
      */
     @Override
-    public SituationResultSetBean search(SituationsFilterBean filters, int page) throws UiException {
+    public SituationResultSetBean search(SituationsFilterBean filters, int page, String sortColumn,
+            boolean ascending) throws UiException {
         SituationResultSetBean rval = new SituationResultSetBean();
         ArrayList<SituationSummaryBean> situations = new ArrayList<SituationSummaryBean>();
         rval.setSituations(situations);
@@ -98,8 +102,50 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
         situation.setTimestamp(new Date());
         situation.setDescription("Some description of the Situation goes here in this column so that it can be read by the user."); //$NON-NLS-1$
         situations.add(situation);
+        
+        sort(situations, sortColumn, ascending);
 
         return rval;
+    }
+
+    /**
+     * Sorts the list of situations.
+     * @param situations
+     * @param sortColumn
+     * @param ascending
+     */
+    private void sort(ArrayList<SituationSummaryBean> situations, final String sortColumn, final boolean ascending) {
+        TreeSet<SituationSummaryBean> sorted = new TreeSet<SituationSummaryBean>(new Comparator<SituationSummaryBean>() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public int compare(SituationSummaryBean sit1, SituationSummaryBean sit2) {
+                Comparable<?> c1;
+                Comparable<?> c2;
+                if (sortColumn.equals(Constants.SORT_COLID_TYPE)) {
+                    c1 = sit1.getType();
+                    c2 = sit2.getType();
+                } else if (sortColumn.equals(Constants.SORT_COLID_SUBJECT)) {
+                    c1 = sit1.getSubject();
+                    c2 = sit2.getSubject();
+                } else {
+                    c1 = sit1.getTimestamp();
+                    c2 = sit2.getTimestamp();
+                }
+                int rval = 0;
+                if (ascending) {
+                    rval = ((Comparable<Object>) c1).compareTo(c2);
+                } else {
+                    rval = ((Comparable<Object>) c2).compareTo(c1);
+                }
+                if (rval == 0) {
+                    rval = sit1.getSituationId().compareTo(sit2.getSituationId());
+                }
+                return rval;
+            }
+        });
+        sorted.addAll(situations);
+        situations.clear();
+        situations.addAll(sorted);
     }
 
     /**
