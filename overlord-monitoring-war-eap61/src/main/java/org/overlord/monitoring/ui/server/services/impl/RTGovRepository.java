@@ -28,7 +28,6 @@ import org.overlord.monitoring.ui.server.i18n.Messages;
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityTypeId;
 import org.overlord.rtgov.activity.model.ActivityUnit;
-import org.overlord.rtgov.activity.model.Context;
 import org.overlord.rtgov.analytics.situation.Situation;
 import org.overlord.rtgov.analytics.situation.Situation.Severity;
 
@@ -38,7 +37,8 @@ import org.overlord.rtgov.analytics.situation.Situation.Severity;
  */
 public class RTGovRepository {
 
-    private static final String OVERLORD_RTGOV_DB = "overlord-rtgov-situations"; //$NON-NLS-1$
+    private static final int MILLISECONDS_PER_DAY = 86400000;
+	private static final String OVERLORD_RTGOV_DB = "overlord-rtgov-situations"; //$NON-NLS-1$
     private static volatile Messages i18n = new Messages();
 
     private EntityManagerFactory _entityManagerFactory=null;
@@ -100,11 +100,6 @@ public class RTGovRepository {
                                 +"WHERE sit.id = '"+id+"'") //$NON-NLS-1$ //$NON-NLS-2$
                                 .getSingleResult();
 
-            // TODO: Temporary workaround until Situation model changed to use eager fetch
-            if (ret != null) {
-                loadSituation(ret);
-            }
-
             if (LOG.isLoggable(Level.FINEST)) {
                 LOG.finest(i18n.format("RTGovRepository.Result", ret)); //$NON-NLS-1$
             }
@@ -116,11 +111,12 @@ public class RTGovRepository {
     }
 
     /**
-     * {@inheritDoc}
+     * 
      */
     @SuppressWarnings("unchecked")
-    public java.util.List<Situation> getSituations(SituationsFilterBean filter) throws Exception {
-        java.util.List<Situation> ret=null;
+    public SituationsResult getSituations(SituationsFilterBean filter, int page, int pageSize,
+    			String sortColumn, boolean ascending) throws Exception {
+    	SituationsResult ret=null;
 
         EntityManager em=getEntityManager();
 
@@ -150,7 +146,9 @@ public class RTGovRepository {
         		if (queryString.length() > 0) {
         			queryString.append("AND "); //$NON-NLS-1$
         		}
-        		queryString.append("sit.timestamp <= "+filter.getTimestampTo().getTime()+" ");  //$NON-NLS-1$//$NON-NLS-2$
+        		// NOTE: As only the day is returned currently, will need to add a day on, so that
+        		// the 'to' time represents the end of the day.
+        		queryString.append("sit.timestamp <= "+(filter.getTimestampTo().getTime()+MILLISECONDS_PER_DAY)+" ");  //$NON-NLS-1$//$NON-NLS-2$
         	}
 
         	if (queryString.length() > 0) {
@@ -158,6 +156,12 @@ public class RTGovRepository {
         	}
 
         	queryString.insert(0, "SELECT sit from Situation sit "); //$NON-NLS-1$
+        	
+        	if (sortColumn == null) {
+        		sortColumn = "timestamp";
+        	}
+        	
+        	queryString.append(" ORDER BY sit."+sortColumn+(ascending?"":" DESC"));
 
         	Query query=em.createQuery(queryString.toString());
 
@@ -169,12 +173,21 @@ public class RTGovRepository {
         		query.setParameter("severity", severity); //$NON-NLS-1$
         	}
 
-            ret = query.getResultList();
-
-            // TODO: Temporary workaround until Situation model changed to use eager fetch
-            for (Situation sit : ret) {
-                loadSituation(sit);
+            java.util.List<Situation> situations = query.getResultList();
+            
+            java.util.List<Situation> subset=new java.util.ArrayList<Situation>();
+            
+            for (int i=0; i < pageSize; i++) {
+            	int pos=((page-1)*pageSize)+i;
+            	
+            	if (pos < situations.size()) {
+            		subset.add(situations.get(pos));
+            	} else {
+            		break;
+            	}
             }
+            
+            ret = new SituationsResult(subset, situations.size());
 
             if (LOG.isLoggable(Level.FINEST)) {
                 LOG.finest(i18n.format("RTGovRepository.SitResult", ret)); //$NON-NLS-1$
@@ -184,17 +197,6 @@ public class RTGovRepository {
         }
 
         return (ret);
-    }
-
-    private void loadSituation(final Situation sit) {
-        try {
-                for (@SuppressWarnings("unused") Context c : sit.getContext()) {
-                }
-                for (@SuppressWarnings("unused") Object val : sit.getProperties().values()) {
-                }
-        } catch (Throwable t) {
-                // Ignore - may be due to change in API post ER4
-        }
     }
 
     /**
@@ -255,4 +257,43 @@ public class RTGovRepository {
         return (ret);
     }
 
+    /**
+     * This class provides the situation results.
+     *
+     */
+    public static class SituationsResult {
+    	
+    	private java.util.List<Situation> _situations=null;
+    	private int _totalCount=0;
+    	
+    	/**
+    	 * This is the constructor for the situation results.
+    	 * 
+    	 * @param situations The situations relevant for the requested page
+    	 * @param total The total number
+    	 */
+    	public SituationsResult(java.util.List<Situation> situations, int total) {
+    		_situations = situations;
+    		_totalCount = total;
+    	}
+    	
+    	/**
+    	 * This method returns the list of situations for the
+    	 * selected page.
+    	 * 
+    	 * @return The situations
+    	 */
+    	public java.util.List<Situation> getSituations() {
+    		return (_situations);
+    	}
+    	
+    	/**
+    	 * This method returns the total number of situations available.
+    	 * 
+    	 * @return The total number of situations
+    	 */
+    	public int getTotalCount() {
+    		return (_totalCount);
+    	}
+    }
 }
