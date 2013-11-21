@@ -32,6 +32,7 @@ import org.overlord.monitoring.ui.client.shared.beans.TraceNodeBean;
 import org.overlord.monitoring.ui.client.shared.exceptions.UiException;
 import org.overlord.monitoring.ui.server.i18n.Messages;
 import org.overlord.monitoring.ui.server.services.ISituationsServiceImpl;
+import org.overlord.monitoring.ui.server.services.impl.RTGovRepository.SituationsResult;
 import org.overlord.rtgov.active.collection.ActiveCollectionContext;
 import org.overlord.rtgov.active.collection.predicate.Predicate;
 import org.overlord.rtgov.activity.model.ActivityType;
@@ -55,6 +56,8 @@ import org.overlord.rtgov.call.trace.model.TraceNode;
 public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
 
 	private static volatile Messages i18n = new Messages();
+	
+	private static final int SITUATIONS_PER_PAGE=4;
 
 	private RTGovRepository _repository=null;
 
@@ -86,24 +89,28 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
     public SituationResultSetBean search(SituationsFilterBean filters, int page, String sortColumn,
             boolean ascending) throws UiException {
         
-        // ******************************************************************************************
-        // TODO implement sorting.  The value of sortColumn will be one of the values listed in
-        // org.overlord.monitoring.ui.client.shared.beans.Constants
-        // ******************************************************************************************
+    	// Check sort column is relevant for situations
+    	if (sortColumn != null && !sortColumn.equals(org.overlord.monitoring.ui.client.shared.beans.Constants.SORT_COLID_SUBJECT)
+    			&& !sortColumn.equals(org.overlord.monitoring.ui.client.shared.beans.Constants.SORT_COLID_TIMESTAMP)
+    			&& !sortColumn.equals(org.overlord.monitoring.ui.client.shared.beans.Constants.SORT_COLID_TYPE)) {
+    		sortColumn = null;
+    	}
         
         SituationResultSetBean rval = new SituationResultSetBean();
         ArrayList<SituationSummaryBean> situations = new ArrayList<SituationSummaryBean>();
 
+        int total=0;
+        
         try {
-        	getHistorySituationList(filters, situations);
+        	total = getHistorySituationList(filters, situations, page, sortColumn, ascending);
         } catch (Exception e) {
         	throw new UiException("Failed to get situation list", e); //$NON-NLS-1$
         }
 
         rval.setSituations(situations);
         rval.setItemsPerPage(situations.size());
-        rval.setStartIndex(0);
-        rval.setTotalResults(situations.size());
+        rval.setStartIndex((page-1)*SITUATIONS_PER_PAGE);
+        rval.setTotalResults(total);
 
         return (rval);
     }
@@ -116,12 +123,17 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
      * @param situations The result list
      * @throws Exception Failed to get situations list
      */
-    protected void getHistorySituationList(SituationsFilterBean filters, java.util.List<SituationSummaryBean> situations) throws Exception {
-    	java.util.List<Situation> results=_repository.getSituations(filters);
+    protected int getHistorySituationList(SituationsFilterBean filters,
+    		java.util.List<SituationSummaryBean> situations, int page, String sortColumn,
+            boolean ascending) throws Exception {
+    	SituationsResult results=_repository.getSituations(filters, page,
+    			SITUATIONS_PER_PAGE, sortColumn, ascending);
 
-    	for (Situation item : results) {
+    	for (Situation item : results.getSituations()) {
         	situations.add(RTGovSituationsUtil.getSituationBean(item));
         }
+    	
+    	return (results.getTotalCount());
     }
 
     /**
