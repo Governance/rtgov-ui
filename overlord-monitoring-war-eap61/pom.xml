@@ -127,7 +127,19 @@
       <artifactId>jboss-as-server</artifactId>
       <scope>provided</scope>
     </dependency>
-
+    
+    <!-- SwitchYard dependencies -->
+    <dependency>
+      <groupId>org.switchyard</groupId>
+      <artifactId>switchyard-remote</artifactId>
+      <version>${switchyard.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.switchyard</groupId>
+      <artifactId>switchyard-serial</artifactId>
+      <version>${switchyard.version}</version>
+    </dependency>
+        
     <!-- Other JBoss-only dependencies -->
     <dependency>
       <groupId>org.jboss.errai</groupId>
