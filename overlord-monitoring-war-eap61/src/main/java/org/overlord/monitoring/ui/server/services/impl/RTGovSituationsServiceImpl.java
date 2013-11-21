@@ -64,6 +64,9 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
 	@Inject
 	private ActivityServer _activityServer=null;
 
+	@Inject
+	private ResubmitHandler _resubmitHandler=null;
+
     /**
      * Constructor.
      */
@@ -265,6 +268,31 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
     	
     	return (ret);
     }
+    
+    /**
+     * @see org.overlord.monitoring.ui.server.services.ISituationsServiceImpl#resubmit(java.lang.String, java.lang.String)
+     */
+    @Override
+    public void resubmit(String situationId, String message) throws UiException {
+    	
+    	try {
+	    	Situation situation=_repository.getSituation(situationId);
+
+	    	if (situation == null) {
+	            throw new UiException(i18n.format("RTGovSituationsServiceImpl.SitNotFound", situationId)); //$NON-NLS-1$
+	    	}
+
+	    	_resubmitHandler.resubmit(situation, message);
+
+    	} catch (UiException uie) {
+    		throw uie;
+
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    		throw new UiException(i18n.format("RTGovSituationsServiceImpl.ResubmitFailed", situationId+":"+e.getLocalizedMessage()), e); //$NON-NLS-1$
+    	}
+
+    }
 
 	/**
      * This class provides the 'situations filter' based predicate implementation.
@@ -327,13 +355,4 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
 		}
 
     }
-    
-    /**
-     * @see org.overlord.monitoring.ui.server.services.ISituationsServiceImpl#resubmit(java.lang.String, java.lang.String)
-     */
-    @Override
-    public void resubmit(String situationId, String message) throws UiException {
-        // TODO Implement me!
-    }
-
 }
