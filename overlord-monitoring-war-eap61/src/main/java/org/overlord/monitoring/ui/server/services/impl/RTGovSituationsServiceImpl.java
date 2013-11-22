@@ -57,7 +57,7 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
 
 	private static volatile Messages i18n = new Messages();
 	
-	private static final int SITUATIONS_PER_PAGE=4;
+	private static final int SITUATIONS_PER_PAGE=10;
 
 	private RTGovRepository _repository=null;
 
