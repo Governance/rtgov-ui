@@ -78,6 +78,16 @@
     
     <!-- RTGov dependencies -->
     <dependency>
+        <groupId>org.overlord.rtgov.common</groupId>
+        <artifactId>rtgov-common</artifactId>
+        <version>${rtgov.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.overlord.rtgov.integration</groupId>
+        <artifactId>rtgov-jbossas</artifactId>
+        <version>${rtgov.version}</version>
+    </dependency>
+    <dependency>
         <groupId>org.overlord.rtgov.activity-management</groupId>
         <artifactId>activity</artifactId>
         <version>${rtgov.version}</version>
