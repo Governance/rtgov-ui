@@ -39,7 +39,7 @@ public class SwitchYardResubmitHandler implements ResubmitHandler {
 
 	protected static final String DEFAULT_REMOTE_INVOKER_URL = "http://localhost:8080/switchyard-remote";
 	
-	private String _serverURLs=RTGovProperties.getProperties().getProperty(SWITCHYARD_RESUBMIT_HANDLER_SERVER_URLS);
+	private String _serverURLs=null;
     
 	private java.util.List<String> _urlList=new java.util.ArrayList<String>();
 
@@ -62,6 +62,9 @@ public class SwitchYardResubmitHandler implements ResubmitHandler {
 	 * @return The server URLs
 	 */
 	public String getServerURLs() {
+		if (_serverURLs == null) {
+			_serverURLs = RTGovProperties.getProperties().getProperty(SWITCHYARD_RESUBMIT_HANDLER_SERVER_URLS);
+		}
 		return (_serverURLs);
 	}
 	
@@ -79,8 +82,8 @@ public class SwitchYardResubmitHandler implements ResubmitHandler {
 		synchronized (_urlList) {
 			if (_urlList.size() == 0) {
 				
-				if (_serverURLs != null) {
-					String[] urls=_serverURLs.split("[, ]");
+				if (getServerURLs() != null && getServerURLs().trim().length() > 0) {
+					String[] urls=getServerURLs().split("[, ]");
 					
 					for (int i=0; i < urls.length; i++) {
 						String url=urls[i].trim();

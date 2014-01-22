@@ -15,6 +15,9 @@ public class SwitchYardResubmitHandlerTest {
 	public void testGetDefaultURL() {
 		SwitchYardResubmitHandler handler=new SwitchYardResubmitHandler();
 		
+		handler.setServerURLs(""); // Prevent it accessing rtgov properties, which in old
+									// version attempts to use jndi
+		
 		java.util.List<String> urls=handler.getURLList();
 		
 		if (urls == null) {
