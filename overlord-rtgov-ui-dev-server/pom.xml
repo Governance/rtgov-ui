@@ -110,7 +110,7 @@
               </execution>
             </executions>
             <configuration>
-              <mainClass>org.overlord.rtgov.ui.devsvr.RTGovUIDevServer</mainClass>
+              <mainClass>org.overlord.rtgov.devsvr.RTGovUIDevServer</mainClass>
             </configuration>
           </plugin>
         </plugins>

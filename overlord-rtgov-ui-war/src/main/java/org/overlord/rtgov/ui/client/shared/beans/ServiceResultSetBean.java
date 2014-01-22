@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.overlord.monitoring.ui.client.shared.beans;
+package org.overlord.rtgov.ui.client.shared.beans;
 
 import java.io.Serializable;
 import java.util.List;
@@ -21,16 +21,16 @@ import java.util.List;
 import org.jboss.errai.common.client.api.annotations.Portable;
 
 /**
- * Models the set of Situation summary objects returned by a Situations search.
+ * Models the set of Service summary objects returned by a Services search.
  *
  * @author eric.wittmann@redhat.com
  */
 @Portable
-public class SituationResultSetBean implements Serializable {
+public class ServiceResultSetBean implements Serializable {
 
-    private static final long serialVersionUID = SituationResultSetBean.class.hashCode();
+    private static final long serialVersionUID = ServiceResultSetBean.class.hashCode();
 
-    private List<SituationSummaryBean> services;
+    private List<ServiceSummaryBean> services;
     private long totalResults;
     private int itemsPerPage;
     private int startIndex;
@@ -38,20 +38,20 @@ public class SituationResultSetBean implements Serializable {
     /**
      * Constructor.
      */
-    public SituationResultSetBean() {
+    public ServiceResultSetBean() {
     }
 
     /**
      * @return the services
      */
-    public List<SituationSummaryBean> getSituations() {
+    public List<ServiceSummaryBean> getServices() {
         return services;
     }
 
     /**
      * @param services the servicess to set
      */
-    public void setSituations(List<SituationSummaryBean> services) {
+    public void setServices(List<ServiceSummaryBean> services) {
         this.services = services;
     }
 

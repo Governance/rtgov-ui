@@ -29,9 +29,6 @@ import org.jboss.errai.ui.shared.api.annotations.Bound;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
-import org.overlord.monitoring.ui.client.shared.beans.NotificationBean;
-import org.overlord.monitoring.ui.client.shared.beans.SituationBean;
-import org.overlord.monitoring.ui.client.shared.beans.TraceNodeBean;
 import org.overlord.rtgov.ui.client.local.ClientMessages;
 import org.overlord.rtgov.ui.client.local.pages.situations.CallTraceDetails;
 import org.overlord.rtgov.ui.client.local.pages.situations.CallTraceWidget;
@@ -42,6 +39,9 @@ import org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHand
 import org.overlord.rtgov.ui.client.local.util.DOMUtil;
 import org.overlord.rtgov.ui.client.local.util.DataBindingDateTimeConverter;
 import org.overlord.rtgov.ui.client.local.widgets.common.SourceEditor;
+import org.overlord.rtgov.ui.client.shared.beans.NotificationBean;
+import org.overlord.rtgov.ui.client.shared.beans.SituationBean;
+import org.overlord.rtgov.ui.client.shared.beans.TraceNodeBean;
 import org.overlord.sramp.ui.client.local.widgets.common.HtmlSnippet;
 
 import com.google.gwt.dom.client.Element;
@@ -58,7 +58,7 @@ import com.google.gwt.user.client.ui.InlineLabel;
  *
  * @author eric.wittmann@redhat.com
  */
-@Templated("/org/overlord/monitoring/ui/client/local/site/situationDetails.html#page")
+@Templated("/org/overlord/rtgov/ui/client/local/site/situationDetails.html#page")
 @Page(path="situationDetails")
 @Dependent
 public class SituationDetailsPage extends AbstractPage {

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.overlord.monitoring.ui.client.shared.beans;
+package org.overlord.rtgov.ui.client.shared.beans;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,39 +23,40 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 
 /**
- * Models the full details of a reference.
+ * Models the full details of a service.
  *
  * @author eric.wittmann@redhat.com
  */
 @Portable
 @Bindable
-public class ReferenceBean implements Serializable {
+public class ComponentServiceBean implements Serializable {
 
-    private static final long serialVersionUID = ReferenceBean.class.hashCode();
+    private static final long serialVersionUID = ComponentServiceBean.class.hashCode();
 
-    private String referenceId;
+    private String serviceId;
     private QName name;
     private QName application;
-    private String referenceInterface;
+    private String serviceInterface;
+    private String serviceImplementation;
     private long successCount;
     private long faultCount;
     private long totalTime;
     private long averageTime;
     private long minTime;
     private long maxTime;
-    private List<GatewayMetric> gatewayMetrics = new ArrayList<GatewayMetric>();
+    private List<ReferenceMetric> referenceMetrics = new ArrayList<ReferenceMetric>();
 
     /**
      * Constructor.
      */
-    public ReferenceBean() {
+    public ComponentServiceBean() {
     }
 
     /**
-     * @return the referenceId
+     * @return the serviceId
      */
-    public String getReferenceId() {
-        return referenceId;
+    public String getServiceId() {
+        return serviceId;
     }
 
     /**
@@ -73,10 +74,10 @@ public class ReferenceBean implements Serializable {
     }
 
     /**
-     * @return the referenceInterface
+     * @return the serviceInterface
      */
-    public String getReferenceInterface() {
-        return referenceInterface;
+    public String getServiceInterface() {
+        return serviceInterface;
     }
 
     /**
@@ -122,10 +123,10 @@ public class ReferenceBean implements Serializable {
     }
 
     /**
-     * @param referenceId the referenceId to set
+     * @param serviceId the serviceId to set
      */
-    public void setReferenceId(String referenceId) {
-        this.referenceId = referenceId;
+    public void setServiceId(String serviceId) {
+        this.serviceId = serviceId;
     }
 
     /**
@@ -143,10 +144,10 @@ public class ReferenceBean implements Serializable {
     }
 
     /**
-     * @param referenceInterface the referenceInterface to set
+     * @param serviceInterface the serviceInterface to set
      */
-    public void setReferenceInterface(String referenceInterface) {
-        this.referenceInterface = referenceInterface;
+    public void setServiceInterface(String serviceInterface) {
+        this.serviceInterface = serviceInterface;
     }
 
     /**
@@ -192,37 +193,49 @@ public class ReferenceBean implements Serializable {
     }
 
     /**
-     * Adds a single gateway metric to the bean.
+     * @return the serviceImplementation
+     */
+    public String getServiceImplementation() {
+        return serviceImplementation;
+    }
+
+    /**
+     * @param serviceImplementation the serviceImplementation to set
+     */
+    public void setServiceImplementation(String serviceImplementation) {
+        this.serviceImplementation = serviceImplementation;
+    }
+
+    /**
+     * Adds a single reference metric to the bean.
      * @param name
-     * @param type
      * @param messageCount
      * @param averageTime
      * @param timePercent
      * @param faultPercent
      */
-    public void addGatewayMetric(String name, String type, long messageCount, long averageTime, int timePercent, int faultPercent) {
-        GatewayMetric metric = new GatewayMetric();
+    public void addReferenceMetric(String name, long messageCount, long averageTime, int timePercent, int faultPercent) {
+        ReferenceMetric metric = new ReferenceMetric();
         metric.setName(name);
-        metric.setType(type);
         metric.setMessageCount(messageCount);
         metric.setAverageTime(averageTime);
         metric.setTimePercent(timePercent);
         metric.setFaultPercent(faultPercent);
-        this.getGatewayMetrics().add(metric);
+        this.getReferenceMetrics().add(metric);
     }
 
     /**
-     * @return the gatewayMetrics
+     * @return the referenceMetrics
      */
-    public List<GatewayMetric> getGatewayMetrics() {
-        return gatewayMetrics;
+    public List<ReferenceMetric> getReferenceMetrics() {
+        return referenceMetrics;
     }
 
     /**
-     * @param gatewayMetrics the gatewayMetrics to set
+     * @param referenceMetrics the referenceMetrics to set
      */
-    public void setGatewayMetrics(List<GatewayMetric> gatewayMetrics) {
-        this.gatewayMetrics = gatewayMetrics;
+    public void setReferenceMetrics(List<ReferenceMetric> referenceMetrics) {
+        this.referenceMetrics = referenceMetrics;
     }
 
 }

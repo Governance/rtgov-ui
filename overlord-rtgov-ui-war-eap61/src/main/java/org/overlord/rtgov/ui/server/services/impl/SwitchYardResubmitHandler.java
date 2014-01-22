@@ -17,15 +17,13 @@ package org.overlord.rtgov.ui.server.services.impl;
 
 import java.util.Collections;
 
-import javax.inject.Inject;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.dom.DOMSource;
 
-import org.overlord.rtgov.common.util.RTGovProperties;
 import org.overlord.rtgov.analytics.situation.Situation;
-
+import org.overlord.rtgov.common.util.RTGovProperties;
 import org.switchyard.remote.RemoteInvoker;
 import org.switchyard.remote.RemoteMessage;
 import org.switchyard.remote.http.HttpInvoker;

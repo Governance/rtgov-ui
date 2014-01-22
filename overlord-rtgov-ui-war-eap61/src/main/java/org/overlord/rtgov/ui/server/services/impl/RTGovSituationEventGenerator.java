@@ -21,9 +21,6 @@ import javax.inject.Singleton;
 
 import org.jboss.errai.bus.client.api.base.MessageBuilder;
 import org.jboss.errai.bus.client.api.messaging.RequestDispatcher;
-import org.overlord.monitoring.ui.client.shared.beans.SituationEventBean;
-import org.overlord.monitoring.ui.client.shared.beans.SituationSummaryBean;
-import org.overlord.monitoring.ui.client.shared.beans.SituationsFilterBean;
 import org.overlord.rtgov.active.collection.ActiveChangeListener;
 import org.overlord.rtgov.active.collection.ActiveCollection;
 import org.overlord.rtgov.active.collection.ActiveCollectionListener;
@@ -32,6 +29,9 @@ import org.overlord.rtgov.active.collection.ActiveCollectionManagerAccessor;
 import org.overlord.rtgov.active.collection.ActiveList;
 import org.overlord.rtgov.active.collection.predicate.Predicate;
 import org.overlord.rtgov.analytics.situation.Situation;
+import org.overlord.rtgov.ui.client.shared.beans.SituationEventBean;
+import org.overlord.rtgov.ui.client.shared.beans.SituationSummaryBean;
+import org.overlord.rtgov.ui.client.shared.beans.SituationsFilterBean;
 import org.overlord.rtgov.ui.server.services.ISituationEventGenerator;
 import org.overlord.rtgov.ui.server.services.impl.RTGovSituationsServiceImpl.SituationsFilterPredicate;
 

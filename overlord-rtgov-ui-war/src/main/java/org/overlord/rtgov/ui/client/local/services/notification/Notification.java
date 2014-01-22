@@ -15,7 +15,7 @@
  */
 package org.overlord.rtgov.ui.client.local.services.notification;
 
-import org.overlord.monitoring.ui.client.shared.beans.NotificationBean;
+import org.overlord.rtgov.ui.client.shared.beans.NotificationBean;
 
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.user.client.Timer;

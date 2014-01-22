@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.overlord.monitoring.ui.client.shared.beans;
+package org.overlord.rtgov.ui.client.shared.beans;
 
 import java.io.Serializable;
 import java.util.List;
@@ -21,16 +21,16 @@ import java.util.List;
 import org.jboss.errai.common.client.api.annotations.Portable;
 
 /**
- * Models the set of Service summary objects returned by a Services search.
+ * Models the set of summary objects returned by a References search.
  *
  * @author eric.wittmann@redhat.com
  */
 @Portable
-public class ServiceResultSetBean implements Serializable {
+public class ReferenceResultSetBean implements Serializable {
 
-    private static final long serialVersionUID = ServiceResultSetBean.class.hashCode();
+    private static final long serialVersionUID = ReferenceResultSetBean.class.hashCode();
 
-    private List<ServiceSummaryBean> services;
+    private List<ReferenceSummaryBean> references;
     private long totalResults;
     private int itemsPerPage;
     private int startIndex;
@@ -38,21 +38,21 @@ public class ServiceResultSetBean implements Serializable {
     /**
      * Constructor.
      */
-    public ServiceResultSetBean() {
+    public ReferenceResultSetBean() {
     }
 
     /**
-     * @return the services
+     * @return the references
      */
-    public List<ServiceSummaryBean> getServices() {
-        return services;
+    public List<ReferenceSummaryBean> getReferences() {
+        return references;
     }
 
     /**
-     * @param services the servicess to set
+     * @param references the referencess to set
      */
-    public void setServices(List<ServiceSummaryBean> services) {
-        this.services = services;
+    public void setReferences(List<ReferenceSummaryBean> references) {
+        this.references = references;
     }
 
     /**

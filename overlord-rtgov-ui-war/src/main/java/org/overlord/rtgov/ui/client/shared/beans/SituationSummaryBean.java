@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.overlord.monitoring.ui.client.shared.beans;
+package org.overlord.rtgov.ui.client.shared.beans;
 
 import java.util.Date;
 import java.util.HashMap;

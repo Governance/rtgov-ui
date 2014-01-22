@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.overlord.monitoring.ui.client.shared.beans;
+package org.overlord.rtgov.ui.client.shared.beans;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -29,27 +29,26 @@ import org.jboss.errai.databinding.client.api.Bindable;
  */
 @Portable
 @Bindable
-public class ComponentServiceBean implements Serializable {
+public class ServiceBean implements Serializable {
 
-    private static final long serialVersionUID = ComponentServiceBean.class.hashCode();
+    private static final long serialVersionUID = ServiceBean.class.hashCode();
 
     private String serviceId;
     private QName name;
     private QName application;
     private String serviceInterface;
-    private String serviceImplementation;
     private long successCount;
     private long faultCount;
     private long totalTime;
     private long averageTime;
     private long minTime;
     private long maxTime;
-    private List<ReferenceMetric> referenceMetrics = new ArrayList<ReferenceMetric>();
+    private List<GatewayMetric> gatewayMetrics = new ArrayList<GatewayMetric>();
 
     /**
      * Constructor.
      */
-    public ComponentServiceBean() {
+    public ServiceBean() {
     }
 
     /**
@@ -193,49 +192,37 @@ public class ComponentServiceBean implements Serializable {
     }
 
     /**
-     * @return the serviceImplementation
-     */
-    public String getServiceImplementation() {
-        return serviceImplementation;
-    }
-
-    /**
-     * @param serviceImplementation the serviceImplementation to set
-     */
-    public void setServiceImplementation(String serviceImplementation) {
-        this.serviceImplementation = serviceImplementation;
-    }
-
-    /**
-     * Adds a single reference metric to the bean.
+     * Adds a single gateway metric to the bean.
      * @param name
+     * @param type
      * @param messageCount
      * @param averageTime
      * @param timePercent
      * @param faultPercent
      */
-    public void addReferenceMetric(String name, long messageCount, long averageTime, int timePercent, int faultPercent) {
-        ReferenceMetric metric = new ReferenceMetric();
+    public void addGatewayMetric(String name, String type, long messageCount, long averageTime, int timePercent, int faultPercent) {
+        GatewayMetric metric = new GatewayMetric();
         metric.setName(name);
+        metric.setType(type);
         metric.setMessageCount(messageCount);
         metric.setAverageTime(averageTime);
         metric.setTimePercent(timePercent);
         metric.setFaultPercent(faultPercent);
-        this.getReferenceMetrics().add(metric);
+        this.getGatewayMetrics().add(metric);
     }
 
     /**
-     * @return the referenceMetrics
+     * @return the gatewayMetrics
      */
-    public List<ReferenceMetric> getReferenceMetrics() {
-        return referenceMetrics;
+    public List<GatewayMetric> getGatewayMetrics() {
+        return gatewayMetrics;
     }
 
     /**
-     * @param referenceMetrics the referenceMetrics to set
+     * @param gatewayMetrics the gatewayMetrics to set
      */
-    public void setReferenceMetrics(List<ReferenceMetric> referenceMetrics) {
-        this.referenceMetrics = referenceMetrics;
+    public void setGatewayMetrics(List<GatewayMetric> gatewayMetrics) {
+        this.gatewayMetrics = gatewayMetrics;
     }
 
 }

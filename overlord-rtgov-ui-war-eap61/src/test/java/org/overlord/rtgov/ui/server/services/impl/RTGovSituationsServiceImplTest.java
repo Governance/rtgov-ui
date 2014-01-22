@@ -3,9 +3,9 @@ package org.overlord.rtgov.ui.server.services.impl;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.overlord.monitoring.ui.client.shared.beans.SituationsFilterBean;
 import org.overlord.rtgov.analytics.situation.Situation;
 import org.overlord.rtgov.analytics.situation.Situation.Severity;
+import org.overlord.rtgov.ui.client.shared.beans.SituationsFilterBean;
 import org.overlord.rtgov.ui.server.services.impl.RTGovSituationsServiceImpl;
 
 public class RTGovSituationsServiceImplTest {

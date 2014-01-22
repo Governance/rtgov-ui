@@ -19,8 +19,8 @@ import java.util.Map.Entry;
 
 import javax.inject.Inject;
 
-import org.overlord.monitoring.ui.client.shared.beans.TraceNodeBean;
 import org.overlord.rtgov.ui.client.local.ClientMessages;
+import org.overlord.rtgov.ui.client.shared.beans.TraceNodeBean;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;

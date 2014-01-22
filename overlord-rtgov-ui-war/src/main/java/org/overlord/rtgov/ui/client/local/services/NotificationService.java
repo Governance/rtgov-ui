@@ -28,8 +28,6 @@ import org.jboss.errai.bus.client.api.messaging.Message;
 import org.jboss.errai.bus.client.api.messaging.MessageBus;
 import org.jboss.errai.bus.client.api.messaging.MessageCallback;
 import org.jboss.errai.bus.client.api.messaging.RequestDispatcher;
-import org.overlord.monitoring.ui.client.shared.beans.NotificationBean;
-import org.overlord.monitoring.ui.client.shared.beans.NotificationType;
 import org.overlord.rtgov.ui.client.local.animations.FadeOutAnimation;
 import org.overlord.rtgov.ui.client.local.animations.MoveAnimation;
 import org.overlord.rtgov.ui.client.local.events.MouseInEvent;
@@ -37,6 +35,8 @@ import org.overlord.rtgov.ui.client.local.events.MouseOutEvent;
 import org.overlord.rtgov.ui.client.local.services.notification.Notification;
 import org.overlord.rtgov.ui.client.local.services.notification.NotificationConstants;
 import org.overlord.rtgov.ui.client.local.services.notification.NotificationWidget;
+import org.overlord.rtgov.ui.client.shared.beans.NotificationBean;
+import org.overlord.rtgov.ui.client.shared.beans.NotificationType;
 import org.overlord.rtgov.ui.client.shared.exceptions.UiException;
 
 import com.google.gwt.dom.client.Style.Position;

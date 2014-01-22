@@ -18,9 +18,9 @@ package org.overlord.rtgov.ui.server.services;
 import javax.inject.Inject;
 
 import org.jboss.errai.bus.server.annotations.Service;
-import org.overlord.monitoring.ui.client.shared.beans.SituationBean;
-import org.overlord.monitoring.ui.client.shared.beans.SituationResultSetBean;
-import org.overlord.monitoring.ui.client.shared.beans.SituationsFilterBean;
+import org.overlord.rtgov.ui.client.shared.beans.SituationBean;
+import org.overlord.rtgov.ui.client.shared.beans.SituationResultSetBean;
+import org.overlord.rtgov.ui.client.shared.beans.SituationsFilterBean;
 import org.overlord.rtgov.ui.client.shared.exceptions.UiException;
 import org.overlord.rtgov.ui.client.shared.services.ISituationsService;
 
@@ -41,7 +41,7 @@ public class SituationsService implements ISituationsService {
     }
     
     /**
-     * @see org.overlord.rtgov.ui.client.shared.services.ISituationsService#search(org.overlord.monitoring.ui.client.shared.beans.SituationsFilterBean, int, java.lang.String, boolean)
+     * @see org.overlord.rtgov.ui.client.shared.services.ISituationsService#search(org.overlord.rtgov.ui.client.shared.beans.SituationsFilterBean, int, java.lang.String, boolean)
      */
     @Override
     public SituationResultSetBean search(SituationsFilterBean filters, int page, String sortColumn,

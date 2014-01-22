@@ -22,11 +22,11 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import org.jboss.errai.ui.nav.client.local.TransitionAnchorFactory;
-import org.overlord.monitoring.ui.client.shared.beans.Constants;
-import org.overlord.monitoring.ui.client.shared.beans.SituationSummaryBean;
 import org.overlord.rtgov.ui.client.local.ClientMessages;
 import org.overlord.rtgov.ui.client.local.pages.SituationDetailsPage;
 import org.overlord.rtgov.ui.client.local.widgets.common.SortableTemplatedWidgetTable;
+import org.overlord.rtgov.ui.client.shared.beans.Constants;
+import org.overlord.rtgov.ui.client.shared.beans.SituationSummaryBean;
 
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.event.logical.shared.AttachEvent.Handler;

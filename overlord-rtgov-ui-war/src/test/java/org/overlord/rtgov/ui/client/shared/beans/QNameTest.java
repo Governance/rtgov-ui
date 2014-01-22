@@ -17,7 +17,7 @@ package org.overlord.rtgov.ui.client.shared.beans;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.overlord.monitoring.ui.client.shared.beans.QName;
+import org.overlord.rtgov.ui.client.shared.beans.QName;
 
 /**
  *
@@ -26,7 +26,7 @@ import org.overlord.monitoring.ui.client.shared.beans.QName;
 public class QNameTest {
 
     /**
-     * Test method for {@link org.overlord.monitoring.ui.client.shared.beans.QName#fromString(java.lang.String)}.
+     * Test method for {@link org.overlord.rtgov.ui.client.shared.beans.QName#fromString(java.lang.String)}.
      */
     @Test
     public void testFromString() {

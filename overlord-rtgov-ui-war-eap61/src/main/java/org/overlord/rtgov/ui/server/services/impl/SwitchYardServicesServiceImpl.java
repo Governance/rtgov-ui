@@ -26,15 +26,15 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
 
 import org.jboss.dmr.ModelNode;
-import org.overlord.monitoring.ui.client.shared.beans.GatewayMetric;
-import org.overlord.monitoring.ui.client.shared.beans.QName;
-import org.overlord.monitoring.ui.client.shared.beans.ReferenceBean;
-import org.overlord.monitoring.ui.client.shared.beans.ReferenceResultSetBean;
-import org.overlord.monitoring.ui.client.shared.beans.ReferenceSummaryBean;
-import org.overlord.monitoring.ui.client.shared.beans.ServiceBean;
-import org.overlord.monitoring.ui.client.shared.beans.ServiceResultSetBean;
-import org.overlord.monitoring.ui.client.shared.beans.ServiceSummaryBean;
-import org.overlord.monitoring.ui.client.shared.beans.ServicesFilterBean;
+import org.overlord.rtgov.ui.client.shared.beans.GatewayMetric;
+import org.overlord.rtgov.ui.client.shared.beans.QName;
+import org.overlord.rtgov.ui.client.shared.beans.ReferenceBean;
+import org.overlord.rtgov.ui.client.shared.beans.ReferenceResultSetBean;
+import org.overlord.rtgov.ui.client.shared.beans.ReferenceSummaryBean;
+import org.overlord.rtgov.ui.client.shared.beans.ServiceBean;
+import org.overlord.rtgov.ui.client.shared.beans.ServiceResultSetBean;
+import org.overlord.rtgov.ui.client.shared.beans.ServiceSummaryBean;
+import org.overlord.rtgov.ui.client.shared.beans.ServicesFilterBean;
 import org.overlord.rtgov.ui.client.shared.exceptions.UiException;
 import org.overlord.rtgov.ui.server.i18n.Messages;
 import org.overlord.rtgov.ui.server.services.IServicesServiceImpl;
@@ -105,7 +105,7 @@ public class SwitchYardServicesServiceImpl implements IServicesServiceImpl {
     }
 
     /**
-     * @see org.overlord.rtgov.ui.server.services.IServicesServiceImpl#findServices(org.overlord.monitoring.ui.client.shared.beans.ServicesFilterBean, int)
+     * @see org.overlord.rtgov.ui.server.services.IServicesServiceImpl#findServices(org.overlord.rtgov.ui.client.shared.beans.ServicesFilterBean, int)
      */
     @Override
     public ServiceResultSetBean findServices(final ServicesFilterBean filters, final int page,
@@ -145,7 +145,7 @@ public class SwitchYardServicesServiceImpl implements IServicesServiceImpl {
     }
 
     /**
-     * @see org.overlord.rtgov.ui.server.services.IServicesServiceImpl#findReferences(org.overlord.monitoring.ui.client.shared.beans.ServicesFilterBean, int)
+     * @see org.overlord.rtgov.ui.server.services.IServicesServiceImpl#findReferences(org.overlord.rtgov.ui.client.shared.beans.ServicesFilterBean, int)
      */
     @Override
     public ReferenceResultSetBean findReferences(

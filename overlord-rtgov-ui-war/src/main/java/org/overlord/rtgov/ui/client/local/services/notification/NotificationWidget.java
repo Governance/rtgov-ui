@@ -21,11 +21,11 @@ import javax.inject.Inject;
 
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
-import org.overlord.monitoring.ui.client.shared.beans.NotificationType;
 import org.overlord.rtgov.ui.client.local.events.MouseInEvent;
 import org.overlord.rtgov.ui.client.local.events.MouseOutEvent;
 import org.overlord.rtgov.ui.client.local.events.MouseInEvent.HasMouseInHandlers;
 import org.overlord.rtgov.ui.client.local.events.MouseOutEvent.HasMouseOutHandlers;
+import org.overlord.rtgov.ui.client.shared.beans.NotificationType;
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.AttachEvent;
@@ -49,7 +49,7 @@ import com.google.gwt.user.client.ui.Widget;
  *
  * @author eric.wittmann@redhat.com
  */
-@Templated("/org/overlord/monitoring/ui/client/local/site/dialogs/growl-dialog.html#growl-dialog")
+@Templated("/org/overlord/rtgov/ui/client/local/site/dialogs/growl-dialog.html#growl-dialog")
 @Dependent
 public class NotificationWidget extends Composite implements HasMouseInHandlers, HasMouseOutHandlers {
 

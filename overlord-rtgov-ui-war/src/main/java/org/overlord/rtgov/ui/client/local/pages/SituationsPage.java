@@ -28,10 +28,6 @@ import org.jboss.errai.ui.nav.client.local.TransitionAnchor;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
-import org.overlord.monitoring.ui.client.shared.beans.SituationEventBean;
-import org.overlord.monitoring.ui.client.shared.beans.SituationResultSetBean;
-import org.overlord.monitoring.ui.client.shared.beans.SituationSummaryBean;
-import org.overlord.monitoring.ui.client.shared.beans.SituationsFilterBean;
 import org.overlord.rtgov.ui.client.local.ClientMessages;
 import org.overlord.rtgov.ui.client.local.events.TableSortEvent;
 import org.overlord.rtgov.ui.client.local.pages.situations.SituationFilters;
@@ -41,6 +37,10 @@ import org.overlord.rtgov.ui.client.local.services.NotificationService;
 import org.overlord.rtgov.ui.client.local.services.SituationsRpcService;
 import org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHandler;
 import org.overlord.rtgov.ui.client.local.widgets.common.SortableTemplatedWidgetTable.SortColumn;
+import org.overlord.rtgov.ui.client.shared.beans.SituationEventBean;
+import org.overlord.rtgov.ui.client.shared.beans.SituationResultSetBean;
+import org.overlord.rtgov.ui.client.shared.beans.SituationSummaryBean;
+import org.overlord.rtgov.ui.client.shared.beans.SituationsFilterBean;
 import org.overlord.sramp.ui.client.local.widgets.bootstrap.Pager;
 import org.overlord.sramp.ui.client.local.widgets.common.HtmlSnippet;
 
@@ -59,7 +59,7 @@ import com.google.gwt.user.client.ui.Button;
  *
  * @author eric.wittmann@redhat.com
  */
-@Templated("/org/overlord/monitoring/ui/client/local/site/situations.html#page")
+@Templated("/org/overlord/rtgov/ui/client/local/site/situations.html#page")
 @Page(path="situations")
 @Dependent
 public class SituationsPage extends AbstractPage {

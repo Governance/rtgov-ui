@@ -17,9 +17,9 @@ package org.overlord.rtgov.ui.server.services.impl;
 
 import java.util.Date;
 
-import org.overlord.monitoring.ui.client.shared.beans.SituationBean;
-import org.overlord.monitoring.ui.client.shared.beans.SituationEventBean;
 import org.overlord.rtgov.analytics.situation.Situation;
+import org.overlord.rtgov.ui.client.shared.beans.SituationBean;
+import org.overlord.rtgov.ui.client.shared.beans.SituationEventBean;
 
 /**
  * Utility class for RTGov situations.

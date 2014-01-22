@@ -18,12 +18,12 @@ package org.overlord.rtgov.ui.client.shared.services;
 import java.util.List;
 
 import org.jboss.errai.bus.server.annotations.Remote;
-import org.overlord.monitoring.ui.client.shared.beans.QName;
-import org.overlord.monitoring.ui.client.shared.beans.ReferenceBean;
-import org.overlord.monitoring.ui.client.shared.beans.ReferenceResultSetBean;
-import org.overlord.monitoring.ui.client.shared.beans.ServiceBean;
-import org.overlord.monitoring.ui.client.shared.beans.ServiceResultSetBean;
-import org.overlord.monitoring.ui.client.shared.beans.ServicesFilterBean;
+import org.overlord.rtgov.ui.client.shared.beans.QName;
+import org.overlord.rtgov.ui.client.shared.beans.ReferenceBean;
+import org.overlord.rtgov.ui.client.shared.beans.ReferenceResultSetBean;
+import org.overlord.rtgov.ui.client.shared.beans.ServiceBean;
+import org.overlord.rtgov.ui.client.shared.beans.ServiceResultSetBean;
+import org.overlord.rtgov.ui.client.shared.beans.ServicesFilterBean;
 import org.overlord.rtgov.ui.client.shared.exceptions.UiException;
 
 /**

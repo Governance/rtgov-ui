@@ -23,12 +23,12 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 
-import org.overlord.monitoring.ui.client.shared.beans.SituationsFilterBean;
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityTypeId;
 import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.analytics.situation.Situation;
 import org.overlord.rtgov.analytics.situation.Situation.Severity;
+import org.overlord.rtgov.ui.client.shared.beans.SituationsFilterBean;
 import org.overlord.rtgov.ui.server.i18n.Messages;
 
 /**

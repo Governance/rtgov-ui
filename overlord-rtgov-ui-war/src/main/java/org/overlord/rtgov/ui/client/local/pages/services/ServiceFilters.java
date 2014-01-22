@@ -23,8 +23,8 @@ import javax.inject.Inject;
 
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
-import org.overlord.monitoring.ui.client.shared.beans.QName;
-import org.overlord.monitoring.ui.client.shared.beans.ServicesFilterBean;
+import org.overlord.rtgov.ui.client.shared.beans.QName;
+import org.overlord.rtgov.ui.client.shared.beans.ServicesFilterBean;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -42,7 +42,7 @@ import com.google.gwt.user.client.ui.TextBox;
  *
  * @author eric.wittmann@redhat.com
  */
-@Templated("/org/overlord/monitoring/ui/client/local/site/services.html#filter-sidebar")
+@Templated("/org/overlord/rtgov/ui/client/local/site/services.html#filter-sidebar")
 @Dependent
 public class ServiceFilters extends Composite implements HasValueChangeHandlers<ServicesFilterBean> {
 

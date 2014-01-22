@@ -22,13 +22,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
 
-import org.overlord.monitoring.ui.client.shared.beans.CallTraceBean;
-import org.overlord.monitoring.ui.client.shared.beans.MessageBean;
-import org.overlord.monitoring.ui.client.shared.beans.SituationBean;
-import org.overlord.monitoring.ui.client.shared.beans.SituationResultSetBean;
-import org.overlord.monitoring.ui.client.shared.beans.SituationSummaryBean;
-import org.overlord.monitoring.ui.client.shared.beans.SituationsFilterBean;
-import org.overlord.monitoring.ui.client.shared.beans.TraceNodeBean;
 import org.overlord.rtgov.active.collection.ActiveCollectionContext;
 import org.overlord.rtgov.active.collection.predicate.Predicate;
 import org.overlord.rtgov.activity.model.ActivityType;
@@ -42,6 +35,13 @@ import org.overlord.rtgov.call.trace.model.Call;
 import org.overlord.rtgov.call.trace.model.CallTrace;
 import org.overlord.rtgov.call.trace.model.Task;
 import org.overlord.rtgov.call.trace.model.TraceNode;
+import org.overlord.rtgov.ui.client.shared.beans.CallTraceBean;
+import org.overlord.rtgov.ui.client.shared.beans.MessageBean;
+import org.overlord.rtgov.ui.client.shared.beans.SituationBean;
+import org.overlord.rtgov.ui.client.shared.beans.SituationResultSetBean;
+import org.overlord.rtgov.ui.client.shared.beans.SituationSummaryBean;
+import org.overlord.rtgov.ui.client.shared.beans.SituationsFilterBean;
+import org.overlord.rtgov.ui.client.shared.beans.TraceNodeBean;
 import org.overlord.rtgov.ui.client.shared.exceptions.UiException;
 import org.overlord.rtgov.ui.server.i18n.Messages;
 import org.overlord.rtgov.ui.server.services.ISituationsServiceImpl;
@@ -83,16 +83,16 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
     }
 
     /**
-     * @see org.overlord.rtgov.ui.server.services.ISituationsServiceImpl#search(org.overlord.monitoring.ui.client.shared.beans.SituationsFilterBean, int, java.lang.String, boolean)
+     * @see org.overlord.rtgov.ui.server.services.ISituationsServiceImpl#search(org.overlord.rtgov.ui.client.shared.beans.SituationsFilterBean, int, java.lang.String, boolean)
      */
     @Override
     public SituationResultSetBean search(SituationsFilterBean filters, int page, String sortColumn,
             boolean ascending) throws UiException {
         
     	// Check sort column is relevant for situations
-    	if (sortColumn != null && !sortColumn.equals(org.overlord.monitoring.ui.client.shared.beans.Constants.SORT_COLID_SUBJECT)
-    			&& !sortColumn.equals(org.overlord.monitoring.ui.client.shared.beans.Constants.SORT_COLID_TIMESTAMP)
-    			&& !sortColumn.equals(org.overlord.monitoring.ui.client.shared.beans.Constants.SORT_COLID_TYPE)) {
+    	if (sortColumn != null && !sortColumn.equals(org.overlord.rtgov.ui.client.shared.beans.Constants.SORT_COLID_SUBJECT)
+    			&& !sortColumn.equals(org.overlord.rtgov.ui.client.shared.beans.Constants.SORT_COLID_TIMESTAMP)
+    			&& !sortColumn.equals(org.overlord.rtgov.ui.client.shared.beans.Constants.SORT_COLID_TYPE)) {
     		sortColumn = null;
     	}
         

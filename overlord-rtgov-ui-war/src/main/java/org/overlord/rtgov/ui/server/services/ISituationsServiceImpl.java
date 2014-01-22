@@ -16,9 +16,9 @@
 package org.overlord.rtgov.ui.server.services;
 
 import org.jboss.errai.bus.server.annotations.Remote;
-import org.overlord.monitoring.ui.client.shared.beans.SituationBean;
-import org.overlord.monitoring.ui.client.shared.beans.SituationResultSetBean;
-import org.overlord.monitoring.ui.client.shared.beans.SituationsFilterBean;
+import org.overlord.rtgov.ui.client.shared.beans.SituationBean;
+import org.overlord.rtgov.ui.client.shared.beans.SituationResultSetBean;
+import org.overlord.rtgov.ui.client.shared.beans.SituationsFilterBean;
 import org.overlord.rtgov.ui.client.shared.exceptions.UiException;
 
 /**

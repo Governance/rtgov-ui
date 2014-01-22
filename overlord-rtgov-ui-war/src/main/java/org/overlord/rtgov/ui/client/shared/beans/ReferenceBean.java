@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.overlord.monitoring.ui.client.shared.beans;
+package org.overlord.rtgov.ui.client.shared.beans;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,20 +23,20 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 
 /**
- * Models the full details of a service.
+ * Models the full details of a reference.
  *
  * @author eric.wittmann@redhat.com
  */
 @Portable
 @Bindable
-public class ServiceBean implements Serializable {
+public class ReferenceBean implements Serializable {
 
-    private static final long serialVersionUID = ServiceBean.class.hashCode();
+    private static final long serialVersionUID = ReferenceBean.class.hashCode();
 
-    private String serviceId;
+    private String referenceId;
     private QName name;
     private QName application;
-    private String serviceInterface;
+    private String referenceInterface;
     private long successCount;
     private long faultCount;
     private long totalTime;
@@ -48,14 +48,14 @@ public class ServiceBean implements Serializable {
     /**
      * Constructor.
      */
-    public ServiceBean() {
+    public ReferenceBean() {
     }
 
     /**
-     * @return the serviceId
+     * @return the referenceId
      */
-    public String getServiceId() {
-        return serviceId;
+    public String getReferenceId() {
+        return referenceId;
     }
 
     /**
@@ -73,10 +73,10 @@ public class ServiceBean implements Serializable {
     }
 
     /**
-     * @return the serviceInterface
+     * @return the referenceInterface
      */
-    public String getServiceInterface() {
-        return serviceInterface;
+    public String getReferenceInterface() {
+        return referenceInterface;
     }
 
     /**
@@ -122,10 +122,10 @@ public class ServiceBean implements Serializable {
     }
 
     /**
-     * @param serviceId the serviceId to set
+     * @param referenceId the referenceId to set
      */
-    public void setServiceId(String serviceId) {
-        this.serviceId = serviceId;
+    public void setReferenceId(String referenceId) {
+        this.referenceId = referenceId;
     }
 
     /**
@@ -143,10 +143,10 @@ public class ServiceBean implements Serializable {
     }
 
     /**
-     * @param serviceInterface the serviceInterface to set
+     * @param referenceInterface the referenceInterface to set
      */
-    public void setServiceInterface(String serviceInterface) {
-        this.serviceInterface = serviceInterface;
+    public void setReferenceInterface(String referenceInterface) {
+        this.referenceInterface = referenceInterface;
     }
 
     /**

@@ -13,31 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.overlord.monitoring.ui.client.shared.beans;
+package org.overlord.rtgov.ui.client.shared.beans;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 
 /**
- * A simple data bean for returning summary information for single component service.
+ * A simple data bean for returning summary information for single reference.
  *
  * @author eric.wittmann@redhat.com
  */
 @Portable
 @Bindable
-public class ComponentServiceSummaryBean {
+public class ReferenceSummaryBean {
 
-    private String serviceId;
+    private String referenceId;
     private String name;
     private String application;
     private String iface;
-    private String implementation;
+    private String bindings;
     private long averageDuration;
 
     /**
      * Constructor.
      */
-    public ComponentServiceSummaryBean() {
+    public ReferenceSummaryBean() {
     }
 
     /**
@@ -64,8 +64,8 @@ public class ComponentServiceSummaryBean {
     /**
      * @return the address
      */
-    public String getImplementation() {
-        return implementation;
+    public String getBindings() {
+        return bindings;
     }
 
     /**
@@ -78,7 +78,7 @@ public class ComponentServiceSummaryBean {
     /**
      * @param name the name to set
      */
-    public ComponentServiceSummaryBean setName(String name) {
+    public ReferenceSummaryBean setName(String name) {
         this.name = name;
         return this;
     }
@@ -86,7 +86,7 @@ public class ComponentServiceSummaryBean {
     /**
      * @param category the category to set
      */
-    public ComponentServiceSummaryBean setApplication(String category) {
+    public ReferenceSummaryBean setApplication(String category) {
         this.application = category;
         return this;
     }
@@ -94,7 +94,7 @@ public class ComponentServiceSummaryBean {
     /**
      * @param iface the iface to set
      */
-    public ComponentServiceSummaryBean setIface(String iface) {
+    public ReferenceSummaryBean setIface(String iface) {
         this.iface = iface;
         return this;
     }
@@ -102,15 +102,15 @@ public class ComponentServiceSummaryBean {
     /**
      * @param address the address to set
      */
-    public ComponentServiceSummaryBean setImplementation(String address) {
-        this.implementation = address;
+    public ReferenceSummaryBean setBindings(String address) {
+        this.bindings = address;
         return this;
     }
 
     /**
      * @param averageDuration the averageDuration to set
      */
-    public ComponentServiceSummaryBean setAverageDuration(long averageDuration) {
+    public ReferenceSummaryBean setAverageDuration(long averageDuration) {
         this.averageDuration = averageDuration;
         return this;
     }
@@ -118,15 +118,15 @@ public class ComponentServiceSummaryBean {
     /**
      * @return the serviceId
      */
-    public String getServiceId() {
-        return serviceId;
+    public String getReferenceId() {
+        return referenceId;
     }
 
     /**
      * @param serviceId the serviceId to set
      */
-    public void setServiceId(String serviceId) {
-        this.serviceId = serviceId;
+    public void setReferenceId(String serviceId) {
+        this.referenceId = serviceId;
     }
 
     /**
@@ -136,7 +136,7 @@ public class ComponentServiceSummaryBean {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((serviceId == null) ? 0 : serviceId.hashCode());
+        result = prime * result + ((referenceId == null) ? 0 : referenceId.hashCode());
         return result;
     }
 
@@ -151,11 +151,11 @@ public class ComponentServiceSummaryBean {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        ComponentServiceSummaryBean other = (ComponentServiceSummaryBean) obj;
-        if (serviceId == null) {
-            if (other.serviceId != null)
+        ReferenceSummaryBean other = (ReferenceSummaryBean) obj;
+        if (referenceId == null) {
+            if (other.referenceId != null)
                 return false;
-        } else if (!serviceId.equals(other.serviceId))
+        } else if (!referenceId.equals(other.referenceId))
             return false;
         return true;
     }

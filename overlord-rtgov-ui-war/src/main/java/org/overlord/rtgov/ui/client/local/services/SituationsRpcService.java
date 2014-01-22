@@ -21,12 +21,12 @@ import javax.inject.Inject;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
-import org.overlord.monitoring.ui.client.shared.beans.SituationBean;
-import org.overlord.monitoring.ui.client.shared.beans.SituationResultSetBean;
-import org.overlord.monitoring.ui.client.shared.beans.SituationsFilterBean;
 import org.overlord.rtgov.ui.client.local.services.rpc.DelegatingErrorCallback;
 import org.overlord.rtgov.ui.client.local.services.rpc.DelegatingRemoteCallback;
 import org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHandler;
+import org.overlord.rtgov.ui.client.shared.beans.SituationBean;
+import org.overlord.rtgov.ui.client.shared.beans.SituationResultSetBean;
+import org.overlord.rtgov.ui.client.shared.beans.SituationsFilterBean;
 import org.overlord.rtgov.ui.client.shared.exceptions.UiException;
 import org.overlord.rtgov.ui.client.shared.services.ISituationsService;
 

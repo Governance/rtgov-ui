@@ -28,7 +28,6 @@ import org.jboss.errai.ui.shared.api.annotations.AutoBound;
 import org.jboss.errai.ui.shared.api.annotations.Bound;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
-import org.overlord.monitoring.ui.client.shared.beans.ReferenceBean;
 import org.overlord.rtgov.ui.client.local.ClientMessages;
 import org.overlord.rtgov.ui.client.local.pages.services.GatewayMetricsTable;
 import org.overlord.rtgov.ui.client.local.services.NotificationService;
@@ -38,6 +37,7 @@ import org.overlord.rtgov.ui.client.local.util.DOMUtil;
 import org.overlord.rtgov.ui.client.local.util.DataBindingLongConverter;
 import org.overlord.rtgov.ui.client.local.util.DataBindingQNameLocalPartConverter;
 import org.overlord.rtgov.ui.client.local.util.DataBindingQNameNamespaceConverter;
+import org.overlord.rtgov.ui.client.shared.beans.ReferenceBean;
 import org.overlord.sramp.ui.client.local.widgets.common.HtmlSnippet;
 
 import com.google.gwt.dom.client.Element;
@@ -48,7 +48,7 @@ import com.google.gwt.user.client.ui.InlineLabel;
  *
  * @author eric.wittmann@redhat.com
  */
-@Templated("/org/overlord/monitoring/ui/client/local/site/referenceDetails.html#page")
+@Templated("/org/overlord/rtgov/ui/client/local/site/referenceDetails.html#page")
 @Page(path="referenceDetails")
 @Dependent
 public class ReferenceDetailsPage extends AbstractPage {
