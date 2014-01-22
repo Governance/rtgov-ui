@@ -1,13 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.overlord.monitoring</groupId>
-  <artifactId>overlord-monitoring</artifactId>
+  <groupId>org.overlord.rtgov.ui</groupId>
+  <artifactId>overlord-rtgov-ui</artifactId>
   <version>1.0.0-SNAPSHOT</version>
 
   <packaging>pom</packaging>
-  <name>Overlord Monitoring UI</name>
-  <description>Parent project for the Overlord Monitoring user interface.</description>
+  <name>Overlord RTGov UI</name>
+  <description>Parent project for the Overlord RTGov user interface.</description>
   <url>http://www.jboss.org/overlord</url>
   <inceptionYear>2013</inceptionYear>
 
@@ -88,20 +88,20 @@
   </properties>
 
   <modules>
-  <module>overlord-monitoring-war</module>
-  <module>overlord-monitoring-dev-server</module>
-  <module>overlord-monitoring-war-eap61</module>
+  <module>overlord-rtgov-ui-war</module>
+  <module>overlord-rtgov-ui-dev-server</module>
+  <module>overlord-rtgov-ui-war-eap61</module>
   </modules>
 
   <scm>
-    <connection>scm:git:git://github.com/EricWittmann/overlord-monitoring.git</connection>
-    <developerConnection>scm:git:git@github.com:EricWittmann/overlord-monitoring.git</developerConnection>
-    <url>http://github.com/EricWittmann/overlord-monitoring</url>
+    <connection>scm:git:git://github.com/Governance/rtgov-ui.git</connection>
+    <developerConnection>scm:git:git@github.com:Governance/rtgov-ui.git</developerConnection>
+    <url>http://github.com/Governance/rtgov-ui</url>
   </scm>
 
   <issueManagement>
     <system>jira</system>
-    <url>https://issues.jboss.org/browse/DTGOV</url>
+    <url>https://issues.jboss.org/browse/RTGOV</url>
   </issueManagement>
 
   <developers>
@@ -109,6 +109,15 @@
       <name>Eric Wittmann</name>
       <id>ewittman</id>
       <email>eric.wittmann@redhat.com</email>
+      <organization>Red Hat</organization>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>Gary Brown</name>
+      <id>gbrown</id>
+      <email>gbrown@redhat.com</email>
       <organization>Red Hat</organization>
       <roles>
         <role>Developer</role>
@@ -299,7 +308,7 @@
     <profile>
       <id>product</id>
       <properties>
-        <rtgov.version>1.0.0.Final</rtgov.version>
+        <rtgov.version>1.0.1.Final</rtgov.version>
       </properties>
     </profile>
   </profiles>
