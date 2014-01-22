@@ -31,7 +31,7 @@ We use Maven 3.x to build our software. The following command compiles all the c
 The Runtime Governance UI project builds as a WAR which can be deployed to a Java application server such as JBoss EAP.
 In fact, a specific EAP 6.1 version of the WAR is created during the build process.
 
-Another (even easier) way to run the Monitoring project is to simply do this:
+Another (even easier) way to run the rtgov-ui project is to simply do this:
 
     $ mvn -Prun clean install
 

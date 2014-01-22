@@ -1,8 +1,8 @@
 
 /**
- * The global OverlordMonitoring namespace.
+ * The global Rtgov namespace.
  */
-function OverlordMonitoringi() {
+function Rtgovi() {
 	this.prevMobile = false;
 	this.fileInputSupported = function() {
 		// Handle devices which falsely report support
@@ -15,17 +15,17 @@ function OverlordMonitoringi() {
 		return !el.disabled;
 	}();
 }
-OverlordMonitoringi.prototype.isMobile = function() {
+Rtgovi.prototype.isMobile = function() {
 	return $(window).width() < 768;
 };
-OverlordMonitoringi.prototype.isFileInputSupported = function() {
+Rtgovi.prototype.isFileInputSupported = function() {
 	return this.fileInputSupported;
 };
 /**
  * Called when the browser is resized in such a way that it transitions
  * from a mobile layout to a desktop layout.
  */
-OverlordMonitoringi.prototype.onSwitchToDesktop = function() {
+Rtgovi.prototype.onSwitchToDesktop = function() {
 	$('.open-on-desktop').slideDown();
 	$('.close-on-desktop').slideUp();
 };
@@ -33,14 +33,14 @@ OverlordMonitoringi.prototype.onSwitchToDesktop = function() {
  * Called when the browser is resized in such a way that it transitions
  * from a desktop layout to a mobile layout.
  */
-OverlordMonitoringi.prototype.onSwitchToMobile = function() {
+Rtgovi.prototype.onSwitchToMobile = function() {
 	$('.close-on-mobile').slideUp();
 	$('.open-on-mobile').slideDown();
 };
 /**
  * Called whenever the page is loaded or reconstructed.
  */
-OverlordMonitoringi.prototype.onPageLoad = function() {
+Rtgovi.prototype.onPageLoad = function() {
 	if (this.isMobile()) {
 		// Loading on a mobile device
 		$('.open-on-mobile').slideDown();
@@ -58,7 +58,7 @@ OverlordMonitoringi.prototype.onPageLoad = function() {
 /**
  * Called whenever the page is resized.
  */
-OverlordMonitoringi.prototype.onResize = function() {
+Rtgovi.prototype.onResize = function() {
 	var mobile = this.isMobile();
 	if (this.prevMobile && !mobile) {
 		this.onSwitchToDesktop();
@@ -68,20 +68,20 @@ OverlordMonitoringi.prototype.onResize = function() {
 	this.prevMobile = mobile;
 };
 
-// The global OverlordMonitoring instance.
-window.OverlordMonitoring = new OverlordMonitoringi();
+// The global Rtgov instance.
+window.Rtgov = new Rtgovi();
 
 /**
  * Do some work when the page first loads.
  */
 $(document).ready(function() {
-	$(window).resize(function(e) { window.OverlordMonitoring.onResize(); });
-	if (window.OverlordMonitoring.isFileInputSupported()) {
+	$(window).resize(function(e) { window.Rtgov.onResize(); });
+	if (window.Rtgov.isFileInputSupported()) {
 		$('body').addClass('fileupload');
 	} else {
 		$('body').addClass('no-fileupload');
 	}
-	window.OverlordMonitoring.onPageLoad();
+	window.Rtgov.onPageLoad();
 });
 
 /**

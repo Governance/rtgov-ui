@@ -44,14 +44,14 @@ public class RTGovUIDevServerEnvironment extends DevServerEnvironment {
 
         File dir = new File(getTargetDir(), "overlord-apps");
 
-        File configFile1 = new File(dir, "monitoring-overlordapp.properties");
+        File configFile1 = new File(dir, "rtgov-ui-overlordapp.properties");
         Properties props = new Properties();
-        props.setProperty("overlordapp.app-id", "monitoring");
-        props.setProperty("overlordapp.href", "/monitoring/index.html");// + (ide_srampUI ? "?gwt.codesvr=127.0.0.1:9997" : ""));
-        props.setProperty("overlordapp.label", "Monitoring");
+        props.setProperty("overlordapp.app-id", "rtgov-ui");
+        props.setProperty("overlordapp.href", "/rtgov-ui/index.html");// + (ide_srampUI ? "?gwt.codesvr=127.0.0.1:9997" : ""));
+        props.setProperty("overlordapp.label", "RTGov");
         props.setProperty("overlordapp.primary-brand", "JBoss Overlord");
-        props.setProperty("overlordapp.secondary-brand", "Monitoring");
-        props.store(new FileWriter(configFile1), "Overlord Monitoring UI application");
+        props.setProperty("overlordapp.secondary-brand", "RTGov");
+        props.store(new FileWriter(configFile1), "Overlord Runtime Governance UI application");
     }
 
 }

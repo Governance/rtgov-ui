@@ -16,9 +16,9 @@
 package org.overlord.rtgov.ui.server;
 
 /**
- * Monitoring UI
+ * RTGov UI
  * @author eric.wittmann@redhat.com
  */
-public class MonitoringUI {
+public class RtgovUI {
 
 }

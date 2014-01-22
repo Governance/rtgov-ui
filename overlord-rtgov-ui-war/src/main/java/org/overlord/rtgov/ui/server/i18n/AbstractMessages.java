@@ -26,7 +26,7 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
 /**
- * Base class for all i18n Messages classes in monitoring projects.
+ * Base class for all i18n Messages classes in rtgov ui projects.
  *
  * @author eric.wittmann@redhat.com
  */

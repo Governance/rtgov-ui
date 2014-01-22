@@ -17,29 +17,29 @@ package org.overlord.rtgov.ui.client.local.util;
 
 
 /**
- * JSNI adapter to get access to the monitoring global javascript defined in the
- * overlord-monitoring-responsive.js javascript file.
+ * JSNI adapter to get access to the rtgov UI global javascript defined in the
+ * rtgov-ui-responsive.js javascript file.
  *
  * @author eric.wittmann@redhat.com
  */
-public final class MonitoringJS {
+public final class RtgovJS {
 
     public static native boolean isMobile() /*-{
-        return $wnd.OverlordMonitoring.isMobile();
+        return $wnd.Rtgov.isMobile();
     }-*/;
     public static native boolean isFileInputSupported() /*-{
-        return $wnd.OverlordMonitoring.isFileInputSupported();
+        return $wnd.Rtgov.isFileInputSupported();
     }-*/;
     public static native void onSwitchToDesktop() /*-{
-        $wnd.OverlordMonitoring.onSwitchToDesktop();
+        $wnd.Rtgov.onSwitchToDesktop();
     }-*/;
     public static native void onSwitchToMobile() /*-{
-        $wnd.OverlordMonitoring.onSwitchToMobile();
+        $wnd.Rtgov.onSwitchToMobile();
     }-*/;
     public static native void onPageLoad() /*-{
-        $wnd.OverlordMonitoring.onPageLoad();
+        $wnd.Rtgov.onPageLoad();
     }-*/;
     public static native void onResize() /*-{
-        $wnd.OverlordMonitoring.onResize();
+        $wnd.Rtgov.onResize();
     }-*/;
 }

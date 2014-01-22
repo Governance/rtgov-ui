@@ -55,7 +55,7 @@ public class RTGovUIServiceActivator  implements ServiceActivator {
    @Override
    public void activate(ServiceActivatorContext context) throws ServiceRegistryException {
       final GetModelControllerService service = new GetModelControllerService();
-      LOG.info(i18n.format("MonitoringServiceActivator.Activating")); //$NON-NLS-1$
+      LOG.info(i18n.format("RTGovUIServiceActivator.Activating")); //$NON-NLS-1$
       context
           .getServiceTarget()
           .addService(ServiceName.of("management", "client", "getter"), service) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -75,31 +75,31 @@ public class RTGovUIServiceActivator  implements ServiceActivator {
 
       @Override
       public void start(StartContext context) throws StartException {
-         LOG.info(i18n.format("MonitoringServiceActivator.Starting")); //$NON-NLS-1$
+         LOG.info(i18n.format("RTGovUIServiceActivator.Starting")); //$NON-NLS-1$
          RTGovUIServiceActivator.executor = Executors.newFixedThreadPool(5, new ThreadFactory() {
             @Override
             public Thread newThread(Runnable r) {
                Thread t = new Thread(r);
                t.setDaemon(true);
-               t.setName("MonitoringServiceActivatorModelControllerClientThread"); //$NON-NLS-1$
+               t.setName("RTGovUIServiceActivatorModelControllerClientThread"); //$NON-NLS-1$
                return t;
             }
          });
          RTGovUIServiceActivator.controller = modelControllerValue.getValue();
-         LOG.info(i18n.format("MonitoringServiceActivator.Started")); //$NON-NLS-1$
+         LOG.info(i18n.format("RTGovUIServiceActivator.Started")); //$NON-NLS-1$
       }
 
 
       @Override
       public void stop(StopContext context) {
-         LOG.info(i18n.format("MonitoringServiceActivator.Stopping")); //$NON-NLS-1$
+         LOG.info(i18n.format("RTGovUIServiceActivator.Stopping")); //$NON-NLS-1$
          try {
             RTGovUIServiceActivator.executor.shutdownNow();
          } finally {
             RTGovUIServiceActivator.executor = null;
             RTGovUIServiceActivator.controller = null;
          }
-         LOG.info(i18n.format("MonitoringServiceActivator.Stopped")); //$NON-NLS-1$
+         LOG.info(i18n.format("RTGovUIServiceActivator.Stopped")); //$NON-NLS-1$
       }
    }
 }

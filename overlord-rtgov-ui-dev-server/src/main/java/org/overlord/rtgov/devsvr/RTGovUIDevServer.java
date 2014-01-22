@@ -35,7 +35,7 @@ import org.overlord.commons.dev.server.discovery.WebAppModuleFromIDEDiscoveryStr
 import org.overlord.commons.gwt.server.filters.GWTCacheControlFilter;
 import org.overlord.commons.gwt.server.filters.ResourceCacheControlFilter;
 import org.overlord.commons.ui.header.OverlordHeaderDataJS;
-import org.overlord.rtgov.ui.server.MonitoringUI;
+import org.overlord.rtgov.ui.server.RtgovUI;
 
 /**
  * A dev server for DTGov.
@@ -82,7 +82,7 @@ public class RTGovUIDevServer extends ErraiDevServer {
      */
     @Override
     protected String getErraiModuleId() {
-        return "monitoring";
+        return "rtgov-ui";
     }
 
     /**
@@ -98,9 +98,9 @@ public class RTGovUIDevServer extends ErraiDevServer {
      */
     @Override
     protected void addModules(DevServerEnvironment environment) {
-        environment.addModule("monitoring",
-                new WebAppModuleFromIDEDiscoveryStrategy(MonitoringUI.class),
-                new ErraiWebAppModuleFromMavenDiscoveryStrategy(MonitoringUI.class));
+        environment.addModule("rtgov-ui",
+                new WebAppModuleFromIDEDiscoveryStrategy(RtgovUI.class),
+                new ErraiWebAppModuleFromMavenDiscoveryStrategy(RtgovUI.class));
         environment.addModule("overlord-commons-uiheader",
                 new JarModuleFromIDEDiscoveryStrategy(OverlordHeaderDataJS.class, "src/main/resources/META-INF/resources"),
                 new JarModuleFromMavenDiscoveryStrategy(OverlordHeaderDataJS.class, "/META-INF/resources"));
@@ -113,42 +113,42 @@ public class RTGovUIDevServer extends ErraiDevServer {
     protected void addModulesToJetty(DevServerEnvironment environment, ContextHandlerCollection handlers) throws Exception {
         super.addModulesToJetty(environment, handlers);
         /* *********
-         * Monitoring UI
+         * RTGov UI
          * ********* */
-        ServletContextHandler monitoringUI = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        monitoringUI.setContextPath("/monitoring");
-        monitoringUI.setWelcomeFiles(new String[] { "index.html" });
-        monitoringUI.setResourceBase(environment.getModuleDir("monitoring").getCanonicalPath());
-        monitoringUI.setInitParameter("errai.properties", "/WEB-INF/errai.properties");
-        monitoringUI.setInitParameter("login.config", "/WEB-INF/login.config");
-        monitoringUI.setInitParameter("users.properties", "/WEB-INF/users.properties");
-        monitoringUI.addEventListener(new Listener());
-        monitoringUI.addEventListener(new BeanManagerResourceBindingListener());
-        monitoringUI.addFilter(GWTCacheControlFilter.class, "/app/*", EnumSet.of(DispatcherType.REQUEST));
-        monitoringUI.addFilter(ResourceCacheControlFilter.class, "/css/*", EnumSet.of(DispatcherType.REQUEST));
-        monitoringUI.addFilter(ResourceCacheControlFilter.class, "/images/*", EnumSet.of(DispatcherType.REQUEST));
-        monitoringUI.addFilter(ResourceCacheControlFilter.class, "/js/*", EnumSet.of(DispatcherType.REQUEST));
-        monitoringUI.addFilter(org.overlord.rtgov.ui.server.filters.LocaleFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
+        ServletContextHandler rtgovUI = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        rtgovUI.setContextPath("/rtgov-ui");
+        rtgovUI.setWelcomeFiles(new String[] { "index.html" });
+        rtgovUI.setResourceBase(environment.getModuleDir("rtgov-ui").getCanonicalPath());
+        rtgovUI.setInitParameter("errai.properties", "/WEB-INF/errai.properties");
+        rtgovUI.setInitParameter("login.config", "/WEB-INF/login.config");
+        rtgovUI.setInitParameter("users.properties", "/WEB-INF/users.properties");
+        rtgovUI.addEventListener(new Listener());
+        rtgovUI.addEventListener(new BeanManagerResourceBindingListener());
+        rtgovUI.addFilter(GWTCacheControlFilter.class, "/app/*", EnumSet.of(DispatcherType.REQUEST));
+        rtgovUI.addFilter(ResourceCacheControlFilter.class, "/css/*", EnumSet.of(DispatcherType.REQUEST));
+        rtgovUI.addFilter(ResourceCacheControlFilter.class, "/images/*", EnumSet.of(DispatcherType.REQUEST));
+        rtgovUI.addFilter(ResourceCacheControlFilter.class, "/js/*", EnumSet.of(DispatcherType.REQUEST));
+        rtgovUI.addFilter(org.overlord.rtgov.ui.server.filters.LocaleFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
         // Servlets
         ServletHolder erraiServlet = new ServletHolder(DefaultBlockingServlet.class);
         erraiServlet.setInitOrder(1);
-        monitoringUI.addServlet(erraiServlet, "*.erraiBus");
+        rtgovUI.addServlet(erraiServlet, "*.erraiBus");
         ServletHolder headerDataServlet = new ServletHolder(OverlordHeaderDataJS.class);
-        headerDataServlet.setInitParameter("app-id", "monitoring");
-        monitoringUI.addServlet(headerDataServlet, "/js/overlord-header-data.js");
+        headerDataServlet.setInitParameter("app-id", "rtgov-ui");
+        rtgovUI.addServlet(headerDataServlet, "/js/overlord-header-data.js");
         // File resources
         ServletHolder resources = new ServletHolder(new MultiDefaultServlet());
         resources.setInitParameter("resourceBase", "/");
-        resources.setInitParameter("resourceBases", environment.getModuleDir("monitoring").getCanonicalPath()
+        resources.setInitParameter("resourceBases", environment.getModuleDir("rtgov-ui").getCanonicalPath()
                 + "|" + environment.getModuleDir("overlord-commons-uiheader").getCanonicalPath());
         resources.setInitParameter("dirAllowed", "true");
         resources.setInitParameter("pathInfoOnly", "false");
         String[] fileTypes = new String[] { "html", "js", "css", "png", "gif" };
         for (String fileType : fileTypes) {
-            monitoringUI.addServlet(resources, "*." + fileType);
+            rtgovUI.addServlet(resources, "*." + fileType);
         }
 
-        handlers.addHandler(monitoringUI);
+        handlers.addHandler(rtgovUI);
     }
 
     /**
@@ -157,7 +157,7 @@ public class RTGovUIDevServer extends ErraiDevServer {
     @Override
     protected void postStart(DevServerEnvironment environment) throws Exception {
         System.out.println("----------  DONE  ---------------");
-        System.out.println("Now try:  \n  http://localhost:"+serverPort()+"/monitoring/index.html");
+        System.out.println("Now try:  \n  http://localhost:"+serverPort()+"/rtgov-ui/index.html");
         System.out.println("---------------------------------");
     }
 

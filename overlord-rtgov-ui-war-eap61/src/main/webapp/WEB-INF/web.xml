@@ -71,7 +71,7 @@
     <servlet-class>org.overlord.commons.ui.header.OverlordHeaderDataJS</servlet-class>
     <init-param>
         <param-name>app-id</param-name>
-        <param-value>monitoring</param-value>
+        <param-value>rtgov-ui</param-value>
     </init-param>
   </servlet>
   <servlet-mapping>
@@ -82,7 +82,7 @@
   <!-- Define a Security Constraint on this Application -->
   <security-constraint>
     <web-resource-collection>
-      <web-resource-name>Monitoring UI</web-resource-name>
+      <web-resource-name>RTGov UI</web-resource-name>
       <url-pattern>/*</url-pattern>
     </web-resource-collection>
     <auth-constraint>
@@ -103,7 +103,7 @@
   <!-- Security roles referenced by this web application -->
   <security-role>
     <description>
-        The role that is required to log in to the Monitoring UI.
+        The role that is required to log in to the RTGov UI.
     </description>
     <role-name>overlorduser</role-name>
   </security-role>

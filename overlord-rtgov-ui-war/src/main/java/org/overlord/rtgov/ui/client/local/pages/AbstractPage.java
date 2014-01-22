@@ -22,7 +22,7 @@ import org.jboss.errai.bus.client.api.ClientMessageBus;
 import org.jboss.errai.enterprise.client.cdi.api.CDI;
 import org.jboss.errai.ui.nav.client.local.HistoryToken;
 import org.jboss.errai.ui.nav.client.local.PageShowing;
-import org.overlord.rtgov.ui.client.local.util.MonitoringJS;
+import org.overlord.rtgov.ui.client.local.util.RtgovJS;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -49,8 +49,8 @@ public abstract class AbstractPage extends Composite {
      */
     @PostConstruct
     private final void _onPostConstruct() {
-        // Call the monitoring javascript every time the page loads.
-        MonitoringJS.onPageLoad();
+        // Call the rtgov javascript every time the page loads.
+        RtgovJS.onPageLoad();
     }
 
     /**
