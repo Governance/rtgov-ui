@@ -21,7 +21,7 @@ import javax.inject.Inject;
 
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
-import org.overlord.rtgov.ui.client.shared.beans.SituationsFilterBean;
+import org.overlord.rtgov.ui.client.model.SituationsFilterBean;
 import org.overlord.sramp.ui.client.local.widgets.bootstrap.DateBox;
 
 import com.google.gwt.event.dom.client.ClickEvent;

@@ -19,7 +19,7 @@ import java.util.List;
 
 import javax.enterprise.context.Dependent;
 
-import org.overlord.rtgov.ui.client.shared.beans.ReferenceMetric;
+import org.overlord.rtgov.ui.client.model.ReferenceMetric;
 import org.overlord.sramp.ui.client.local.widgets.common.TemplatedWidgetTable;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;

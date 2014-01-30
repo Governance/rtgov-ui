@@ -16,10 +16,10 @@
 package org.overlord.rtgov.ui.server.services;
 
 import org.jboss.errai.bus.server.annotations.Remote;
-import org.overlord.rtgov.ui.client.shared.beans.SituationBean;
-import org.overlord.rtgov.ui.client.shared.beans.SituationResultSetBean;
-import org.overlord.rtgov.ui.client.shared.beans.SituationsFilterBean;
-import org.overlord.rtgov.ui.client.shared.exceptions.UiException;
+import org.overlord.rtgov.ui.client.model.SituationBean;
+import org.overlord.rtgov.ui.client.model.SituationResultSetBean;
+import org.overlord.rtgov.ui.client.model.SituationsFilterBean;
+import org.overlord.rtgov.ui.client.model.UiException;
 
 /**
  * Provides a way to manage situations.

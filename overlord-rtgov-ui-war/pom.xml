@@ -10,6 +10,12 @@
   <packaging>war</packaging>
   <name>overlord-rtgov-ui-war</name>
   <dependencies>
+    <dependency>
+      <groupId>org.overlord.rtgov.ui</groupId>
+      <artifactId>rtgov-ui-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
     <!-- Overlord Commons Config -->
     <dependency>
       <groupId>org.overlord</groupId>

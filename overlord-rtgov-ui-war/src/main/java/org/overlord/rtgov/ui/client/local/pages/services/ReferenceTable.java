@@ -22,8 +22,8 @@ import org.jboss.errai.ui.nav.client.local.TransitionAnchorFactory;
 import org.overlord.rtgov.ui.client.local.ClientMessages;
 import org.overlord.rtgov.ui.client.local.pages.ReferenceDetailsPage;
 import org.overlord.rtgov.ui.client.local.widgets.common.SortableTemplatedWidgetTable;
-import org.overlord.rtgov.ui.client.shared.beans.Constants;
-import org.overlord.rtgov.ui.client.shared.beans.ReferenceSummaryBean;
+import org.overlord.rtgov.ui.client.model.Constants;
+import org.overlord.rtgov.ui.client.model.ReferenceSummaryBean;
 
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.InlineLabel;

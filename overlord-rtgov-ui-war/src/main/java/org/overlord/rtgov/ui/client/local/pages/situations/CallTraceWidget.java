@@ -19,8 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.overlord.rtgov.ui.client.shared.beans.CallTraceBean;
-import org.overlord.rtgov.ui.client.shared.beans.TraceNodeBean;
+import org.overlord.rtgov.ui.client.model.CallTraceBean;
+import org.overlord.rtgov.ui.client.model.TraceNodeBean;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;

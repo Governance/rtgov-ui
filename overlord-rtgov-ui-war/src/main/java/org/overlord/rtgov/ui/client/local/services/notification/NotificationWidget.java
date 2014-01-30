@@ -25,7 +25,7 @@ import org.overlord.rtgov.ui.client.local.events.MouseInEvent;
 import org.overlord.rtgov.ui.client.local.events.MouseOutEvent;
 import org.overlord.rtgov.ui.client.local.events.MouseInEvent.HasMouseInHandlers;
 import org.overlord.rtgov.ui.client.local.events.MouseOutEvent.HasMouseOutHandlers;
-import org.overlord.rtgov.ui.client.shared.beans.NotificationType;
+import org.overlord.rtgov.ui.client.model.NotificationType;
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.AttachEvent;

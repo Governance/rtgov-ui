@@ -23,15 +23,15 @@ import java.util.TreeSet;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
 
-import org.overlord.rtgov.ui.client.shared.beans.CallTraceBean;
-import org.overlord.rtgov.ui.client.shared.beans.Constants;
-import org.overlord.rtgov.ui.client.shared.beans.MessageBean;
-import org.overlord.rtgov.ui.client.shared.beans.SituationBean;
-import org.overlord.rtgov.ui.client.shared.beans.SituationResultSetBean;
-import org.overlord.rtgov.ui.client.shared.beans.SituationSummaryBean;
-import org.overlord.rtgov.ui.client.shared.beans.SituationsFilterBean;
-import org.overlord.rtgov.ui.client.shared.beans.TraceNodeBean;
-import org.overlord.rtgov.ui.client.shared.exceptions.UiException;
+import org.overlord.rtgov.ui.client.model.CallTraceBean;
+import org.overlord.rtgov.ui.client.model.Constants;
+import org.overlord.rtgov.ui.client.model.MessageBean;
+import org.overlord.rtgov.ui.client.model.SituationBean;
+import org.overlord.rtgov.ui.client.model.SituationResultSetBean;
+import org.overlord.rtgov.ui.client.model.SituationSummaryBean;
+import org.overlord.rtgov.ui.client.model.SituationsFilterBean;
+import org.overlord.rtgov.ui.client.model.TraceNodeBean;
+import org.overlord.rtgov.ui.client.model.UiException;
 import org.overlord.rtgov.ui.server.services.ISituationsServiceImpl;
 
 /**

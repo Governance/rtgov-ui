@@ -23,8 +23,8 @@ import javax.inject.Inject;
 
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
-import org.overlord.rtgov.ui.client.shared.beans.QName;
-import org.overlord.rtgov.ui.client.shared.beans.ServicesFilterBean;
+import org.overlord.rtgov.ui.client.model.QName;
+import org.overlord.rtgov.ui.client.model.ServicesFilterBean;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

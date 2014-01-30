@@ -39,9 +39,9 @@ import org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHand
 import org.overlord.rtgov.ui.client.local.util.DOMUtil;
 import org.overlord.rtgov.ui.client.local.util.DataBindingDateTimeConverter;
 import org.overlord.rtgov.ui.client.local.widgets.common.SourceEditor;
-import org.overlord.rtgov.ui.client.shared.beans.NotificationBean;
-import org.overlord.rtgov.ui.client.shared.beans.SituationBean;
-import org.overlord.rtgov.ui.client.shared.beans.TraceNodeBean;
+import org.overlord.rtgov.ui.client.model.NotificationBean;
+import org.overlord.rtgov.ui.client.model.SituationBean;
+import org.overlord.rtgov.ui.client.model.TraceNodeBean;
 import org.overlord.sramp.ui.client.local.widgets.common.HtmlSnippet;
 
 import com.google.gwt.dom.client.Element;

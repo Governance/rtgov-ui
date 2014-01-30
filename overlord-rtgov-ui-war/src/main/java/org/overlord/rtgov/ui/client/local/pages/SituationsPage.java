@@ -37,10 +37,10 @@ import org.overlord.rtgov.ui.client.local.services.NotificationService;
 import org.overlord.rtgov.ui.client.local.services.SituationsRpcService;
 import org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHandler;
 import org.overlord.rtgov.ui.client.local.widgets.common.SortableTemplatedWidgetTable.SortColumn;
-import org.overlord.rtgov.ui.client.shared.beans.SituationEventBean;
-import org.overlord.rtgov.ui.client.shared.beans.SituationResultSetBean;
-import org.overlord.rtgov.ui.client.shared.beans.SituationSummaryBean;
-import org.overlord.rtgov.ui.client.shared.beans.SituationsFilterBean;
+import org.overlord.rtgov.ui.client.model.SituationEventBean;
+import org.overlord.rtgov.ui.client.model.SituationResultSetBean;
+import org.overlord.rtgov.ui.client.model.SituationSummaryBean;
+import org.overlord.rtgov.ui.client.model.SituationsFilterBean;
 import org.overlord.sramp.ui.client.local.widgets.bootstrap.Pager;
 import org.overlord.sramp.ui.client.local.widgets.common.HtmlSnippet;
 
