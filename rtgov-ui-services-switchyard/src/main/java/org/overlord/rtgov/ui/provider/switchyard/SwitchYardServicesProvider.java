@@ -480,9 +480,6 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 		        
     	        referenceResult.setReferenceId(uuid);
 		        
-		        //ObjectName app=(ObjectName)con.getAttribute(result.getObjectName(), "Application");
-		        //String appName=stripQuotes(app.getKeyProperty("name"));
-		        
             } catch (Exception e) {
     			throw new UiException(i18n.format("SwitchYardServicesProvider.GetReferenceFailed",
     					applicationName, referenceName), e);
