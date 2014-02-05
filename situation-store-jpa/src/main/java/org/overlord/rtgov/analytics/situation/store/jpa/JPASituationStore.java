@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.overlord.rtgov.ui.provider.situations;
+package org.overlord.rtgov.analytics.situation.store.jpa;
 
 import static org.overlord.rtgov.ui.client.model.ResolutionState.RESOLVED;
 
@@ -22,6 +22,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.naming.InitialContext;
+import javax.inject.Singleton;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -29,19 +31,21 @@ import javax.persistence.Query;
 import javax.transaction.Status;
 import javax.transaction.UserTransaction;
 
-import org.overlord.rtgov.activity.model.ActivityType;
-import org.overlord.rtgov.activity.model.ActivityTypeId;
-import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.analytics.situation.Situation;
 import org.overlord.rtgov.analytics.situation.Situation.Severity;
 import org.overlord.rtgov.ui.client.model.ResolutionState;
 import org.overlord.rtgov.ui.client.model.SituationsFilterBean;
+import org.overlord.rtgov.analytics.situation.store.SituationStore;
+import org.overlord.rtgov.analytics.situation.store.SituationsQuery;
+import org.overlord.rtgov.ui.provider.situations.Messages;
 
 /**
- * This class provides access to the RTGov db.
+ * This class provides the JPA based implementation of the SituationsStore interface.
  *
  */
-public class RTGovRepository {
+@Singleton
+public class JPASituationStore implements SituationStore {
+
 	private static final String USER_TRANSACTION = "java:comp/UserTransaction";
 	public static final String RESOLUTION_STATE_PROPERTY = "resolutionState";
 	public static final String ASSIGNED_TO_PROPERTY = "assignedTo";
@@ -51,17 +55,12 @@ public class RTGovRepository {
 
     private EntityManagerFactory _entityManagerFactory=null;
 
-    private static final Logger LOG=Logger.getLogger(RTGovRepository.class.getName());
-
-    RTGovRepository(EntityManagerFactory _entityManagerFactory) {
-		super();
-		this._entityManagerFactory = _entityManagerFactory;
-	}
+    private static final Logger LOG=Logger.getLogger(JPASituationStore.class.getName());
 
 	/**
      * The situation repository constructor.
      */
-    public RTGovRepository() {
+    public JPASituationStore() {
     	init();
     }
 
@@ -93,11 +92,7 @@ public class RTGovRepository {
     }
 
     /**
-     * This method returns the situation associated with the supplied id.
-     *
-     * @param id The id
-     * @return The situation, or null if not found
-     * @throws Exception Failed to get situation
+     * {@inheritDoc}
      */
     public Situation getSituation(String id) throws Exception {
         if (LOG.isLoggable(Level.FINEST)) {
@@ -124,10 +119,10 @@ public class RTGovRepository {
     }
 
     /**
-     * 
+     * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
-    public java.util.List<Situation> getSituations(SituationsFilterBean filter) throws Exception {
+    public java.util.List<Situation> getSituations(SituationsQuery sitQuery) throws Exception {
     	java.util.List<Situation> situations=null;
         EntityManager em=getEntityManager();
 
@@ -135,31 +130,31 @@ public class RTGovRepository {
         	// Build the query string
         	StringBuffer queryString=new StringBuffer();
 
-        	if (filter.getSeverity() != null && filter.getSeverity().trim().length() > 0) {
+        	if (sitQuery.getSeverity() != null) {
         		queryString.append("sit.severity = :severity "); //$NON-NLS-1$
         	}
 
-        	if (filter.getType() != null && filter.getType().trim().length() > 0) {
+        	if (sitQuery.getType() != null && sitQuery.getType().trim().length() > 0) {
         		if (queryString.length() > 0) {
         			queryString.append("AND "); //$NON-NLS-1$
         		}
-        		queryString.append("sit.type = '"+filter.getType()+"' ");  //$NON-NLS-1$//$NON-NLS-2$
+        		queryString.append("sit.type = '"+sitQuery.getType()+"' ");  //$NON-NLS-1$//$NON-NLS-2$
         	}
 
-        	if (filter.getTimestampFrom() != null) {
+        	if (sitQuery.getFromTimestamp() > 0) {
         		if (queryString.length() > 0) {
         			queryString.append("AND "); //$NON-NLS-1$
         		}
-        		queryString.append("sit.timestamp >= "+filter.getTimestampFrom().getTime()+" ");  //$NON-NLS-1$//$NON-NLS-2$
+        		queryString.append("sit.timestamp >= "+sitQuery.getFromTimestamp()+" ");  //$NON-NLS-1$//$NON-NLS-2$
         	}
 
-        	if (filter.getTimestampTo() != null) {
+        	if (sitQuery.getToTimestamp() > 0) {
         		if (queryString.length() > 0) {
         			queryString.append("AND "); //$NON-NLS-1$
         		}
         		// NOTE: As only the day is returned currently, will need to add a day on, so that
         		// the 'to' time represents the end of the day.
-        		queryString.append("sit.timestamp <= "+(filter.getTimestampTo().getTime()+MILLISECONDS_PER_DAY)+" ");  //$NON-NLS-1$//$NON-NLS-2$
+        		queryString.append("sit.timestamp <= "+sitQuery.getToTimestamp()+" ");  //$NON-NLS-1$//$NON-NLS-2$
         	}
 
             if (filter.getResolutionState() != null) {
@@ -181,12 +176,8 @@ public class RTGovRepository {
         	
         	Query query=em.createQuery(queryString.toString());
 
-        	if (filter.getSeverity() != null && filter.getSeverity().trim().length() > 0) {
-        		String severityName=Character.toUpperCase(filter.getSeverity().charAt(0))
-        						+filter.getSeverity().substring(1);
-        		Severity severity=Severity.valueOf(severityName);
-
-        		query.setParameter("severity", severity); //$NON-NLS-1$
+        	if (sitQuery.getSeverity() != null) {
+        		query.setParameter("severity", sitQuery.getSeverity()); //$NON-NLS-1$
         	}
 
             situations = query.getResultList();
@@ -372,5 +363,4 @@ public class RTGovRepository {
     		return (_totalCount);
     	}
     }
-
 }

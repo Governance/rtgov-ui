@@ -37,6 +37,7 @@ public class ServiceBean implements Serializable {
     private QName name;
     private QName application;
     private String serviceInterface;
+    private List<ReferenceSummaryBean> references = new ArrayList<ReferenceSummaryBean>();
     private long successCount;
     private long faultCount;
     private long totalTime;
@@ -79,6 +80,20 @@ public class ServiceBean implements Serializable {
         return serviceInterface;
     }
 
+    /**
+     * @return the references
+     */
+    public List<ReferenceSummaryBean> getReferences() {
+        return references;
+    }
+
+    /**
+     * @param references the references to set
+     */
+    public void setReferences(List<ReferenceSummaryBean> references) {
+        this.references = references;
+    }
+    
     /**
      * @return the successCount
      */

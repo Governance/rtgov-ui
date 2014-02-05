@@ -12,9 +12,9 @@
   <inceptionYear>2013</inceptionYear>
 
   <parent>
-    <groupId>org.jboss</groupId>
-    <artifactId>jboss-parent</artifactId>
-    <version>10</version>
+    <groupId>org.jboss.integration-platform</groupId>
+    <artifactId>jboss-integration-platform-parent</artifactId>
+    <version>6.0.0.CR3</version>
   </parent>
 
   <organization>
@@ -85,15 +85,20 @@
     <junit.version>4.10</junit.version>
     <jboss.msc.version>1.0.4.GA</jboss.msc.version>
     <jboss.as.server.version>7.2.0.Final</jboss.as.server.version>
+
+    <version.org.jboss.msc.jboss-msc>1.0.4.GA</version.org.jboss.msc.jboss-msc>
+
   </properties>
 
   <modules>
 	<module>rtgov-ui-core</module>
 	<module>rtgov-ui-services-switchyard</module>
 	<module>rtgov-ui-situations</module>
+	<module>situation-store-jpa</module>
 	<module>overlord-rtgov-ui-war</module>
 	<module>overlord-rtgov-ui-dev-server</module>
 	<module>overlord-rtgov-ui-war-eap61</module>
+	<module>tests</module>
   </modules>
 
   <scm>
@@ -133,11 +138,17 @@
 
       <!-- Imported dependencies -->
       <dependency>
-        <groupId>org.jboss.as</groupId>
-        <artifactId>jboss-as-parent</artifactId>
-        <version>${jbossas.version}</version>
+        <groupId>org.jboss.integration-platform</groupId>
+        <artifactId>jboss-integration-platform-bom</artifactId>
+        <version>6.0.0.CR3</version>
         <type>pom</type>
         <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jboss.msc</groupId>
+        <artifactId>jboss-msc</artifactId>
+        <version>${version.org.jboss.msc.jboss-msc}</version>
       </dependency>
 
 <!--

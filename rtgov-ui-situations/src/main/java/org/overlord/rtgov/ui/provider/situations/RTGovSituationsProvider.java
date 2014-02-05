@@ -16,6 +16,7 @@
 package org.overlord.rtgov.ui.provider.situations;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.inject.Instance;
@@ -30,10 +31,15 @@ import org.overlord.rtgov.active.collection.ActiveList;
 import org.overlord.rtgov.active.collection.predicate.Predicate;
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityTypeId;
+import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.activity.model.Context;
 import org.overlord.rtgov.activity.model.soa.RPCActivityType;
 import org.overlord.rtgov.activity.server.ActivityServer;
+import org.overlord.rtgov.activity.server.ActivityStore;
+import org.overlord.rtgov.activity.server.QuerySpec;
 import org.overlord.rtgov.analytics.situation.Situation;
+import org.overlord.rtgov.analytics.situation.store.SituationStore;
+import org.overlord.rtgov.analytics.situation.store.SituationsQuery;
 import org.overlord.rtgov.call.trace.CallTraceService;
 import org.overlord.rtgov.call.trace.model.Call;
 import org.overlord.rtgov.call.trace.model.CallTrace;
@@ -51,7 +57,6 @@ import org.overlord.rtgov.ui.client.model.UiException;
 import org.overlord.rtgov.ui.provider.ServicesProvider;
 import org.overlord.rtgov.ui.provider.SituationEventListener;
 import org.overlord.rtgov.ui.provider.SituationsProvider;
-import org.overlord.rtgov.ui.provider.situations.RTGovRepository;
 
 /**
  * Concrete implementation of the faults service using RTGov situations.
@@ -63,19 +68,24 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
 	
 	// Active collection name
 	private static final String SITUATIONS = "Situations"; //$NON-NLS-1$
+	
+    protected static final int MILLISECONDS_PER_DAY = 86400000;
 
 	private static volatile Messages i18n = new Messages();
 	
-	private RTGovRepository _repository;
-
 	@Inject
 	private CallTraceService _callTraceService;
 
 	@Inject
-	private ActivityServer _activityServer;
+	private ActivityStore _activityStore;
 
 	@Inject
-	private Instance<ServicesProvider> _providers;
+	private SituationStore _situationStore;
+
+	@Inject
+	private Instance<ServicesProvider> _injectedProviders;
+	
+	private java.util.List<ServicesProvider> _providers=new java.util.ArrayList<ServicesProvider>();
 	
 	private java.util.List<SituationEventListener> _listeners=new java.util.ArrayList<SituationEventListener>();
 
@@ -87,33 +97,127 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
      */
     public RTGovSituationsProvider() {
     }
+    
+    /**
+     * This method returns the list of services providers.
+     * 
+     * @return The providers
+     */
+    protected java.util.List<ServicesProvider> getProviders() {
+    	return (_providers);
+    }
+    
+    /**
+     * This method sets the activity store.
+     * 
+     * @param acts The activity store
+     */
+    protected void setActivityStore(ActivityStore acts) {
+    	_activityStore = acts;
+    }
+    
+    /**
+     * This method returns the activity store.
+     * 
+     * @return The activity store
+     */
+    protected ActivityStore getActivityStore() {
+    	return (_activityStore);
+    }
+
+    /**
+     * This method sets the situation store.
+     * 
+     * @param sits The situation store
+     */
+    protected void setSituationStore(SituationStore sits) {
+    	_situationStore = sits;
+    }
+    
+    /**
+     * This method returns the situation store.
+     * 
+     * @return The situation store
+     */
+    protected SituationStore getSituationStore() {
+    	return (_situationStore);
+    }
+
+    /**
+     * This method sets the call trace service.
+     * 
+     * @param cts The call trace service
+     */
+    protected void setCallTraceService(CallTraceService cts) {
+    	_callTraceService = cts;
+    }
+    
+    /**
+     * This method returns the call trace service.
+     * 
+     * @return The call trace service
+     */
+    protected CallTraceService getCallTraceService() {
+    	return (_callTraceService);
+    }
+
+    /**
+     * This method sets the situations active list.
+     * 
+     * @param cts The situations active list
+     */
+    protected void setSituations(ActiveList situations) {
+    	_situations = situations;
+    }
+    
+    /**
+     * This method returns the situations active list.
+     * 
+     * @return The situations active list
+     */
+    protected ActiveList getSituations() {
+    	return (_situations);
+    }
 
     @PostConstruct
     public void init() {
-    	_repository = new RTGovRepository();
-    	_callTraceService.setActivityServer(_activityServer);    
+    	
+    	if (_injectedProviders != null) {
+    		// Copy any injected providers into the provider list
+    		for (ServicesProvider sp : _injectedProviders) {
+    			_providers.add(sp);
+    		}
+    	}
+    	
+    	if (_callTraceService != null) {
+    		// Overwrite any existing activity server to ensure using the
+    		// same activity store as the situations provider
+    		_callTraceService.setActivityServer(new ActivityServerAdapter()); 
+    	}
 
-    	_acmManager = ActiveCollectionManagerAccessor.getActiveCollectionManager();
-
-    	_acmManager.addActiveCollectionListener(new ActiveCollectionListener() {
-
-			@Override
-			public void registered(ActiveCollection ac) {
-				if (ac.getName().equals(SITUATIONS)) {
-					synchronized (SITUATIONS) {
-						if (_situations == null) {
-					    	_situations = (ActiveList)ac;
-					    	_situations.addActiveChangeListener(RTGovSituationsProvider.this);		
+    	if (_situations == null) {
+	    	_acmManager = ActiveCollectionManagerAccessor.getActiveCollectionManager();
+	
+	    	_acmManager.addActiveCollectionListener(new ActiveCollectionListener() {
+	
+				@Override
+				public void registered(ActiveCollection ac) {
+					if (ac.getName().equals(SITUATIONS)) {
+						synchronized (SITUATIONS) {
+							if (_situations == null) {
+						    	_situations = (ActiveList)ac;
+						    	_situations.addActiveChangeListener(RTGovSituationsProvider.this);		
+							}
 						}
 					}
 				}
-			}
-
-			@Override
-			public void unregistered(ActiveCollection ac) {
-			}
-    		
-    	});
+	
+				@Override
+				public void unregistered(ActiveCollection ac) {
+				}
+	    		
+	    	});
+    	}
     	
     	// TEMPORARY WORKAROUND: Currently hen active collection listener is registered, existing
     	// collections are not notified to the listener, thus potentially causing a situation where
@@ -121,10 +225,11 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
 		synchronized (SITUATIONS) {
 			if (_situations == null) {
 		    	_situations = (ActiveList)_acmManager.getActiveCollection(SITUATIONS);
-		    	if (_situations != null) {
-		    		_situations.addActiveChangeListener(RTGovSituationsProvider.this);	
-		    	}
 			}
+			
+	    	if (_situations != null) {
+	    		_situations.addActiveChangeListener(RTGovSituationsProvider.this);	
+	    	}
 		}
     }
 
@@ -173,7 +278,9 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
         ArrayList<SituationSummaryBean> situations = new ArrayList<SituationSummaryBean>();
 
         try {
-	    	java.util.List<Situation> results=_repository.getSituations(filters);
+        	SituationsQuery query=createQuery(filters);
+        	
+	    	java.util.List<Situation> results=_situationStore.getSituations(query);
 	
 	    	for (Situation item : results) {
 	        	situations.add(RTGovSituationsUtil.getSituationBean(item));
@@ -184,16 +291,46 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
 
         return (situations);
     }
+    
+    /**
+     * This method creates a query from the supplied filter.
+     * 
+     * @param filter The filter
+     * @return The query
+     */
+    protected static SituationsQuery createQuery(SituationsFilterBean filters) {
+    	SituationsQuery ret=new SituationsQuery();
+
+    	ret.setType(filters.getType());
+    	
+    	if (filters.getSeverity() != null && filters.getSeverity().trim().length() > 0) {
+    		String severityName=Character.toUpperCase(filters.getSeverity().charAt(0))
+    				+filters.getSeverity().substring(1);
+    		ret.setSeverity(Situation.Severity.valueOf(severityName));
+    	}
+    	
+    	if (filters.getTimestampFrom() != null) {
+    		ret.setFromTimestamp(filters.getTimestampFrom().getTime());
+    	}
+    	
+    	if (filters.getTimestampTo() != null) {
+    		// Currently represents the start of the date of interest - so add
+    		// milliseconds for a day
+    		ret.setToTimestamp(filters.getTimestampTo().getTime()+MILLISECONDS_PER_DAY);
+    	}
+
+    	return (ret);
+    }
 
     /**
-     * @see org.overlord.rtgov.ui.server.services.ISituationsServiceImpl#getService(java.lang.String)
+     * {@inheritDoc}
      */
     @Override
-    public SituationBean get(String situationId) throws UiException {
+    public SituationBean getSituation(String situationId) throws UiException {
     	SituationBean ret=null;
 
     	try {
-	    	Situation situation=_repository.getSituation(situationId);
+	    	Situation situation=_situationStore.getSituation(situationId);
 
 	    	if (situation == null) {
 	            throw new UiException(i18n.format("RTGovSituationsProvider.SitNotFound", situationId)); //$NON-NLS-1$
@@ -230,7 +367,13 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
     	
 		for (ActivityTypeId id : situation.getActivityTypeIds()) {
 			try {
-    			ActivityType at=_repository.getActivityType(id);
+		        ActivityType at=null;
+		        
+		        ActivityUnit au=_activityStore.getActivityUnit(id.getUnitId());
+		        
+		        if (au != null && id.getUnitIndex() < au.getActivityTypes().size()) {
+		        	at = au.getActivityTypes().get(id.getUnitIndex());
+		        }
     			
     			if (at instanceof RPCActivityType && ((RPCActivityType)at).isRequest()
     					&& ((RPCActivityType)at).getContent() != null) {
@@ -270,7 +413,7 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
         	context = situation.getContext().iterator().next();
         }
         
-        if (context != null) {
+        if (context != null && _callTraceService != null) {
         	try {
         		CallTrace ct=_callTraceService.createCallTrace(context);
         		
@@ -337,7 +480,7 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
     public void resubmit(String situationId, MessageBean message) throws UiException {
     	
     	try {
-	    	Situation sit=_repository.getSituation(situationId);
+	    	Situation sit=_situationStore.getSituation(situationId);
 
 	    	if (sit == null) {
 	            throw new UiException(i18n.format("RTGovSituationsProvider.SitNotFound", situationId)); //$NON-NLS-1$
@@ -441,4 +584,55 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
 	public void updateResolutionState(String situationId, ResolutionState resolutionState) {
 		_repository.updateResolutionState(situationId, resolutionState);
 	}
+    
+    /**
+     * This class provides a simple activity server adapter that passes requests
+     * through to the activity store.
+     *
+     */
+    protected class ActivityServerAdapter implements ActivityServer {
+
+    	/**
+    	 * {@inheritDoc}
+    	 */
+		@Override
+		public void store(List<ActivityUnit> activities) throws Exception {
+		}
+
+    	/**
+    	 * {@inheritDoc}
+    	 */
+		@Override
+		public ActivityUnit getActivityUnit(String id) throws Exception {
+			return (_activityStore.getActivityUnit(id));
+		}
+
+    	/**
+    	 * {@inheritDoc}
+    	 */
+		@Override
+		public List<ActivityType> getActivityTypes(Context context)
+				throws Exception {
+			return (_activityStore.getActivityTypes(context));
+		}
+
+    	/**
+    	 * {@inheritDoc}
+    	 */
+		@Override
+		public List<ActivityType> getActivityTypes(Context context, long from,
+				long to) throws Exception {
+			return (_activityStore.getActivityTypes(context, from, to));
+		}
+
+    	/**
+    	 * {@inheritDoc}
+    	 */
+		@Override
+		public List<ActivityType> query(QuerySpec query) throws Exception {
+			return (_activityStore.query(query));
+		}
+    	
+    }
+>>>>>>> a1f828d... RTGOV-348 Move references to service details page and refactor situations repository into SituationStore API and JPA implementation. Also added arquillian test for switchyard service provider with initial test - more to come.
 }

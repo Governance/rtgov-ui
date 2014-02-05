@@ -28,7 +28,6 @@ import org.overlord.rtgov.ui.client.local.services.rpc.DelegatingRemoteCallback;
 import org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHandler;
 import org.overlord.rtgov.ui.client.model.QName;
 import org.overlord.rtgov.ui.client.model.ReferenceBean;
-import org.overlord.rtgov.ui.client.model.ReferenceResultSetBean;
 import org.overlord.rtgov.ui.client.model.ServiceBean;
 import org.overlord.rtgov.ui.client.model.ServiceResultSetBean;
 import org.overlord.rtgov.ui.client.model.ServicesFilterBean;
@@ -77,23 +76,6 @@ public class ServicesRpcService {
         ErrorCallback<?> errorCallback = new DelegatingErrorCallback(handler);
         try {
             remoteServicesService.call(successCallback, errorCallback).findServices(filters, page, sortColumn, ascending);
-        } catch (UiException e) {
-            errorCallback.error(null, e);
-        }
-    }
-
-    /**
-     * @see org.overlord.rtgov.ui.client.shared.services.IServicesService#findReferences(ServicesFilterBean, int, String, boolean)
-     */
-    public void findReferences(ServicesFilterBean filters, int page, String sortColumn, boolean ascending,
-            final IRpcServiceInvocationHandler<ReferenceResultSetBean> handler) {
-        // TODO only allow one search at a time.  If another search comes in before the previous one
-        // finished, cancel the previous one.  In other words, only return the results of the *last*
-        // search performed.
-        RemoteCallback<ReferenceResultSetBean> successCallback = new DelegatingRemoteCallback<ReferenceResultSetBean>(handler);
-        ErrorCallback<?> errorCallback = new DelegatingErrorCallback(handler);
-        try {
-            remoteServicesService.call(successCallback, errorCallback).findReferences(filters, page, sortColumn, ascending);
         } catch (UiException e) {
             errorCallback.error(null, e);
         }

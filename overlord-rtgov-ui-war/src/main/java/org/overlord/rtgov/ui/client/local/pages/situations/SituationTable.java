@@ -62,8 +62,8 @@ public class SituationTable extends SortableTemplatedWidgetTable {
     @Override
     protected SortColumn getDefaultSortColumn() {
         SortColumn sortColumn = new SortColumn();
-        sortColumn.columnId = Constants.SORT_COLID_NAME;
-        sortColumn.ascending = true;
+        sortColumn.columnId = Constants.SORT_COLID_TIMESTAMP;
+        sortColumn.ascending = false;
         return sortColumn;
     }
 

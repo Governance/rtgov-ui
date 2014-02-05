@@ -36,11 +36,6 @@
 	        <scope>provided</scope>
 	    </dependency>
 	    <dependency>
-	        <groupId>org.overlord.rtgov.integration</groupId>
-	        <artifactId>rtgov-jbossas</artifactId>
-	        <version>${rtgov.version}</version>
-	    </dependency>
-	    <dependency>
 	        <groupId>org.overlord.rtgov.active-queries</groupId>
 	        <artifactId>active-collection</artifactId>
 	        <version>${rtgov.version}</version>
@@ -50,15 +45,11 @@
 	        <groupId>org.overlord.rtgov.activity-analysis</groupId>
 	        <artifactId>call-trace</artifactId>
 	        <version>${rtgov.version}</version>
+	        <scope>provided</scope>
 	    </dependency>
 	    <dependency>
 	        <groupId>org.overlord.rtgov.activity-management</groupId>
 	        <artifactId>activity-store-jpa</artifactId>
-	        <version>${rtgov.version}</version>
-	    </dependency>
-	    <dependency>
-	        <groupId>org.overlord.rtgov.activity-management</groupId>
-	        <artifactId>activity-server-jee</artifactId>
 	        <version>${rtgov.version}</version>
 	    </dependency>
 	    <dependency>
@@ -119,6 +110,13 @@
 	        <scope>provided</scope>
 	    </dependency>
 
+		<!-- Test only dependencies -->
+	    <dependency>
+	        <groupId>org.overlord.rtgov.activity-management</groupId>
+	        <artifactId>activity-store-mem</artifactId>
+	        <version>${rtgov.version}</version>
+			<scope>test</scope>
+	    </dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>

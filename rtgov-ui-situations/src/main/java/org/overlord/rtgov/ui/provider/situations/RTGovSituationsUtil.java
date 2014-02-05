@@ -43,7 +43,9 @@ public class RTGovSituationsUtil {
     	SituationBean ret=new SituationBean();
 
     	ret.setSituationId(situation.getId());
-    	ret.setSeverity(situation.getSeverity().name().toLowerCase());
+    	if (situation.getSeverity() != null) {
+    		ret.setSeverity(situation.getSeverity().name().toLowerCase());
+    	}
     	ret.setType(situation.getType());
     	ret.setSubject(situation.getSubject());
     	ret.setTimestamp(new Date(situation.getTimestamp()));
@@ -63,7 +65,9 @@ public class RTGovSituationsUtil {
     	SituationEventBean ret=new SituationEventBean();
 
     	ret.setSituationId(situation.getId());
-    	ret.setSeverity(situation.getSeverity().name().toLowerCase());
+    	if (situation.getSeverity() != null) {
+    		ret.setSeverity(situation.getSeverity().name().toLowerCase());
+    	}
     	ret.setType(situation.getType());
     	ret.setSubject(situation.getSubject());
     	ret.setTimestamp(new Date(situation.getTimestamp()));

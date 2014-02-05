@@ -99,179 +99,89 @@
 
           <!-- The tabs -->
           <div class="span9 pull-right">
-            <ul class="nav nav-tabs overlord-tabs">
-              <li class="active"><a data-target="#tab-services" data-toggle="tab" data-i18n-key="services">Services</a></li>
-              <li class=""><a data-target="#tab-references" data-toggle="tab" data-i18n-key="references">References</a></li>
-            </ul>
-
-            <div class="tab-content">
-              <!-- The Services table -->
-              <div class="tab-pane fade active in container-fluid" id="tab-services">
-                <div class="row-fluid services">
-                  <div class="span12 overlord-actions">
-                    <button class="btn spacer" style="visibility:hidden"><i class="icon-refresh"></i></button>
-                    <button data-field="services-btn-refresh" class="btn pull-right"><i class="icon-refresh"></i></button>
-                    <div class="pull-right sp4n-label">
-                      <span data-i18n-key="displaying" class="desktop-only">Displaying</span>
-                      <span data-field="services-range" data-role="dummy">1-11</span>
-                      <span data-i18n-key="of">of</span>
-                      <span data-field="services-total" data-role="dummy">37</span>
-                    </div>
-                  </div>
-                  <div data-field="services-none" style="display:none" class="overlord-none">
-                    <span data-i18n-key="no-services-found">No services found.</span>
-                  </div>
-                  <div data-field="services-searching" style="display:none" class="overlord-searching">
-                    <span class="spinner" data-i18n-key="finding-services">Finding services, please wait...</span>
-                  </div>
-                  <table data-field="services-table" class="overlord-table table table-striped table-condensed table-hover">
-                  <thead>
-                    <tr>
-                      <th data-i18n-key="service-name">Service Name</th>
-                      <th data-i18n-key="application">Application</th>
-                      <th class="desktop-only" data-i18n-key="interface">Interface</th>
-                      <th class="desktop-only" data-i18n-key="bindings">Bindings</th>
-                      <th class="desktop-only" data-i18n-key="avg-duration">Average Duration</th>
-                    </tr>
-                  </thead>
-                  <tbody data-role="dummy">
-                    <tr>
-                      <td><a href="serviceDetails.html">CreateApplicationWebservice</a></td>
-                      <td>Contract</td>
-                      <td class="desktop-only">{urn:jboss:demo:create-application}CreateApplicationPT</td>
-                      <td class="desktop-only">SOAP, JMS</td>
-                      <td class="desktop-only">0.13s</td>
-                    </tr>
-                    <tr>
-                      <td><a href="serviceDetails.html">CreateQuoteWebservice</a></td>
-                      <td>Contract</td>
-                      <td class="desktop-only">{urn:jboss:demo:create-application}CreateQuotePT</td>
-                      <td class="desktop-only">SOAP</td>
-                      <td class="desktop-only">0.22s</td>
-                    </tr>
-                    <tr>
-                      <td><a href="serviceDetails.html">SearchContractWebservice</a></td>
-                      <td>Contract</td>
-                      <td class="desktop-only">{urn:jboss:demo:search}SearchContractPT</td>
-                      <td class="desktop-only">SOAP</td>
-                      <td class="desktop-only">3.93s</td>
-                    </tr>
-                    <tr>
-                      <td><a href="serviceDetails.html">DomainInformationWebservice</a></td>
-                      <td>GGRL</td>
-                      <td class="desktop-only">{urn:jboss:demo:domain-info}DomainInformationPT</td>
-                      <td class="desktop-only">JMS</td>
-                      <td class="desktop-only">0.17s</td>
-                    </tr>
-                    <tr>
-                      <td><a href="serviceDetails.html">FNOLWebservice</a></td>
-                      <td>Claim</td>
-                      <td class="desktop-only">{urn:jboss:demo:create-application}FNOLPT</td>
-                      <td class="desktop-only">SOAP</td>
-                      <td class="desktop-only">0.01s</td>
-                    </tr>
-                  </tbody>
-                  </table>
-                  <div data-field="services-pager" class="pagination overlord-pager" data-role="dummy">
-                    <ul>
-                      <li class="disabled"><a>&#x00AB;</a></li>
-                      <li class="active"><a>1</a></li>
-                      <li><a>2</a></li>
-                      <li><a>3</a></li>
-                      <li><a>4</a></li>
-                      <li><a>&#x00BB;</a></li>
-                    </ul>
-                  </div>
+            <div class="row-fluid services">
+              <div class="span12 overlord-actions">
+                <button class="btn spacer" style="visibility:hidden"><i class="icon-refresh"></i></button>
+                <button data-field="services-btn-refresh" class="btn pull-right"><i class="icon-refresh"></i></button>
+                <div class="pull-right sp4n-label">
+                  <span data-i18n-key="displaying" class="desktop-only">Displaying</span>
+                  <span data-field="services-range" data-role="dummy">1-11</span>
+                  <span data-i18n-key="of">of</span>
+                  <span data-field="services-total" data-role="dummy">37</span>
                 </div>
               </div>
-
-              <!-- The References table -->
-              <div class="tab-pane fade container-fluid" id="tab-references">
-                <div class="row-fluid services">
-                  <div class="span12 overlord-actions">
-                    <button class="btn spacer" style="visibility:hidden"><i class="icon-refresh"></i></button>
-                    <button data-field="ref-btn-refresh" class="btn pull-right"><i class="icon-refresh"></i></button>
-                    <div class="pull-right sp4n-label">
-                      <span data-i18n-key="displaying" class="desktop-only">Displaying</span>
-                      <span data-field="ref-range" data-role="dummy">1-11</span>
-                      <span data-i18n-key="of">of</span>
-                      <span data-field="ref-total" data-role="dummy">37</span>
-                    </div>
-                  </div>
-                  <div data-field="ref-none" style="display:none" class="overlord-none">
-                    <span data-i18n-key="no-references-found">No references found.</span>
-                  </div>
-                  <div data-field="ref-searching" style="display:none" class="overlord-searching">
-                    <span class="spinner" data-i18n-key="finding-references">Finding references, please wait...</span>
-                  </div>
-                  <table data-field="ref-table" class="overlord-table table table-striped table-condensed table-hover">
-                  <thead>
-                    <tr>
-                      <th data-i18n-key="reference-name">Reference Name</th>
-                      <th data-i18n-key="application">Application</th>
-                      <th class="desktop-only" data-i18n-key="interface">Interface</th>
-                      <th class="desktop-only" data-i18n-key="bindings">Bindings</th>
-                      <th class="desktop-only" data-i18n-key="avg-duration">Average Duration</th>
-                    </tr>
-                  </thead>
-                  <tbody data-role="dummy">
-                    <tr>
-                      <td><a href="referenceDetails.html">CreateApplicationRef</a></td>
-                      <td>Contract</td>
-                      <td class="desktop-only">org.jboss.demos.services.ICreateApplication</td>
-                      <td class="desktop-only">JMS,SOAP,REST</td>
-                      <td class="desktop-only">0.13s</td>
-                    </tr>
-                    <tr>
-                      <td><a href="referenceDetails.html">CreateQuoteRef</a></td>
-                      <td>Contract</td>
-                      <td class="desktop-only">org.jboss.demos.services.ICreateQuote</td>
-                      <td class="desktop-only">JMS,SOAP</td>
-                      <td class="desktop-only">0.22s</td>
-                    </tr>
-                    <tr>
-                      <td><a href="referenceDetails.html">SearchContractRef</a></td>
-                      <td>Contract</td>
-                      <td class="desktop-only">org.jboss.demos.services.ISearchContract</td>
-                      <td class="desktop-only">REST</td>
-                      <td class="desktop-only">3.93s</td>
-                    </tr>
-                    <tr>
-                      <td><a href="referenceDetails.html">DomainInformationRef</a></td>
-                      <td>GGRL</td>
-                      <td class="desktop-only">org.jboss.demos.services.IDomainInformation</td>
-                      <td class="desktop-only">JMS,REST</td>
-                      <td class="desktop-only">0.17s</td>
-                    </tr>
-                    <tr>
-                      <td><a href="referenceDetails.html">FNOLRef</a></td>
-                      <td>Claim</td>
-                      <td class="desktop-only">org.jboss.demos.services.IFNOL</td>
-                      <td class="desktop-only">JMS,SOAP,REST</td>
-                      <td class="desktop-only">0.01s</td>
-                    </tr>
-                  </tbody>
-                  </table>
-                  <div data-field="ref-pager" class="pagination overlord-pager" data-role="dummy">
-                    <ul>
-                      <li class="disabled"><a>&#x00AB;</a></li>
-                      <li class="active"><a>1</a></li>
-                      <li><a>2</a></li>
-                      <li><a>3</a></li>
-                      <li><a>4</a></li>
-                      <li><a>&#x00BB;</a></li>
-                    </ul>
-                  </div>
-                </div>
+              <div data-field="services-none" style="display:none" class="overlord-none">
+                <span data-i18n-key="no-services-found">No services found.</span>
               </div>
-            </div> <!-- end tab-content -->
+              <div data-field="services-searching" style="display:none" class="overlord-searching">
+                <span class="spinner" data-i18n-key="finding-services">Finding services, please wait...</span>
+              </div>
+              <table data-field="services-table" class="overlord-table table table-striped table-condensed table-hover">
+              <thead>
+                <tr>
+                  <th data-i18n-key="service-name">Service Name</th>
+                  <th data-i18n-key="application">Application</th>
+                  <th class="desktop-only" data-i18n-key="interface">Interface</th>
+                  <th class="desktop-only" data-i18n-key="bindings">Bindings</th>
+                  <th class="desktop-only" data-i18n-key="avg-duration">Average Duration</th>
+                </tr>
+              </thead>
+              <tbody data-role="dummy">
+                <tr>
+                  <td><a href="serviceDetails.html">CreateApplicationWebservice</a></td>
+                  <td>Contract</td>
+                  <td class="desktop-only">{urn:jboss:demo:create-application}CreateApplicationPT</td>
+                  <td class="desktop-only">SOAP, JMS</td>
+                  <td class="desktop-only">0.13s</td>
+                </tr>
+                <tr>
+                  <td><a href="serviceDetails.html">CreateQuoteWebservice</a></td>
+                  <td>Contract</td>
+                  <td class="desktop-only">{urn:jboss:demo:create-application}CreateQuotePT</td>
+                  <td class="desktop-only">SOAP</td>
+                  <td class="desktop-only">0.22s</td>
+                </tr>
+                <tr>
+                  <td><a href="serviceDetails.html">SearchContractWebservice</a></td>
+                  <td>Contract</td>
+                  <td class="desktop-only">{urn:jboss:demo:search}SearchContractPT</td>
+                  <td class="desktop-only">SOAP</td>
+                  <td class="desktop-only">3.93s</td>
+                </tr>
+                <tr>
+                  <td><a href="serviceDetails.html">DomainInformationWebservice</a></td>
+                  <td>GGRL</td>
+                  <td class="desktop-only">{urn:jboss:demo:domain-info}DomainInformationPT</td>
+                  <td class="desktop-only">JMS</td>
+                  <td class="desktop-only">0.17s</td>
+                </tr>
+                <tr>
+                  <td><a href="serviceDetails.html">FNOLWebservice</a></td>
+                  <td>Claim</td>
+                  <td class="desktop-only">{urn:jboss:demo:create-application}FNOLPT</td>
+                  <td class="desktop-only">SOAP</td>
+                  <td class="desktop-only">0.01s</td>
+                </tr>
+              </tbody>
+              </table>
+              <div data-field="services-pager" class="pagination overlord-pager" data-role="dummy">
+                <ul>
+                  <li class="disabled"><a>&#x00AB;</a></li>
+                  <li class="active"><a>1</a></li>
+                  <li><a>2</a></li>
+                  <li><a>3</a></li>
+                  <li><a>4</a></li>
+                  <li><a>&#x00BB;</a></li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Footer -->
         <footer>
           <hr />
-          <p data-i18n-key="footer">&copy; JBoss Overlord 2013</p>
+          <p data-i18n-key="footer">&copy; JBoss Overlord 2013-4</p>
         </footer>
       </div> <!-- /container -->
       

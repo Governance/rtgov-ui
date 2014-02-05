@@ -142,7 +142,7 @@ public class SituationsProviderServiceImpl implements ISituationsServiceImpl {
      */
     @Override
     public SituationBean get(String situationId) throws UiException {
-    	return (_provider.get(situationId));
+    	return (_provider.getSituation(situationId));
     }
 
     /**

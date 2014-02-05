@@ -15,21 +15,23 @@
  */
 package org.overlord.rtgov.ui.provider.switchyard;
 
-import java.io.IOException;
-import java.math.BigDecimal;
+import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.logging.Logger;
 
+import javax.management.MBeanServerConnection;
+import javax.management.ObjectInstance;
+import javax.management.ObjectName;
+import javax.management.remote.JMXConnector;
+import javax.management.remote.JMXConnectorFactory;
+import javax.management.remote.JMXServiceURL;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.dom.DOMSource;
 
-import org.jboss.dmr.ModelNode;
 import org.overlord.rtgov.common.util.RTGovProperties;
-import org.overlord.rtgov.ui.client.model.GatewayMetric;
 import org.overlord.rtgov.ui.client.model.MessageBean;
 import org.overlord.rtgov.ui.client.model.QName;
 import org.overlord.rtgov.ui.client.model.ReferenceBean;
@@ -43,7 +45,9 @@ import org.switchyard.remote.RemoteInvoker;
 import org.switchyard.remote.RemoteMessage;
 import org.switchyard.remote.http.HttpInvoker;
 
-public class SwitchYardServicesProvider implements ServicesProvider {
+public class SwitchYardServicesProvider { //implements ServicesProvider {
+	
+	private static final Logger LOG=Logger.getLogger(SwitchYardServicesProvider.class.getName());
 	
     private static volatile Messages i18n = new Messages();
 
@@ -56,38 +60,9 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 	private String _serverURLs=null;
     
 	private java.util.List<String> _urlList=new java.util.ArrayList<String>();
-
-    private static final String SUBSYSTEM = "subsystem"; //$NON-NLS-1$
-    private static final String SWITCHYARD = "switchyard"; //$NON-NLS-1$
-
-    private static final String OPERATION = "operation"; //$NON-NLS-1$
-    private static final String ADDRESS = "address"; //$NON-NLS-1$
-    private static final String APPLICATION_NAME = "application-name"; //$NON-NLS-1$
-    private static final String SERVICE_NAME = "service-name"; //$NON-NLS-1$
-    private static final String REFERENCE_NAME = "reference-name"; //$NON-NLS-1$
-
-    private static final String NAME = "name"; //$NON-NLS-1$
-    private static final String APPLICATION = "application"; //$NON-NLS-1$
-    private static final String INTERFACE = "interface"; //$NON-NLS-1$
-    private static final String GATEWAYS = "gateways"; //$NON-NLS-1$
-    private static final String PROMOTED_REFERENCE = "promotedReference"; //$NON-NLS-1$
-    private static final String PROMOTED_SERVICE = "promotedService"; //$NON-NLS-1$
-    private static final String TYPE = "type"; //$NON-NLS-1$
-
-    private static final String SUCCESS_COUNT = "successCount"; //$NON-NLS-1$
-    private static final String FAULT_COUNT = "faultCount"; //$NON-NLS-1$
-    private static final String AVERAGE_TIME = "averageTime"; //$NON-NLS-1$
-    private static final String MIN_TIME = "minTime"; //$NON-NLS-1$
-    private static final String MAX_TIME = "maxTime"; //$NON-NLS-1$
-    private static final String TOTAL_TIME = "totalTime"; //$NON-NLS-1$
-    private static final String TOTAL_COUNT = "totalCount"; //$NON-NLS-1$
-
-    private static final String LIST_APPLICATIONS = "list-applications"; //$NON-NLS-1$
-    private static final String READ_SERVICE = "read-service"; //$NON-NLS-1$
-    private static final String READ_REFERENCE = "read-reference"; //$NON-NLS-1$
-    private static final String SHOW_METRICS = "show-metrics"; //$NON-NLS-1$
-
-    private static final String RESULT = "result"; //$NON-NLS-1$
+	
+	private MBeanServerConnection _mbeanServerConnection;
+	private String _serverJMX=null;
 
     private static final char ESCAPE_CHAR = '\\';
     private static final char SEPARATOR_CHAR = ':';
@@ -176,6 +151,24 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 	}
 	
 	/**
+	 * This method sets the JMX server URL.
+	 * 
+	 * @param url The JMX server URL
+	 */
+	public void setServerJMX(String url) {
+		_serverJMX = url;
+	}
+	
+	/**
+	 * This method returns the JMX server URL.
+	 * 
+	 * @return The JMX server URL
+	 */
+	public String getServerJMX() {
+		return (_serverJMX);
+	}
+	
+	/**
 	 * {@inheritDoc}
 	 */
 	public void resubmit(String service, String operation, MessageBean message) throws UiException {
@@ -232,22 +225,59 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 			throw new UiException(exc);
 		}
 	}
-
+	
+	/**
+	 * This method returns the mbean server connection.
+	 * 
+	 * @return The MBean server connection
+	 */
+	protected synchronized MBeanServerConnection getMBeanServerConnection() throws UiException {
+		if (_mbeanServerConnection == null) {
+			
+			if (getServerJMX() == null) {
+				_mbeanServerConnection = ManagementFactory.getPlatformMBeanServer();
+			} else {
+				try {
+					JMXServiceURL url = 
+						    new JMXServiceURL(getServerJMX());
+					
+					JMXConnector jmxc = JMXConnectorFactory.connect(url, null);
+					
+					_mbeanServerConnection = jmxc.getMBeanServerConnection();
+				} catch (Exception e) {
+					throw new UiException(i18n.format("SwitchYardServicesProvider.JMXConnectionFailed"), e);
+				}
+			}
+		}
+		
+		return (_mbeanServerConnection);
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */
     public List<QName> getApplicationNames() throws UiException {
         final List<QName> apps = new ArrayList<QName>();
 
-        final ModelNode operation = getBlankOperation(LIST_APPLICATIONS);
-        final ModelNode response = execute(operation);
-        final ModelNode result = response.get(RESULT);
-        if (result.isDefined()) {
-            final List<ModelNode> applications = result.asList();
-            for(ModelNode application: applications) {
-                apps.add(parseQName(asString(application)));
-            }
+        try {
+	        MBeanServerConnection con=getMBeanServerConnection();
+	        
+	        java.util.Set<ObjectInstance> results=
+	        		con.queryMBeans(new ObjectName("org.switchyard.admin:type=Application,name=*"), null);
+	        
+	        for (ObjectInstance result : results) {
+	        	java.util.Map<String,String> map=result.getObjectName().getKeyPropertyList();
+	        			
+	        	if (map.containsKey("name")) {
+			        String name=result.getObjectName().getKeyProperty("name");
+			        
+		        	apps.add(parseQName(stripQuotes(name)));
+	        	}
+	        }
+        } catch (Exception e) {
+			throw new UiException(i18n.format("SwitchYardServicesProvider.AppNamesFailed"), e);
         }
+        
         return apps;
     }
 
@@ -257,64 +287,104 @@ public class SwitchYardServicesProvider implements ServicesProvider {
     public java.util.List<ServiceSummaryBean> findServices(final ServicesFilterBean filters) throws UiException {
         final ArrayList<ServiceSummaryBean> services = new ArrayList<ServiceSummaryBean>();
 
-        final String applicationName = filters.getApplicationName();
-//        final String processingState = filters.getProcessingState();
-        final String serviceName = filters.getServiceName();
+        try {
+	        MBeanServerConnection con=getMBeanServerConnection();
+	        
+	        java.util.Set<ObjectInstance> results=
+	        		con.queryMBeans(new ObjectName("org.switchyard.admin:type=Service,name=*"), null);
+	        
+            // TODO: Request all attributes in one operation
+            
+	        for (ObjectInstance result : results) {
+	        	java.util.Map<String,String> map=result.getObjectName().getKeyPropertyList();
+	        			
+	        	if (map.containsKey("name")) {
+			        String name=(String)con.getAttribute(result.getObjectName(), "Name");
 
-        final ModelNode operation = getBlankOperation(READ_SERVICE);
-        if (isSet(applicationName)) {
-            operation.get(APPLICATION_NAME).set(applicationName);
+			        ServiceSummaryBean ssb=new ServiceSummaryBean();
+			        ssb.setName(name);
+			        
+			        ObjectName app=(ObjectName)con.getAttribute(result.getObjectName(), "Application");
+			        String appName=stripQuotes(app.getKeyProperty("name"));
+			        
+			        if (!isSet(filters.getApplicationName()) ||
+			        			filters.getApplicationName().equals(appName)) {
+				        ssb.setApplication(appName);
+			        	
+				        ssb.setAverageDuration(0L);
+				        ssb.setBindings("");
+				        ssb.setIface((String)con.getAttribute(result.getObjectName(), "Interface"));
+				        
+				        ssb.setServiceId(generateId(appName, name));
+				        
+			        	services.add(ssb);
+			        }
+	        	}
+	        }
+        } catch (Exception e) {
+			throw new UiException(i18n.format("SwitchYardServicesProvider.AppNamesFailed"), e);
         }
-        if (isSet(serviceName)) {
-            operation.get(SERVICE_NAME).set(serviceName);
-        }
-
-        final Map<String, Map<String, BigDecimal>> averageDurations = getAverageDuration(applicationName, serviceName, "service"); //$NON-NLS-1$
-
-        final ModelNode response = execute(operation);
-        final ModelNode result = response.get().get(RESULT);
-        if (result.isDefined()) {
-            for (final ModelNode serviceNode: result.asList()) {
-                final ServiceSummaryBean service = createServiceSummaryBean(serviceNode, averageDurations);
-                if (service != null) {
-                    services.add(service);
-                }
-            }
-        }
-
+        
         return services;
+    }
+    
+    protected String stripQuotes(String text) {
+    	if (text.length() >= 2 && text.charAt(0) == '\"'
+    				&& text.charAt(text.length()-1) == '\"') {
+    		return (text.substring(1, text.length()-1));
+    	}
+    	return (text);
     }
 
 	/**
-	 * {@inheritDoc}
+	 * This method returns the list of references associated with the supplied application
+	 * and service.
 	 * 
-	 * @deprecated No longer supporting retrieving references based on a filter, only in context of service
+	 * @param applicationName The application
+	 * @param serviceName The service name
+	 * @return The list of references
+	 * @throws UiException Failed to get the references
 	 */
-    public List<ReferenceSummaryBean> findReferences(ServicesFilterBean filters) throws UiException {
+    protected List<ReferenceSummaryBean> getReferences(final String applicationName,
+    							final String serviceName) throws UiException {
         final List<ReferenceSummaryBean> references = new ArrayList<ReferenceSummaryBean>();
 
-        final String applicationName = filters.getApplicationName();
-        final String serviceName = filters.getServiceName();
+        try {
+	        MBeanServerConnection con=getMBeanServerConnection();
+	        
+            // TODO: Request all attributes in one operation
+            
+	        java.util.Set<ObjectInstance> results=
+	        		con.queryMBeans(new ObjectName("org.switchyard.admin:type=Reference,name=*"), null);
+	        
+	        for (ObjectInstance result : results) {
+	        	java.util.Map<String,String> map=result.getObjectName().getKeyPropertyList();
+	        			
+	        	if (map.containsKey("name")) {
+			        String name=(String)con.getAttribute(result.getObjectName(), "Name");
 
-        final ModelNode operation = getBlankOperation(READ_REFERENCE);
-        if (isSet(applicationName)) {
-            operation.get(APPLICATION_NAME).set(applicationName);
-        }
-        if (serviceName != null) {
-            operation.get(SERVICE_NAME).set(serviceName);
-        }
-
-        final Map<String, Map<String, BigDecimal>> averageDurations = getAverageDuration(applicationName, serviceName, "reference"); //$NON-NLS-1$
-
-        final ModelNode response = execute(operation);
-        final ModelNode result = response.get().get(RESULT);
-        if (result.isDefined()) {
-            for (final ModelNode referenceNode: result.asList()) {
-                final ReferenceSummaryBean reference = createReferenceSummaryBean(referenceNode, averageDurations);
-                if (reference != null) {
-                    references.add(reference);
-                }
-            }
+			        ReferenceSummaryBean rsb=new ReferenceSummaryBean();
+			        rsb.setName(name);
+			        
+			        ObjectName app=(ObjectName)con.getAttribute(result.getObjectName(), "Application");
+			        String appName=stripQuotes(app.getKeyProperty("name"));
+			        
+			        if (isSet(applicationName) ||
+			        					applicationName.equals(appName)) {
+				        rsb.setApplication(appName);
+			        	
+				        rsb.setAverageDuration(0L);
+				        rsb.setBindings("");
+				        rsb.setIface((String)con.getAttribute(result.getObjectName(), "Interface"));
+				        
+				        rsb.setReferenceId(generateId(appName, name));
+				        
+			        	references.add(rsb);
+			        }
+	        	}
+	        }
+        } catch (Exception e) {
+			throw new UiException(i18n.format("SwitchYardServicesProvider.AppNamesFailed"), e);
         }
 
         return references;
@@ -331,63 +401,33 @@ public class SwitchYardServicesProvider implements ServicesProvider {
             final String applicationName = ids.get(0);
             final String serviceName = ids.get(1);
 
-            final ModelNode operation = getBlankOperation(READ_SERVICE);
-            operation.get(APPLICATION_NAME).set(applicationName);
-            operation.get(SERVICE_NAME).set(serviceName);
-
-            final ModelNode response = execute(operation);
-            final ModelNode result = response.get().get(RESULT);
-            if (result.isDefined()) {
-                final List<ModelNode> services = result.asList();
-                if ((services != null) && (services.size() == 1)) {
-                    final ModelNode serviceNode = services.get(0);
-                    serviceResult.setServiceId(uuid);
-                    serviceResult.setApplication(parseQName(applicationName));
-                    serviceResult.setName(parseQName(serviceName));
-                    serviceResult.setServiceInterface(asString(serviceNode.get(INTERFACE)));
-
-                    final ModelNode metrics = getMetrics(applicationName, serviceName, "service"); //$NON-NLS-1$
-                    if (metrics.isDefined()) {
-                        serviceResult.setSuccessCount(metrics.get(SUCCESS_COUNT).asLong());
-                        serviceResult.setFaultCount(metrics.get(FAULT_COUNT).asLong());
-                        final long totalTime = metrics.get(TOTAL_TIME).asLong();
-                        serviceResult.setTotalTime(totalTime);
-                        serviceResult.setAverageTime(metrics.get(AVERAGE_TIME).asLong());
-                        serviceResult.setMaxTime(metrics.get(MAX_TIME).asLong());
-                        serviceResult.setMinTime(metrics.get(MIN_TIME).asLong());
-
-                        final ModelNode gateways = metrics.get(GATEWAYS);
-                        if (gateways.isDefined()) {
-                            final ModelNode systemMetrics = getSystemMetrics();
-                            final int systemFaultCount = systemMetrics.isDefined() ? systemMetrics.get(FAULT_COUNT).asInt() : 0;
-                            final long systemTotalTime = systemMetrics.isDefined() ? systemMetrics.get(TOTAL_TIME).asLong() : 0L;
-                            final List<GatewayMetric> gatewayMetrics = new ArrayList<GatewayMetric>();
-                            for (ModelNode gateway: gateways.asList()) {
-                                final GatewayMetric gatewayMetric = new GatewayMetric();
-                                gatewayMetric.setName(asString(gateway.get(NAME)));
-                                gatewayMetric.setType(asString(gateway.get(TYPE)));
-                                gatewayMetric.setAverageTime(gateway.get(AVERAGE_TIME).asLong());
-                                gatewayMetric.setMessageCount(gateway.get(TOTAL_COUNT).asLong());
-                                if (systemFaultCount > 0) {
-                                    gatewayMetric.setFaultPercent((int)(100 * gateway.get(FAULT_COUNT).asLong() / systemFaultCount));
-                                } else {
-                                    gatewayMetric.setFaultPercent(0);
-                                }
-                                if (systemTotalTime > 0) {
-                                    gatewayMetric.setTimePercent((int)(100 * gateway.get(TOTAL_TIME).asLong() / systemTotalTime));
-                                } else {
-                                    gatewayMetric.setTimePercent(0);
-                                }
-                                gatewayMetrics.add(gatewayMetric);
-                            }
-                            serviceResult.setGatewayMetrics(gatewayMetrics);
-                        }
-                    }
-                    return serviceResult;
-                }
+            // TODO: Request all attributes in one operation
+            
+            try {
+    	        MBeanServerConnection con=getMBeanServerConnection();
+    	        
+    	        ObjectInstance instance=con.getObjectInstance(
+    	        		new ObjectName("org.switchyard.admin:type=Service,name=\""+serviceName+"\""));
+    	        
+		        serviceResult.setName(parseQName(serviceName));
+		        
+		        serviceResult.setApplication(parseQName(applicationName));
+		        
+		        serviceResult.setServiceInterface((String)con.getAttribute(instance.getObjectName(), "Interface"));
+		        
+		        serviceResult.setServiceId(uuid);
+		        
+		        serviceResult.setReferences(getReferences(applicationName, serviceName));
+		        
+		        //ObjectName app=(ObjectName)con.getAttribute(result.getObjectName(), "Application");
+		        //String appName=stripQuotes(app.getKeyProperty("name"));
+		        
+            } catch (Exception e) {
+    			throw new UiException(i18n.format("SwitchYardServicesProvider.GetServiceFailed"), e);
             }
+            
         }
-        return null;
+        return serviceResult;
     }
 
 	/**
@@ -401,222 +441,41 @@ public class SwitchYardServicesProvider implements ServicesProvider {
             final String applicationName = ids.get(0);
             final String referenceName = ids.get(1);
 
-            final ModelNode operation = getBlankOperation(READ_REFERENCE);
-            operation.get(APPLICATION_NAME).set(applicationName);
-            operation.get(REFERENCE_NAME).set(referenceName);
-
-            final ModelNode response = execute(operation);
-            final ModelNode result = response.get().get(RESULT);
-            if (result.isDefined()) {
-                final List<ModelNode> references = result.asList();
-                if ((references != null) && (references.size() == 1)) {
-                    final ModelNode referenceNode = references.get(0);
-                    referenceResult.setReferenceId(uuid);
-                    referenceResult.setApplication(parseQName(applicationName));
-                    referenceResult.setName(parseQName(referenceName));
-                    referenceResult.setReferenceInterface(asString(referenceNode.get(INTERFACE)));
-
-                    final ModelNode metrics = getMetrics(applicationName, referenceName, "reference"); //$NON-NLS-1$
-                    if (metrics.isDefined()) {
-                        referenceResult.setSuccessCount(metrics.get(SUCCESS_COUNT).asLong());
-                        referenceResult.setFaultCount(metrics.get(FAULT_COUNT).asLong());
-                        final long totalTime = metrics.get(TOTAL_TIME).asLong();
-                        referenceResult.setTotalTime(totalTime);
-                        referenceResult.setAverageTime(metrics.get(AVERAGE_TIME).asLong());
-                        referenceResult.setMaxTime(metrics.get(MAX_TIME).asLong());
-                        referenceResult.setMinTime(metrics.get(MIN_TIME).asLong());
-
-                        final ModelNode gateways = metrics.get(GATEWAYS);
-                        if (gateways.isDefined()) {
-                            final ModelNode systemMetrics = getSystemMetrics();
-                            final int systemFaultCount = systemMetrics.isDefined() ? systemMetrics.get(FAULT_COUNT).asInt() : 0;
-                            final long systemTotalTime = systemMetrics.isDefined() ? systemMetrics.get(TOTAL_TIME).asLong() : 0L;
-                            final List<GatewayMetric> gatewayMetrics = new ArrayList<GatewayMetric>();
-                            for (ModelNode gateway: gateways.asList()) {
-                                final GatewayMetric gatewayMetric = new GatewayMetric();
-                                gatewayMetric.setName(asString(gateway.get(NAME)));
-                                gatewayMetric.setType(asString(gateway.get(TYPE)));
-                                gatewayMetric.setAverageTime(gateway.get(AVERAGE_TIME).asLong());
-                                gatewayMetric.setMessageCount(gateway.get(TOTAL_COUNT).asLong());
-                                if (systemFaultCount > 0) {
-                                    gatewayMetric.setFaultPercent((int)(100 * gateway.get(FAULT_COUNT).asLong() / systemFaultCount));
-                                } else {
-                                    gatewayMetric.setFaultPercent(0);
-                                }
-                                if (systemTotalTime > 0) {
-                                    gatewayMetric.setTimePercent((int)(100 * gateway.get(TOTAL_TIME).asLong() / systemTotalTime));
-                                } else {
-                                    gatewayMetric.setTimePercent(0);
-                                }
-                                gatewayMetrics.add(gatewayMetric);
-                            }
-                            referenceResult.setGatewayMetrics(gatewayMetrics);
-                        }
-                    }
-                    return referenceResult;
-                }
+            // TODO: Request all attributes in one operation
+            
+            try {
+    	        MBeanServerConnection con=getMBeanServerConnection();
+    	        
+    	        ObjectInstance instance=con.getObjectInstance(
+    	        		new ObjectName("org.switchyard.admin:type=Reference,name=\""+referenceName+"\""));
+    	        
+    	        referenceResult.setName(parseQName(referenceName));
+		        
+    	        referenceResult.setApplication(parseQName(applicationName));
+		        
+    	        referenceResult.setReferenceInterface((String)con.getAttribute(instance.getObjectName(), "Interface"));
+		        
+    	        referenceResult.setReferenceId(uuid);
+		        
+		        //ObjectName app=(ObjectName)con.getAttribute(result.getObjectName(), "Application");
+		        //String appName=stripQuotes(app.getKeyProperty("name"));
+		        
+            } catch (Exception e) {
+    			throw new UiException(i18n.format("SwitchYardServicesProvider.GetReferenceFailed",
+    					applicationName, referenceName), e);
             }
         }
-        return null;
+        
+        return referenceResult;
     }
 
-    private static ModelNode getBlankOperation(final String operation) {
-        final ModelNode modelNode = new ModelNode();
-        final ModelNode address = new ModelNode();
-        address.add(SUBSYSTEM, SWITCHYARD);
-        modelNode.get(ADDRESS).set(address);
-        modelNode.get(OPERATION).set(operation);
-        return modelNode;
+    private static QName parseQName(final String value) {
+        final javax.xml.namespace.QName qname = javax.xml.namespace.QName.valueOf(value);
+        return new QName(qname.getNamespaceURI(), qname.getLocalPart());
     }
 
-    private static Map<String, Map<String, BigDecimal>> getAverageDuration(final String applicationName, final String serviceName, final String type) throws UiException {
-        final Map<String, Map<String, BigDecimal>> averageDurations = new TreeMap<String, Map<String, BigDecimal>>();
-
-        final ModelNode operation = getBlankOperation(SHOW_METRICS);
-        if (isSet(serviceName)) {
-            operation.get(SERVICE_NAME).set(serviceName);
-        } else {
-            operation.get(SERVICE_NAME).set("*"); //$NON-NLS-1$
-        }
-        operation.get(TYPE).set(type);
-        final ModelNode response = execute(operation);
-        final ModelNode result = response.get().get(RESULT);
-        if (result.isDefined()) {
-            for (final ModelNode metricsNode: result.asList()) {
-                final String nodeApplicationName = asString(metricsNode.get(APPLICATION));
-                if ((applicationName == null) || applicationName.equals(nodeApplicationName)) {
-                    Map<String, BigDecimal> applicationMap = averageDurations.get(nodeApplicationName);
-                    if (applicationMap == null) {
-                        applicationMap = new TreeMap<String, BigDecimal>();
-                        averageDurations.put(nodeApplicationName, applicationMap);
-                    }
-                    final String nodeServiceName = asString(metricsNode.get(NAME));
-
-                    applicationMap.put(nodeServiceName, metricsNode.get(AVERAGE_TIME).asBigDecimal());
-                }
-            }
-        }
-        return averageDurations;
-    }
-
-    private static ModelNode getMetrics(final String applicationName, final String serviceName, final String type) throws UiException {
-        final ModelNode operation = getBlankOperation(SHOW_METRICS);
-        operation.get(SERVICE_NAME).set(serviceName);
-        operation.get(TYPE).set(type);
-        final ModelNode response = execute(operation);
-        final ModelNode result = response.get().get(RESULT);
-        if (result.isDefined()) {
-            for (final ModelNode metricsNode: result.asList()) {
-                final String nodeApplicationName = asString(metricsNode.get(APPLICATION));
-                if (applicationName.equals(nodeApplicationName)) {
-                    return metricsNode;
-                }
-            }
-        }
-        return new ModelNode();
-    }
-
-    private static ModelNode getSystemMetrics() throws UiException {
-        final ModelNode operation = getBlankOperation(SHOW_METRICS);
-        final ModelNode response = execute(operation);
-        final ModelNode result = response.get().get(RESULT);
-        if (result.isDefined()) {
-            final List<ModelNode> metrics = result.asList();
-            if ((metrics != null) && (metrics.size() == 1)) {
-                return metrics.get(0);
-            }
-        }
-        return new ModelNode();
-    }
-
-    private static ServiceSummaryBean createServiceSummaryBean(final ModelNode serviceNode, final Map<String, Map<String, BigDecimal>> averageDurations) throws UiException {
-        final ServiceSummaryBean result = new ServiceSummaryBean();
-
-        final String name = asString(serviceNode.get(NAME));
-        final String application = asString(serviceNode.get(APPLICATION));
-        final String intface = asString(serviceNode.get(INTERFACE));
-        final String promotedService = asString(serviceNode.get(PROMOTED_SERVICE));
-
-        result.setServiceId(generateId(application, name));
-        result.setApplication(application);
-        result.setName(name);
-        result.setIface(intface);
-
-        final List<ModelNode> gateways = serviceNode.get(GATEWAYS).asList();
-        if (!gateways.isEmpty()) {
-            final StringBuilder sb = new StringBuilder();
-            for(ModelNode gateway: gateways) {
-                final String type = asString(gateway.get(TYPE));
-                if (type != null) {
-                    sb.append(type).append(", "); //$NON-NLS-1$
-                }
-            }
-            final int length = sb.length();
-            if (length > 0) {
-                sb.setLength(length-2);
-            }
-            result.setBindings(sb.toString());
-        }
-
-        if (promotedService != null) {
-            final Map<String, BigDecimal> applicationMap = averageDurations.get(application);
-            if (applicationMap != null) {
-                final BigDecimal averageDuration = applicationMap.get(promotedService);
-                if (averageDuration != null) {
-                    result.setAverageDuration(averageDuration.longValue());
-                }
-            }
-        }
-        return result;
-    }
-
-    private static ReferenceSummaryBean createReferenceSummaryBean(final ModelNode referenceNode, final Map<String, Map<String, BigDecimal>> averageDurations) throws UiException {
-        final ReferenceSummaryBean result = new ReferenceSummaryBean();
-
-        final String name = asString(referenceNode.get(NAME));
-        final String application = asString(referenceNode.get(APPLICATION));
-        final String intface = asString(referenceNode.get(INTERFACE));
-        final String promotedReference = asString(referenceNode.get(PROMOTED_REFERENCE));
-
-        result.setReferenceId(generateId(application, name));
-        result.setApplication(application);
-        result.setName(name);
-        result.setIface(intface);
-
-        final List<ModelNode> gateways = referenceNode.get(GATEWAYS).asList();
-        if (!gateways.isEmpty()) {
-            final StringBuilder sb = new StringBuilder();
-            for(ModelNode gateway: gateways) {
-                final String type = asString(gateway.get(TYPE));
-                if (type != null) {
-                    sb.append(type).append(", "); //$NON-NLS-1$
-                }
-            }
-            final int length = sb.length();
-            if (length > 0) {
-                sb.setLength(length-2);
-            }
-            result.setBindings(sb.toString());
-        }
-
-        if (promotedReference != null) {
-            final Map<String, BigDecimal> applicationMap = averageDurations.get(application);
-            if (applicationMap != null) {
-                final BigDecimal averageDuration = applicationMap.get(promotedReference);
-                if (averageDuration != null) {
-                    result.setAverageDuration(averageDuration.longValue());
-                }
-            }
-        }
-        return result;
-    }
-
-    private static ModelNode execute(final ModelNode operation) throws UiException {
-        try {
-            return RTGovUIServiceActivator.getClient().execute(operation);
-        } catch (final IOException ioe) {
-            throw new UiException(i18n.format("SwitchYardServicesProvider.DMROperationFailed"), ioe); //$NON-NLS-1$
-        }
+    private static boolean isSet(final String name) {
+        return ((name != null) && (name.trim().length() > 0));
     }
 
     private static String generateId(final String application, final String name) {
@@ -669,19 +528,6 @@ public class SwitchYardServicesProvider implements ServicesProvider {
             }
         }
         return escaped.toString();
-    }
-
-    private static QName parseQName(final String value) {
-        final javax.xml.namespace.QName qname = javax.xml.namespace.QName.valueOf(value);
-        return new QName(qname.getNamespaceURI(), qname.getLocalPart());
-    }
-
-    private static boolean isSet(final String name) {
-        return ((name != null) && (name.length() > 0));
-    }
-
-    private static String asString(final ModelNode modelNode) {
-        return (modelNode.isDefined() ? modelNode.asString() : null);
     }
 
 }

@@ -30,6 +30,7 @@ import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.overlord.rtgov.ui.client.local.ClientMessages;
 import org.overlord.rtgov.ui.client.local.pages.services.GatewayMetricsTable;
+import org.overlord.rtgov.ui.client.local.pages.services.ReferenceTable;
 import org.overlord.rtgov.ui.client.local.services.NotificationService;
 import org.overlord.rtgov.ui.client.local.services.ServicesRpcService;
 import org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHandler;
@@ -111,6 +112,10 @@ public class ServiceDetailsPage extends AbstractPage {
     // Gateway Metrics
     @Inject @DataField("gateway-table") @Bound(property="gatewayMetrics")
     GatewayMetricsTable gatewayMetricsTable;
+
+    // References
+    @Inject @DataField("reference-table") @Bound(property="references")
+    ReferenceTable referenceTable;
 
     @Inject @DataField("service-details-loading-spinner")
     protected HtmlSnippet loading;

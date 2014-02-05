@@ -22,7 +22,6 @@ import javax.inject.Inject;
 import org.jboss.errai.bus.server.annotations.Service;
 import org.overlord.rtgov.ui.client.model.QName;
 import org.overlord.rtgov.ui.client.model.ReferenceBean;
-import org.overlord.rtgov.ui.client.model.ReferenceResultSetBean;
 import org.overlord.rtgov.ui.client.model.ServiceBean;
 import org.overlord.rtgov.ui.client.model.ServiceResultSetBean;
 import org.overlord.rtgov.ui.client.model.ServicesFilterBean;
@@ -60,15 +59,6 @@ public class ServicesService implements IServicesService {
     public ServiceResultSetBean findServices(ServicesFilterBean filters, int page, String sortColumn,
             boolean ascending) throws UiException {
         return impl.findServices(filters, page, sortColumn, ascending);
-    }
-
-    /**
-     * @see org.overlord.rtgov.ui.client.shared.services.IServicesService#findReferences(org.overlord.rtgov.ui.client.model.ServicesFilterBean, int, java.lang.String, boolean)
-     */
-    @Override
-    public ReferenceResultSetBean findReferences(ServicesFilterBean filters, int page,
-            String sortColumn, boolean ascending) throws UiException {
-        return impl.findReferences(filters, page, sortColumn, ascending);
     }
 
     /**
