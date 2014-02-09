@@ -91,6 +91,7 @@ public class SituationTable extends SortableTemplatedWidgetTable {
         icon.getElement().addClassName("icon-severity-" + situationSummaryBean.getSeverity()); //$NON-NLS-1$
         Anchor type = toDetailsPageLinkFactory.get("id", situationSummaryBean.getSituationId()); //$NON-NLS-1$
         type.setText(situationSummaryBean.getType());
+        InlineLabel resolutionState = new InlineLabel(situationSummaryBean.getResolutionState());
         InlineLabel subject = new InlineLabel(situationSummaryBean.getSubject());
         InlineLabel description = new InlineLabel(situationSummaryBean.getDescription());
         InlineLabel timestamp = new InlineLabel(format.format(situationSummaryBean.getTimestamp()));
@@ -98,10 +99,11 @@ public class SituationTable extends SortableTemplatedWidgetTable {
 
         add(rowIdx, 0, icon);
         add(rowIdx, 1, type);
-        add(rowIdx, 2, subject);
-        add(rowIdx, 3, timestamp);
-        add(rowIdx, 4, description);
-        add(rowIdx, 5, infoIcons);
+        add(rowIdx, 2, resolutionState);
+        add(rowIdx, 3, subject);
+        add(rowIdx, 4, timestamp);
+        add(rowIdx, 5, description);
+        add(rowIdx, 6, infoIcons);
     }
 
     /**

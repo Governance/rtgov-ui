@@ -30,6 +30,7 @@ public class SituationsFilterBean {
 
     private String severity;
     private String type;
+    private String resolutionState;
     private Date timestampFrom;
     private Date timestampTo;
 
@@ -54,6 +55,13 @@ public class SituationsFilterBean {
     }
 
     /**
+	 * @return the resolutionState
+	 */
+	public String getResolutionState() {
+		return resolutionState;
+	}
+
+	/**
      * @return the timestampFrom
      */
     public Date getTimestampFrom() {
@@ -99,58 +107,81 @@ public class SituationsFilterBean {
         return this;
     }
 
-    /**
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((severity == null) ? 0 : severity.hashCode());
-        result = prime * result + ((timestampFrom == null) ? 0 : timestampFrom.hashCode());
-        result = prime * result + ((timestampTo == null) ? 0 : timestampTo.hashCode());
-        result = prime * result + ((type == null) ? 0 : type.hashCode());
-        return result;
-    }
+	/**
+	 * @param resolutionState the resolutionState to set
+	 */
+	public SituationsFilterBean setResolutionState(String resolutionState) {
+		this.resolutionState = resolutionState;
+		return this;
+	}
 
-    /**
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        SituationsFilterBean other = (SituationsFilterBean) obj;
-        if (severity == null) {
-            if (other.severity != null)
-                return false;
-        } else if (!severity.equals(other.severity))
-            return false;
-        if (timestampFrom == null) {
-            if (other.timestampFrom != null)
-                return false;
-        } else if (!timestampFrom.equals(other.timestampFrom))
-            return false;
-        if (timestampTo == null) {
-            if (other.timestampTo != null)
-                return false;
-        } else if (!timestampTo.equals(other.timestampTo))
-            return false;
-        if (type == null) {
-            if (other.type != null)
-                return false;
-        } else if (!type.equals(other.type))
-            return false;
-        return true;
-    }
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((resolutionState == null) ? 0 : resolutionState.hashCode());
+		result = prime * result
+				+ ((severity == null) ? 0 : severity.hashCode());
+		result = prime * result
+				+ ((timestampFrom == null) ? 0 : timestampFrom.hashCode());
+		result = prime * result
+				+ ((timestampTo == null) ? 0 : timestampTo.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
 
-    @Override
-    public String toString() {
-        return ("SituationsFilter[severity=" + severity + ",type=" + type + ",from=" + timestampFrom + ",to=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-                + timestampTo + "]"); //$NON-NLS-1$
-    }
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SituationsFilterBean other = (SituationsFilterBean) obj;
+		if (resolutionState == null) {
+			if (other.resolutionState != null)
+				return false;
+		} else if (!resolutionState.equals(other.resolutionState))
+			return false;
+		if (severity == null) {
+			if (other.severity != null)
+				return false;
+		} else if (!severity.equals(other.severity))
+			return false;
+		if (timestampFrom == null) {
+			if (other.timestampFrom != null)
+				return false;
+		} else if (!timestampFrom.equals(other.timestampFrom))
+			return false;
+		if (timestampTo == null) {
+			if (other.timestampTo != null)
+				return false;
+		} else if (!timestampTo.equals(other.timestampTo))
+			return false;
+		if (type == null) {
+			if (other.type != null)
+				return false;
+		} else if (!type.equals(other.type))
+			return false;
+		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "SituationsFilterBean [severity=" + severity + ", type=" + type
+				+ ", resolutionState=" + resolutionState + ", timestampFrom="
+				+ timestampFrom + ", timestampTo=" + timestampTo + "]";
+	}
+
 }

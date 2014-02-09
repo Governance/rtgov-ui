@@ -144,6 +144,17 @@ public class SituationSummaryBean {
     }
 
     /**
+	 * @return the resolutionState
+	 */
+    public String getResolutionState() {
+        String resolutionState = ResolutionState.OPEN.toString();
+        if (properties != null && properties.get("resolutionState") != null) {
+            resolutionState = properties.get("resolutionState");
+        }
+        return resolutionState;
+    }
+
+	/**
      * @see java.lang.Object#hashCode()
      */
     @Override

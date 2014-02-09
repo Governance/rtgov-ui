@@ -96,6 +96,8 @@ public class SituationDetailsPage extends AbstractPage {
     InlineLabel subject;
     @Inject @DataField @Bound(property="timestamp", converter=DataBindingDateTimeConverter.class)
     InlineLabel timestamp;
+    @Inject @DataField @Bound(property="resolutionState")
+    InlineLabel resolutionState;
     @Inject @DataField @Bound(property="description")
     InlineLabel description;
 

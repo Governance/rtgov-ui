@@ -45,7 +45,12 @@ public class RTGovRepository {
 
     private static final Logger LOG=Logger.getLogger(RTGovRepository.class.getName());
 
-    /**
+    RTGovRepository(EntityManagerFactory _entityManagerFactory) {
+		super();
+		this._entityManagerFactory = _entityManagerFactory;
+	}
+
+	/**
      * The situation repository constructor.
      */
     public RTGovRepository() {
@@ -150,6 +155,14 @@ public class RTGovRepository {
         		// the 'to' time represents the end of the day.
         		queryString.append("sit.timestamp <= "+(filter.getTimestampTo().getTime()+MILLISECONDS_PER_DAY)+" ");  //$NON-NLS-1$//$NON-NLS-2$
         	}
+
+            if (filter.getResolutionState() != null) {
+                if (queryString.length() > 0) {
+                    queryString.append("AND "); //$NON-NLS-1$
+                }
+                queryString.append("key(sit.properties) = 'resolutionState' and value(sit.properties)='"
+                        + filter.getResolutionState() + "'");
+            }
 
         	if (queryString.length() > 0) {
         		queryString.insert(0, "WHERE "); //$NON-NLS-1$

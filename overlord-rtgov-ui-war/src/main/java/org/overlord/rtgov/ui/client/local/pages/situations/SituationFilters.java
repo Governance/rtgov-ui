@@ -51,12 +51,12 @@ public class SituationFilters extends Composite implements HasValueChangeHandler
     protected SeverityListBox severity;
     @Inject @DataField
     protected TextBox type;
-
+    @Inject @DataField
+    protected ResolutionStateListBox resolutionState;
     @Inject @DataField
     protected DateBox timestampFrom;
     @Inject @DataField
     protected DateBox timestampTo;
-
     @Inject @DataField
     protected Anchor clearFilters;
 
@@ -89,6 +89,7 @@ public class SituationFilters extends Composite implements HasValueChangeHandler
         };
         severity.addValueChangeHandler(valueChangeHandler);
         type.addValueChangeHandler(valueChangeHandler);
+        resolutionState.addValueChangeHandler(valueChangeHandler);
         timestampFrom.addValueChangeHandler(valueChangeHandler);
         timestampTo.addValueChangeHandler(valueChangeHandler);
     }
@@ -100,6 +101,7 @@ public class SituationFilters extends Composite implements HasValueChangeHandler
         SituationsFilterBean newState = new SituationsFilterBean();
         newState.setSeverity(severity.getValue())
             .setType(type.getValue())
+            .setResolutionState(resolutionState.getValue())
             .setTimestampFrom(timestampFrom.getDateValue())
             .setTimestampTo(timestampTo.getDateValue());
 
@@ -122,6 +124,7 @@ public class SituationFilters extends Composite implements HasValueChangeHandler
     public void setValue(SituationsFilterBean value) {
         severity.setValue(value.getSeverity() == null ? "" : value.getSeverity()); //$NON-NLS-1$
         type.setValue(value.getType() == null ? "" : value.getType()); //$NON-NLS-1$
+        resolutionState.setValue(value.getResolutionState() == null ? "" : value.getResolutionState()); //$NON-NLS-1$
         timestampFrom.setDateValue(value.getTimestampFrom() == null ? null : value.getTimestampFrom());
         timestampTo.setDateValue(value.getTimestampTo() == null ? null : value.getTimestampTo());
         onFilterValueChange();
