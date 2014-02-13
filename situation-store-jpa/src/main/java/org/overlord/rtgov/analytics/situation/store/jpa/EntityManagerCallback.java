@@ -1,4 +1,4 @@
-package org.overlord.rtgov.ui.provider.situations;
+package org.overlord.rtgov.analytics.situation.store.jpa;
 
 import javax.persistence.EntityManager;
 

@@ -19,8 +19,8 @@ import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Logger;
 
+import javax.management.AttributeList;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectInstance;
 import javax.management.ObjectName;
@@ -45,15 +45,20 @@ import org.switchyard.remote.RemoteInvoker;
 import org.switchyard.remote.RemoteMessage;
 import org.switchyard.remote.http.HttpInvoker;
 
-public class SwitchYardServicesProvider { //implements ServicesProvider {
-	
-	private static final Logger LOG=Logger.getLogger(SwitchYardServicesProvider.class.getName());
+/**
+ * This class provides a SwitchYard implementation of the ServicesProvider
+ * interface obtaining its information via JMX.
+ *
+ */
+public class SwitchYardServicesProvider implements ServicesProvider {
 	
     private static volatile Messages i18n = new Messages();
 
 	private static final String PROVIDER_NAME = "switchyard";
 
+	// Properties
 	private static final String SWITCHYARD_RESUBMIT_HANDLER_SERVER_URLS = "SwitchYardServiceProvider.serverURLs";
+	private static final String SWITCHYARD_JMX_URL = "SwitchYardServiceProvider.serverJMX";
 
 	protected static final String DEFAULT_REMOTE_INVOKER_URL = "http://localhost:8080/switchyard-remote";
 	
@@ -165,6 +170,9 @@ public class SwitchYardServicesProvider { //implements ServicesProvider {
 	 * @return The JMX server URL
 	 */
 	public String getServerJMX() {
+		if (_serverJMX == null) {
+			_serverJMX = RTGovProperties.getProperties().getProperty(SWITCHYARD_JMX_URL);
+		}
 		return (_serverJMX);
 	}
 	
@@ -299,33 +307,44 @@ public class SwitchYardServicesProvider { //implements ServicesProvider {
 	        	java.util.Map<String,String> map=result.getObjectName().getKeyPropertyList();
 	        			
 	        	if (map.containsKey("name")) {
-			        String name=(String)con.getAttribute(result.getObjectName(), "Name");
+			        AttributeList attrs=con.getAttributes(result.getObjectName(),
+			        				new String[] {"Name", "Application", "Interface"});
+			        String name=(String)getAttributeValue(attrs.get(0));
 
-			        ServiceSummaryBean ssb=new ServiceSummaryBean();
-			        ssb.setName(name);
-			        
-			        ObjectName app=(ObjectName)con.getAttribute(result.getObjectName(), "Application");
-			        String appName=stripQuotes(app.getKeyProperty("name"));
-			        
-			        if (!isSet(filters.getApplicationName()) ||
-			        			filters.getApplicationName().equals(appName)) {
-				        ssb.setApplication(appName);
-			        	
-				        ssb.setAverageDuration(0L);
-				        ssb.setBindings("");
-				        ssb.setIface((String)con.getAttribute(result.getObjectName(), "Interface"));
+			        if (!isSet(filters.getServiceName()) ||
+		        			filters.getServiceName().equals(name)) {
+				        ObjectName app=(ObjectName)getAttributeValue(attrs.get(1));
+				        String appName=stripQuotes(app.getKeyProperty("name"));
 				        
-				        ssb.setServiceId(generateId(appName, name));
-				        
-			        	services.add(ssb);
+				        if (!isSet(filters.getApplicationName()) ||
+				        			filters.getApplicationName().equals(appName)) {
+					        ServiceSummaryBean ssb=new ServiceSummaryBean();
+					        ssb.setName(name);				        
+					        ssb.setApplication(appName);
+				        	
+					        ssb.setAverageDuration(0L);
+					        ssb.setBindings("");
+					        ssb.setIface((String)getAttributeValue(attrs.get(2)));
+					        
+					        ssb.setServiceId(generateId(appName, name));
+					        
+				        	services.add(ssb);
+				        }
 			        }
 	        	}
 	        }
         } catch (Exception e) {
-			throw new UiException(i18n.format("SwitchYardServicesProvider.AppNamesFailed"), e);
+			throw new UiException(i18n.format("SwitchYardServicesProvider.GetServicesFailed"), e);
         }
         
         return services;
+    }
+    
+    protected Object getAttributeValue(Object attr) {
+    	if (attr instanceof javax.management.Attribute) {
+    		return (((javax.management.Attribute)attr).getValue());
+    	}
+    	return (attr);
     }
     
     protected String stripQuotes(String text) {
@@ -358,33 +377,32 @@ public class SwitchYardServicesProvider { //implements ServicesProvider {
 	        		con.queryMBeans(new ObjectName("org.switchyard.admin:type=Reference,name=*"), null);
 	        
 	        for (ObjectInstance result : results) {
-	        	java.util.Map<String,String> map=result.getObjectName().getKeyPropertyList();
-	        			
-	        	if (map.containsKey("name")) {
-			        String name=(String)con.getAttribute(result.getObjectName(), "Name");
+	        	AttributeList attrs=con.getAttributes(result.getObjectName(),
+	        					new String[]{"Name", "Application", "Interface"});
+		        String name=(String)getAttributeValue(attrs.get(0));
 
-			        ReferenceSummaryBean rsb=new ReferenceSummaryBean();
-			        rsb.setName(name);
+		        ReferenceSummaryBean rsb=new ReferenceSummaryBean();
+		        rsb.setName(name);
+		        
+		        ObjectName app=(ObjectName)getAttributeValue(attrs.get(1));
+		        String appName=stripQuotes(app.getKeyProperty("name"));
+		        
+		        if (isSet(applicationName) ||
+		        					applicationName.equals(appName)) {
+			        rsb.setApplication(appName);
+		        	
+			        rsb.setAverageDuration(0L);
+			        rsb.setBindings("");
+			        rsb.setIface((String)getAttributeValue(attrs.get(2)));
 			        
-			        ObjectName app=(ObjectName)con.getAttribute(result.getObjectName(), "Application");
-			        String appName=stripQuotes(app.getKeyProperty("name"));
+			        rsb.setReferenceId(generateId(appName, name));
 			        
-			        if (isSet(applicationName) ||
-			        					applicationName.equals(appName)) {
-				        rsb.setApplication(appName);
-			        	
-				        rsb.setAverageDuration(0L);
-				        rsb.setBindings("");
-				        rsb.setIface((String)con.getAttribute(result.getObjectName(), "Interface"));
-				        
-				        rsb.setReferenceId(generateId(appName, name));
-				        
-			        	references.add(rsb);
-			        }
-	        	}
+		        	references.add(rsb);
+		        }
 	        }
         } catch (Exception e) {
-			throw new UiException(i18n.format("SwitchYardServicesProvider.AppNamesFailed"), e);
+			throw new UiException(i18n.format("SwitchYardServicesProvider.GetReferencesFailed",
+								applicationName, serviceName), e);
         }
 
         return references;
@@ -413,7 +431,9 @@ public class SwitchYardServicesProvider { //implements ServicesProvider {
 		        
 		        serviceResult.setApplication(parseQName(applicationName));
 		        
-		        serviceResult.setServiceInterface((String)con.getAttribute(instance.getObjectName(), "Interface"));
+		        AttributeList attrs=con.getAttributes(instance.getObjectName(), new String[]{"Interface"});
+		        
+		        serviceResult.setServiceInterface((String)getAttributeValue(attrs.get(0)));
 		        
 		        serviceResult.setServiceId(uuid);
 		        
@@ -453,7 +473,9 @@ public class SwitchYardServicesProvider { //implements ServicesProvider {
 		        
     	        referenceResult.setApplication(parseQName(applicationName));
 		        
-    	        referenceResult.setReferenceInterface((String)con.getAttribute(instance.getObjectName(), "Interface"));
+		        AttributeList attrs=con.getAttributes(instance.getObjectName(), new String[]{"Interface"});
+		        
+		        referenceResult.setReferenceInterface((String)getAttributeValue(attrs.get(0)));
 		        
     	        referenceResult.setReferenceId(uuid);
 		        

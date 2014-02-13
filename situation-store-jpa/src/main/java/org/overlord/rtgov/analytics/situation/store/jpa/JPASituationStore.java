@@ -15,26 +15,21 @@
  */
 package org.overlord.rtgov.analytics.situation.store.jpa;
 
-import static org.overlord.rtgov.ui.client.model.ResolutionState.RESOLVED;
-
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.naming.InitialContext;
+import javax.annotation.Resource;
 import javax.inject.Singleton;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Status;
 import javax.transaction.UserTransaction;
 
 import org.overlord.rtgov.analytics.situation.Situation;
-import org.overlord.rtgov.analytics.situation.Situation.Severity;
 import org.overlord.rtgov.ui.client.model.ResolutionState;
-import org.overlord.rtgov.ui.client.model.SituationsFilterBean;
 import org.overlord.rtgov.analytics.situation.store.SituationStore;
 import org.overlord.rtgov.analytics.situation.store.SituationsQuery;
 import org.overlord.rtgov.ui.provider.situations.Messages;
@@ -46,14 +41,16 @@ import org.overlord.rtgov.ui.provider.situations.Messages;
 @Singleton
 public class JPASituationStore implements SituationStore {
 
-	private static final String USER_TRANSACTION = "java:comp/UserTransaction";
-	public static final String RESOLUTION_STATE_PROPERTY = "resolutionState";
-	public static final String ASSIGNED_TO_PROPERTY = "assignedTo";
-	private static final int MILLISECONDS_PER_DAY = 86400000;
+	private static final String USER_TRANSACTION = "java:comp/UserTransaction"; //$NON-NLS-1$
 	private static final String OVERLORD_RTGOV_DB = "overlord-rtgov-situations"; //$NON-NLS-1$
+	
     private static volatile Messages i18n = new Messages();
 
-    private EntityManagerFactory _entityManagerFactory=null;
+    @Resource
+    private UserTransaction _transaction;
+
+    @PersistenceContext(unitName=OVERLORD_RTGOV_DB)
+    private EntityManager _entityManager;
 
     private static final Logger LOG=Logger.getLogger(JPASituationStore.class.getName());
 
@@ -61,14 +58,35 @@ public class JPASituationStore implements SituationStore {
      * The situation repository constructor.
      */
     public JPASituationStore() {
-    	init();
+    }
+    
+    /**
+     * This method sets a transaction.
+     * 
+     * @param txn The transaction
+     */
+    protected void setUserTransaction(UserTransaction txn) {
+    	_transaction = txn;
     }
 
     /**
-     * Initialize the situation repository.
+     * This method returns a transaction.
+     *
+     * @return The transaction
      */
-    protected void init() {
-        _entityManagerFactory = Persistence.createEntityManagerFactory(OVERLORD_RTGOV_DB);
+    protected UserTransaction getTransaction() throws Exception {
+        return (_transaction != null ? _transaction :
+        			(UserTransaction)new InitialContext().lookup(USER_TRANSACTION));
+    }
+
+    /**
+     * This method sets an entity manager. This can be used
+     * for testing purposes.
+     * 
+     * @param em The entity manager
+     */
+    protected void setEntityManager(EntityManager em) {
+    	_entityManager = em;
     }
 
     /**
@@ -77,18 +95,7 @@ public class JPASituationStore implements SituationStore {
      * @return The entity manager
      */
     protected EntityManager getEntityManager() {
-        return (_entityManagerFactory.createEntityManager());
-    }
-
-    /**
-     * This method closes the supplied entity manager.
-     *
-     * @param em The entity manager
-     */
-    protected void closeEntityManager(EntityManager em) {
-        if (em != null) {
-            em.close();
-        }
+        return (_entityManager);
     }
 
     /**
@@ -96,23 +103,17 @@ public class JPASituationStore implements SituationStore {
      */
     public Situation getSituation(String id) throws Exception {
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest(i18n.format("RTGovRepository.GetSit", id)); //$NON-NLS-1$
+            LOG.finest(i18n.format("JPASituationStore.GetSit", id)); //$NON-NLS-1$
         }
 
         EntityManager em=getEntityManager();
 
-        Situation ret=null;
-
-        try {
-            ret=(Situation)em.createQuery("SELECT sit FROM Situation sit " //$NON-NLS-1$
+        Situation ret=(Situation)em.createQuery("SELECT sit FROM Situation sit " //$NON-NLS-1$
                                 +"WHERE sit.id = '"+id+"'") //$NON-NLS-1$ //$NON-NLS-2$
                                 .getSingleResult();
 
-            if (LOG.isLoggable(Level.FINEST)) {
-                LOG.finest(i18n.format("RTGovRepository.Result", ret)); //$NON-NLS-1$
-            }
-        } finally {
-            closeEntityManager(em);
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest(i18n.format("JPASituationStore.Result", ret)); //$NON-NLS-1$
         }
 
         return (ret);
@@ -126,133 +127,71 @@ public class JPASituationStore implements SituationStore {
     	java.util.List<Situation> situations=null;
         EntityManager em=getEntityManager();
 
-        try {
-        	// Build the query string
-        	StringBuffer queryString=new StringBuffer();
+    	// Build the query string
+    	StringBuffer queryString=new StringBuffer();
 
-        	if (sitQuery.getSeverity() != null) {
-        		queryString.append("sit.severity = :severity "); //$NON-NLS-1$
-        	}
+    	if (sitQuery.getSeverity() != null) {
+    		queryString.append("sit.severity = :severity "); //$NON-NLS-1$
+    	}
 
-        	if (sitQuery.getType() != null && sitQuery.getType().trim().length() > 0) {
-        		if (queryString.length() > 0) {
-        			queryString.append("AND "); //$NON-NLS-1$
-        		}
-        		queryString.append("sit.type = '"+sitQuery.getType()+"' ");  //$NON-NLS-1$//$NON-NLS-2$
-        	}
+    	if (sitQuery.getType() != null && sitQuery.getType().trim().length() > 0) {
+    		if (queryString.length() > 0) {
+    			queryString.append("AND "); //$NON-NLS-1$
+    		}
+    		queryString.append("sit.type = '"+sitQuery.getType()+"' ");  //$NON-NLS-1$//$NON-NLS-2$
+    	}
 
-        	if (sitQuery.getFromTimestamp() > 0) {
-        		if (queryString.length() > 0) {
-        			queryString.append("AND "); //$NON-NLS-1$
-        		}
-        		queryString.append("sit.timestamp >= "+sitQuery.getFromTimestamp()+" ");  //$NON-NLS-1$//$NON-NLS-2$
-        	}
+    	if (sitQuery.getFromTimestamp() > 0) {
+    		if (queryString.length() > 0) {
+    			queryString.append("AND "); //$NON-NLS-1$
+    		}
+    		queryString.append("sit.timestamp >= "+sitQuery.getFromTimestamp()+" ");  //$NON-NLS-1$//$NON-NLS-2$
+    	}
 
-        	if (sitQuery.getToTimestamp() > 0) {
-        		if (queryString.length() > 0) {
-        			queryString.append("AND "); //$NON-NLS-1$
-        		}
-        		// NOTE: As only the day is returned currently, will need to add a day on, so that
-        		// the 'to' time represents the end of the day.
-        		queryString.append("sit.timestamp <= "+sitQuery.getToTimestamp()+" ");  //$NON-NLS-1$//$NON-NLS-2$
-        	}
+    	if (sitQuery.getToTimestamp() > 0) {
+    		if (queryString.length() > 0) {
+    			queryString.append("AND "); //$NON-NLS-1$
+    		}
+    		// NOTE: As only the day is returned currently, will need to add a day on, so that
+    		// the 'to' time represents the end of the day.
+    		queryString.append("sit.timestamp <= "+sitQuery.getToTimestamp()+" ");  //$NON-NLS-1$//$NON-NLS-2$
+    	}
 
-            if (filter.getResolutionState() != null) {
-                if (queryString.length() > 0) {
-                    queryString.append("AND "); //$NON-NLS-1$
-                }
-				if (ResolutionState.UNRESOLVED == ResolutionState.valueOf(filter.getResolutionState())) {
-					queryString.append("'resolutionState' not in indices(sit.properties)");
-				} else {
-					queryString.append("sit.properties['resolutionState']='" + filter.getResolutionState() + "'");
-				}
+        if (sitQuery.getResolutionState() != null) {
+            if (queryString.length() > 0) {
+                queryString.append("AND "); //$NON-NLS-1$
             }
+			if (ResolutionState.UNRESOLVED == ResolutionState.valueOf(sitQuery.getResolutionState())) {
+				queryString.append("'resolutionState' not in indices(sit.properties)");
+			} else {
+				queryString.append("sit.properties['resolutionState']='" + sitQuery.getResolutionState() + "'");
+			}
+        }
 
-        	if (queryString.length() > 0) {
-        		queryString.insert(0, "WHERE "); //$NON-NLS-1$
-        	}
+    	if (queryString.length() > 0) {
+    		queryString.insert(0, "WHERE "); //$NON-NLS-1$
+    	}
 
-        	queryString.insert(0, "SELECT sit from Situation sit "); //$NON-NLS-1$
-        	
-        	Query query=em.createQuery(queryString.toString());
+    	queryString.insert(0, "SELECT sit from Situation sit "); //$NON-NLS-1$
+    	
+    	Query query=em.createQuery(queryString.toString());
 
-        	if (sitQuery.getSeverity() != null) {
-        		query.setParameter("severity", sitQuery.getSeverity()); //$NON-NLS-1$
-        	}
+    	if (sitQuery.getSeverity() != null) {
+    		query.setParameter("severity", sitQuery.getSeverity()); //$NON-NLS-1$
+    	}
 
-            situations = query.getResultList();
-            
-            if (LOG.isLoggable(Level.FINEST)) {
-                LOG.finest(i18n.format("RTGovRepository.SitResult", situations)); //$NON-NLS-1$
-            }
-        } finally {
-            closeEntityManager(em);
+        situations = query.getResultList();
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest(i18n.format("JPASituationStore.SitResult", situations)); //$NON-NLS-1$
         }
 
         return (situations);
     }
-
-    /**
-     * This method returns the situation associated with the supplied id.
-     *
-     * @param id The id
-     * @return The situation, or null if not found
-     * @throws Exception Failed to get situation
-     */
-    public ActivityUnit getActivityUnit(String id) throws Exception {
-        if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest(i18n.format("RTGovRepository.GetAU", id)); //$NON-NLS-1$
-        }
-
-        EntityManager em=getEntityManager();
-
-        ActivityUnit ret=null;
-
-        try {
-            ret=(ActivityUnit)em.createQuery("SELECT au FROM ActivityUnit au " //$NON-NLS-1$
-                                +"WHERE au.id = '"+id+"'") //$NON-NLS-1$ //$NON-NLS-2$
-                                .getSingleResult();
-
-            if (LOG.isLoggable(Level.FINEST)) {
-                LOG.finest(i18n.format("RTGovRepository.Result", ret)); //$NON-NLS-1$
-            }
-        } finally {
-            closeEntityManager(em);
-        }
-
-        return (ret);
-    }
-
-    /**
-     * This method returns the situation associated with the supplied id.
-     *
-     * @param id The id
-     * @return The situation, or null if not found
-     * @throws Exception Failed to get situation
-     */
-    public ActivityType getActivityType(ActivityTypeId id) throws Exception {
-        if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest(i18n.format("RTGovRepository.GetAT", id)); //$NON-NLS-1$
-        }
-
-        ActivityType ret=null;
-        
-        ActivityUnit au=getActivityUnit(id.getUnitId());
-        
-        if (au != null && id.getUnitIndex() < au.getActivityTypes().size()) {
-        	ret = au.getActivityTypes().get(id.getUnitIndex());
-        }
-        
-        if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest(i18n.format("RTGovRepository.Result", ret)); //$NON-NLS-1$
-        }
-
-        return (ret);
-    }
-
+    
 	public void assignSituation(final String situationId, final String userName) {
 		if (LOG.isLoggable(Level.FINEST)) {
-			LOG.finest(i18n.format("RTGovRepository.AssSit", situationId)); //$NON-NLS-1$
+			LOG.finest(i18n.format("JPASituationStore.AssSit", situationId)); //$NON-NLS-1$
 		}
 		doInTransaction(new EntityManagerCallback.Void() {
 			@Override
@@ -265,17 +204,17 @@ public class JPASituationStore implements SituationStore {
 
 	public void closeSituation(final String situationId) {
 		if (LOG.isLoggable(Level.FINEST)) {
-			LOG.finest(i18n.format("RTGovRepository.DeassSit", situationId)); //$NON-NLS-1$
+			LOG.finest(i18n.format("JPASituationStore.DeassSit", situationId)); //$NON-NLS-1$
 		}
 		doInTransaction(new EntityManagerCallback.Void() {
 			@Override
 			public void doExecute(EntityManager entityManager) {
 				Situation situation = entityManager.find(Situation.class, situationId);
-				Map<String, String> properties = situation.getProperties();
+				java.util.Map<String, String> properties = situation.getProperties();
 				properties.remove(ASSIGNED_TO_PROPERTY);
 				// remove current state if not already resolved
 				String resolutionState = properties.get(RESOLUTION_STATE_PROPERTY);
-				if (resolutionState != null && RESOLVED != ResolutionState.valueOf(resolutionState)) {
+				if (resolutionState != null && ResolutionState.RESOLVED != ResolutionState.valueOf(resolutionState)) {
 					properties.remove(RESOLUTION_STATE_PROPERTY);
 				}
 			}
@@ -284,7 +223,7 @@ public class JPASituationStore implements SituationStore {
 
 	public void updateResolutionState(final String situationId, final ResolutionState resolutionState) {
 		if (LOG.isLoggable(Level.FINEST)) {
-			LOG.finest(i18n.format("RTGovRepository.UpdRState", situationId)); //$NON-NLS-1$
+			LOG.finest(i18n.format("JPASituationStore.UpdRState", situationId)); //$NON-NLS-1$
 		}
 		doInTransaction(new EntityManagerCallback.Void() {
 			@Override
@@ -300,11 +239,11 @@ public class JPASituationStore implements SituationStore {
 		UserTransaction userTransaction = null;
 		T result = null;
 		try {
-			userTransaction = (UserTransaction) new InitialContext().lookup(USER_TRANSACTION);
+			userTransaction = getTransaction();
 			boolean handleTransaction = userTransaction.getStatus() != Status.STATUS_ACTIVE;
 			if (handleTransaction) {
 				userTransaction.begin();
-				entityManager.joinTransaction();
+				//entityManager.joinTransaction();
 			}
 			result = callback.execute(entityManager);
 			if (handleTransaction) {
@@ -318,8 +257,6 @@ public class JPASituationStore implements SituationStore {
 			} catch (Exception rollbackException) {
 				rollbackException.printStackTrace();
 			}
-		} finally {
-			closeEntityManager(entityManager);
 		}
 		return result;
 	}

@@ -16,6 +16,7 @@
 package org.overlord.rtgov.analytics.situation.store;
 
 import org.overlord.rtgov.analytics.situation.Situation;
+import org.overlord.rtgov.ui.client.model.ResolutionState;
 
 /**
  * This interface provides access to the Situation store.
@@ -23,7 +24,10 @@ import org.overlord.rtgov.analytics.situation.Situation;
  */
 public interface SituationStore {
 
-    /**
+	public static final String RESOLUTION_STATE_PROPERTY = "resolutionState";
+	public static final String ASSIGNED_TO_PROPERTY = "assignedTo";
+
+	/**
      * This method returns the situation associated with the supplied id.
      *
      * @param id The id
@@ -41,5 +45,31 @@ public interface SituationStore {
      * @throws Exception Failed to get situations
      */
     public java.util.List<Situation> getSituations(SituationsQuery query) throws Exception;
+
+    /**
+     * This method assigns a situation to a specified user.
+     * 
+     * @param situationId The situation id
+     * @param userName The user
+     * @throws Exception Failed to assign the situation
+     */
+    public void assignSituation(String situationId, String userName) throws Exception;
+    
+    /**
+     * This method closes a situation.
+     * 
+     * @param situationId The situation id
+     * @throws Exception Failed to close the situation
+     */
+    public void closeSituation(String situationId) throws Exception;
+    
+    /**
+     * This method updates the resolution state of a situation.
+     * 
+     * @param situationId The situation id
+     * @param resolutionState The resolution state
+     * @throws Exception Failed to update the resolution state
+     */
+    public void updateResolutionState(String situationId, ResolutionState resolutionState) throws Exception;
 
 }

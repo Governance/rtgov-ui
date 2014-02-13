@@ -65,6 +65,7 @@ public class SwitchYardServicesProviderTest {
         return ShrinkWrap.create(WebArchive.class, "rtgov-ui-test.war")
             .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
             .addAsManifestResource("META-INF/jboss-deployment-structure.xml", "jboss-deployment-structure.xml")
+            // Required for RTGOV-351 .addAsLibraries(Maven.resolver().resolve("org.jboss.remotingjmx:remoting-jmx:1.1.2.Final").withTransitivity().asFile())
             .addAsLibraries(Maven.resolver().resolve("org.overlord.rtgov.ui:rtgov-ui-services-switchyard:"+rtgovuiversion).withTransitivity().asFile())
     		.addAsLibraries(Maven.resolver().resolve("org.overlord.rtgov.ui:rtgov-ui-core:"+rtgovuiversion).withTransitivity().asFile());
     }
@@ -99,6 +100,18 @@ public class SwitchYardServicesProviderTest {
         
         return ShrinkWrap.createFromZipFile(JavaArchive.class, archiveFile);
     }
+    
+    /* Required for RTGOV-351
+     * However currently this causes the test server to hang after appearing to undeploy all components.
+     * Used version 1.1.2.Final of the jmx remoting lib, as 2.0.0.Final was failing to resolve a Beta3
+     * dependent on a remoting lib.
+    @org.junit.Before
+    public void init() {
+    	if (_provider instanceof SwitchYardServicesProvider) {
+    		((SwitchYardServicesProvider)_provider).setServerJMX("service:jmx:remoting-jmx://localhost:9999");
+    	}
+    }
+    */
    
     @Test @OperateOnDeployment(value="rtgov-ui-test")
     public void testGetApplicationNames() {

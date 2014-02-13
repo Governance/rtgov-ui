@@ -3,7 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
 	version="2.0">
-	<persistence-unit name="RTGovRepositoryTest" transaction-type="RESOURCE_LOCAL">
+	<persistence-unit name="JPASituationStoreTest" transaction-type="RESOURCE_LOCAL">
         <class>org.overlord.rtgov.activity.model.ActivityUnit</class>
         <class>org.overlord.rtgov.activity.model.ActivityType</class>
         <class>org.overlord.rtgov.activity.model.ActivityTypeId</class>

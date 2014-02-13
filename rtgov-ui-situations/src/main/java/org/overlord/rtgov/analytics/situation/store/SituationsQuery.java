@@ -28,6 +28,7 @@ public class SituationsQuery {
 	private Situation.Severity _severity;
 	private long _fromTimestamp;
 	private long _toTimestamp;
+    private String _resolutionState;
 	
 	/**
 	 * The default constructor.
@@ -123,5 +124,23 @@ public class SituationsQuery {
 	 */
 	public void setToTimestamp(long toTimestamp) {
 		_toTimestamp = toTimestamp;
+	}
+	
+    /**
+     * This method returns the resolution state.
+     * 
+	 * @return The resolution state
+	 */
+	public String getResolutionState() {
+		return (_resolutionState);
+	}
+
+	/**
+	 * This method sets the resolution state.
+	 * 
+	 * @param resolutionState The resolution state
+	 */
+	public void setResolutionState(String resolutionState) {
+		_resolutionState = resolutionState;
 	}
 }

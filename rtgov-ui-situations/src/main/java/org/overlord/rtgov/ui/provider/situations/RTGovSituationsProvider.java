@@ -318,6 +318,8 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
     		// milliseconds for a day
     		ret.setToTimestamp(filters.getTimestampTo().getTime()+MILLISECONDS_PER_DAY);
     	}
+    	
+    	ret.setResolutionState(filters.getResolutionState());
 
     	return (ret);
     }
@@ -572,17 +574,29 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
 
 	@Override
 	public void assign(String situationId,String userName) throws UiException {
-		_repository.assignSituation(situationId, userName);
+		try {
+			_situationStore.assignSituation(situationId, userName);
+		} catch (Exception e) {
+			throw new UiException(e);
+		}
 	}
 
 	@Override
 	public void close(String situationId) throws UiException {
-		_repository.closeSituation(situationId);
+		try {
+			_situationStore.closeSituation(situationId);
+		} catch (Exception e) {
+			throw new UiException(e);
+		}
 	}
 
 	@Override
-	public void updateResolutionState(String situationId, ResolutionState resolutionState) {
-		_repository.updateResolutionState(situationId, resolutionState);
+	public void updateResolutionState(String situationId, ResolutionState resolutionState) throws UiException {
+		try {
+			_situationStore.updateResolutionState(situationId, resolutionState);
+		} catch (Exception e) {
+			throw new UiException(e);
+		}
 	}
     
     /**
@@ -634,5 +648,4 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
 		}
     	
     }
->>>>>>> a1f828d... RTGOV-348 Move references to service details page and refactor situations repository into SituationStore API and JPA implementation. Also added arquillian test for switchyard service provider with initial test - more to come.
 }

@@ -1,24 +1,14 @@
-package org.overlord.rtgov.ui.provider.situations;
+package org.overlord.rtgov.analytics.situation.store.jpa;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
+import static org.junit.Assert.*;
 import static org.overlord.rtgov.ui.client.model.ResolutionState.IN_PROGRESS;
-import static org.overlord.rtgov.ui.provider.situations.RTGovRepository.ASSIGNED_TO_PROPERTY;
-import static org.overlord.rtgov.ui.provider.situations.RTGovRepository.RESOLUTION_STATE_PROPERTY;
-
-import java.util.Map;
 
 import javax.inject.Inject;
-import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.persistence.Cache;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceUnitUtil;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.metamodel.Metamodel;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.NotSupportedException;
@@ -27,40 +17,63 @@ import javax.transaction.Status;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.overlord.rtgov.analytics.situation.Situation;
+import org.overlord.rtgov.analytics.situation.store.SituationStore;
+import org.overlord.rtgov.analytics.situation.store.SituationsQuery;
 import org.overlord.rtgov.ui.client.model.ResolutionState;
-import org.overlord.rtgov.ui.client.model.SituationsFilterBean;
-import org.overlord.rtgov.ui.provider.situations.RTGovRepository.SituationsResult;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 
 @ContextConfiguration
-public class RTGovRepositoryTest extends AbstractTransactionalJUnit4SpringContextTests {
+public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringContextTests {
 
-    private static final String USER_TRANSACTION = "java:comp/UserTransaction";
-	RTGovRepository rtGovRepository;
-    @PersistenceContext
-    EntityManager entityManager;
-    @Inject
-    EntityManagerFactory entityManagerFactory;
-
+	private JPASituationStore _situationStore;
+    
+	@PersistenceContext
+    private EntityManager _entityManager;
+	
+	@Inject
+	private EntityManagerFactory entityManagerFactory;
+    
     @Before
     public void init() throws NamingException {
-        this.rtGovRepository = new RTGovRepository(new EntityManagerFactoryDelegate(this.entityManagerFactory) {
-            @Override
-            public EntityManager createEntityManager() {
-                return entityManager;
-            }
-
-            @Override
-            public EntityManager createEntityManager(@SuppressWarnings("rawtypes") Map map) {
-                return entityManager;
-            }
-        });
+        this._situationStore = new JPASituationStore();
+        this._situationStore.setEntityManager(this._entityManager);
+        
+        this._situationStore.setUserTransaction(new UserTransaction() {
+			
+			@Override
+			public void setTransactionTimeout(int arg0) throws SystemException {
+			}
+			
+			@Override
+			public void setRollbackOnly() throws IllegalStateException, SystemException {
+			}
+			
+			@Override
+			public void rollback() throws IllegalStateException, SecurityException, SystemException {
+			}
+			
+			@Override
+			public int getStatus() throws SystemException {
+				return Status.STATUS_ACTIVE;
+			}
+			
+			@Override
+			public void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException,
+					RollbackException, SecurityException, SystemException {
+				
+			}
+			
+			@Override
+			public void begin() throws NotSupportedException, SystemException {
+			}
+		});
+        
+        /*
         InitialContext initialContext = new InitialContext();
 		initialContext.rebind(USER_TRANSACTION, new UserTransaction() {
 			
@@ -91,41 +104,39 @@ public class RTGovRepositoryTest extends AbstractTransactionalJUnit4SpringContex
 			public void begin() throws NotSupportedException, SystemException {
 			}
 		});
+		*/
     }
 
     @Test
-    @org.junit.Ignore
     public void getSituationNotFound() throws Exception {
         try {
-            rtGovRepository.getSituation("1");
+            _situationStore.getSituation("1");
             Assert.fail("NoResultException expected");
         } catch (NoResultException noResultException) {
         }
     }
 
     @Test
-    @org.junit.Ignore
     public void getSituationById() throws Exception {
         Situation situation = new Situation();
         situation.setId("getSituationNotFound");
         situation.setTimestamp(System.currentTimeMillis());
-        entityManager.persist(situation);
-        assertEquals(situation, rtGovRepository.getSituation(situation.getId()));
+        _entityManager.persist(situation);
+        assertEquals(situation, _situationStore.getSituation(situation.getId()));
     }
 
     @Test
-    @org.junit.Ignore
     public void getSituationsByResolutionState() throws Exception {
         Situation openSituation = new Situation();
         openSituation.setId("openSituation");
         openSituation.setTimestamp(System.currentTimeMillis());
         openSituation.getProperties().put("resolutionState", ResolutionState.REOPENED.name());
-        entityManager.persist(openSituation);
+        _entityManager.persist(openSituation);
         Situation closedSituation = new Situation();
         closedSituation.setId("closedSituation");
         closedSituation.setTimestamp(System.currentTimeMillis());
         closedSituation.getProperties().put("resolutionState", ResolutionState.RESOLVED.name());
-        entityManager.persist(closedSituation);
+        _entityManager.persist(closedSituation);
 
         java.util.List<Situation> situations = findSituationsByFilterBean(openSituation);
         Assert.assertNotNull(situations);
@@ -134,90 +145,86 @@ public class RTGovRepositoryTest extends AbstractTransactionalJUnit4SpringContex
     }
     
     @Test
-    @org.junit.Ignore
     public void getSituationsByUnresolvedResolutionState() throws Exception {
         Situation unresolvedSituation = new Situation();
         unresolvedSituation.setId("unresolvedSituation");
         unresolvedSituation.setTimestamp(System.currentTimeMillis());
-        entityManager.persist(unresolvedSituation);
-        SituationsFilterBean situationsFilterBean = new SituationsFilterBean();
-        situationsFilterBean.setResolutionState(ResolutionState.UNRESOLVED.name());
-        java.util.List<Situation> situations = rtGovRepository.getSituations(situationsFilterBean);
+        _entityManager.persist(unresolvedSituation);
+        SituationsQuery sitQuery = new SituationsQuery();
+        sitQuery.setResolutionState(ResolutionState.UNRESOLVED.name());
+        java.util.List<Situation> situations = _situationStore.getSituations(sitQuery);
         Assert.assertNotNull(situations);
         Assert.assertTrue(1 == situations.size());
         Assert.assertEquals(unresolvedSituation, situations.get(0));
     }
 
 	@Test
-    @org.junit.Ignore
 	public void assignSituation() throws Exception {
 		Situation situation = new Situation();
 		situation.setId("assignSituation");
 		situation.setTimestamp(System.currentTimeMillis());
-		entityManager.persist(situation);
-		Situation reload = rtGovRepository.getSituation(situation.getId());
+		_entityManager.persist(situation);
+		Situation reload = _situationStore.getSituation(situation.getId());
 		assertEquals(situation, reload);
 		assertFalse(reload.getProperties().containsKey("assignedTo"));
 		assertFalse(reload.getProperties().containsKey("resolutionState"));
-		rtGovRepository.assignSituation(situation.getId(), "junit");
-		reload = rtGovRepository.getSituation(situation.getId());
+		_situationStore.assignSituation(situation.getId(), "junit");
+		reload = _situationStore.getSituation(situation.getId());
 		assertEquals("junit",reload.getProperties().get("assignedTo"));
 	}
-    
+
 	@Test
-    @org.junit.Ignore
 	public void closeSituationAndRemoveAssignment() throws Exception {
 		Situation situation = new Situation();
 		situation.setId("deassignSituation");
 		situation.setTimestamp(System.currentTimeMillis());
-		entityManager.persist(situation);
-		rtGovRepository.assignSituation(situation.getId(), "junit");
-		Situation reload = rtGovRepository.getSituation(situation.getId());
+		_entityManager.persist(situation);
+		_situationStore.assignSituation(situation.getId(), "junit");
+		Situation reload = _situationStore.getSituation(situation.getId());
 		assertEquals("junit",reload.getProperties().get("assignedTo"));
-		rtGovRepository.closeSituation(situation.getId());
-		reload = rtGovRepository.getSituation(situation.getId());
+		_situationStore.closeSituation(situation.getId());
+		reload = _situationStore.getSituation(situation.getId());
 		assertFalse(reload.getProperties().containsKey("assignedTo"));
 	}
     
 	@Test
-    @org.junit.Ignore
 	public void closeSituationResetOpenResolution() throws Exception {
 		Situation situation = new Situation();
 		situation.setId("deassignSituation");
 		situation.setTimestamp(System.currentTimeMillis());
-		entityManager.persist(situation);
-		rtGovRepository.assignSituation(situation.getId(), "junit");
-		rtGovRepository.updateResolutionState(situation.getId(),IN_PROGRESS);
-		Situation reload = rtGovRepository.getSituation(situation.getId());
-		assertEquals("junit",reload.getProperties().get(ASSIGNED_TO_PROPERTY));
-		rtGovRepository.closeSituation(situation.getId());
-		reload = rtGovRepository.getSituation(situation.getId());
-		assertFalse(reload.getProperties().containsKey(RESOLUTION_STATE_PROPERTY));
-		assertFalse(reload.getProperties().containsKey(ASSIGNED_TO_PROPERTY));
+		_entityManager.persist(situation);
+		_situationStore.assignSituation(situation.getId(), "junit");
+		_situationStore.updateResolutionState(situation.getId(),IN_PROGRESS);
+		Situation reload = _situationStore.getSituation(situation.getId());
+		assertEquals("junit",reload.getProperties().get(SituationStore.ASSIGNED_TO_PROPERTY));
+		_situationStore.closeSituation(situation.getId());
+		reload = _situationStore.getSituation(situation.getId());
+		assertFalse(reload.getProperties().containsKey(SituationStore.RESOLUTION_STATE_PROPERTY));
+		assertFalse(reload.getProperties().containsKey(SituationStore.ASSIGNED_TO_PROPERTY));
 	}
     
 	@Test
-    @org.junit.Ignore
 	public void updateResolutionState() throws Exception {
 		Situation situation = new Situation();
 		situation.setId("updateResolutionState");
 		situation.setTimestamp(System.currentTimeMillis());
-		entityManager.persist(situation);
-		Situation reload = rtGovRepository.getSituation(situation.getId());
-		assertFalse(reload.getProperties().containsKey(RESOLUTION_STATE_PROPERTY));
-		rtGovRepository.updateResolutionState(situation.getId(),ResolutionState.IN_PROGRESS);
-		reload = rtGovRepository.getSituation(situation.getId());
-		assertEquals(ResolutionState.IN_PROGRESS.name(), reload.getProperties().get(RTGovRepository.RESOLUTION_STATE_PROPERTY));
+		_entityManager.persist(situation);
+		Situation reload = _situationStore.getSituation(situation.getId());
+		assertFalse(reload.getProperties().containsKey(SituationStore.RESOLUTION_STATE_PROPERTY));
+		_situationStore.updateResolutionState(situation.getId(),ResolutionState.IN_PROGRESS);
+		reload = _situationStore.getSituation(situation.getId());
+		assertEquals(ResolutionState.IN_PROGRESS.name(), reload.getProperties().get(SituationStore.RESOLUTION_STATE_PROPERTY));
 	}
-
+    
     private java.util.List<Situation> findSituationsByFilterBean(Situation openSituation) throws Exception {
         String resolutionState = openSituation.getProperties().get("resolutionState");
-        SituationsFilterBean situationsFilterBean = new SituationsFilterBean();
-        situationsFilterBean.setResolutionState(resolutionState);
-        java.util.List<Situation> situations = rtGovRepository.getSituations(situationsFilterBean);
+        SituationsQuery sitQuery = new SituationsQuery();
+        sitQuery.setResolutionState(resolutionState);
+        java.util.List<Situation> situations = _situationStore.getSituations(sitQuery);
         return situations;
     }
 
+    /*
     private static class EntityManagerFactoryDelegate implements EntityManagerFactory {
         private final EntityManagerFactory delegate;
 
@@ -261,6 +268,6 @@ public class RTGovRepositoryTest extends AbstractTransactionalJUnit4SpringContex
         public PersistenceUnitUtil getPersistenceUnitUtil() {
             return delegate.getPersistenceUnitUtil();
         }
-
     }
+    */
 }

@@ -38,12 +38,11 @@ import org.overlord.rtgov.ui.client.model.ServiceBean;
 import org.overlord.rtgov.ui.client.model.ServiceSummaryBean;
 import org.overlord.rtgov.ui.client.model.ServicesFilterBean;
 import org.overlord.rtgov.ui.client.model.UiException;
-import org.overlord.rtgov.ui.provider.ServicesProvider;
 import org.switchyard.remote.RemoteInvoker;
 import org.switchyard.remote.RemoteMessage;
 import org.switchyard.remote.http.HttpInvoker;
 
-public class SwitchYardServicesProviderDMR implements ServicesProvider {
+public class SwitchYardServicesProviderDMR { //implements org.overlord.rtgov.ui.provider.ServicesProvider {
 	
     private static volatile Messages i18n = new Messages();
 

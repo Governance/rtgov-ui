@@ -29,6 +29,7 @@ import org.overlord.rtgov.analytics.situation.Situation.Severity;
 import org.overlord.rtgov.analytics.situation.store.SituationStore;
 import org.overlord.rtgov.analytics.situation.store.SituationsQuery;
 import org.overlord.rtgov.ui.client.model.MessageBean;
+import org.overlord.rtgov.ui.client.model.ResolutionState;
 import org.overlord.rtgov.ui.client.model.SituationBean;
 import org.overlord.rtgov.ui.client.model.SituationEventBean;
 import org.overlord.rtgov.ui.client.model.SituationSummaryBean;
@@ -140,6 +141,15 @@ public class RTGovSituationsProviderTest {
 				ret.add(s1);
 				return (ret);
 			}
+			public void assignSituation(String situationId, String userName) throws Exception {
+				throw new Exception("Fail");
+			}
+			public void closeSituation(String situationId) throws Exception {
+				throw new Exception("Fail");
+			}
+			public void updateResolutionState(String situationId, ResolutionState resolutionState) throws Exception {
+				throw new Exception("Fail");
+			}
 		};
 		
 		provider.setSituationStore(sits);
@@ -236,6 +246,15 @@ public class RTGovSituationsProviderTest {
 				return (ret);
 			}
 			public java.util.List<Situation> getSituations(SituationsQuery query) throws Exception {
+				throw new Exception("Fail");
+			}
+			public void assignSituation(String situationId, String userName) throws Exception {
+				throw new Exception("Fail");
+			}
+			public void closeSituation(String situationId) throws Exception {
+				throw new Exception("Fail");
+			}
+			public void updateResolutionState(String situationId, ResolutionState resolutionState) throws Exception {
 				throw new Exception("Fail");
 			}
 		};
