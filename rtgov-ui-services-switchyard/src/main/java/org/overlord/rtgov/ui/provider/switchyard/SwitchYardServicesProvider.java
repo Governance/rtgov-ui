@@ -478,7 +478,7 @@ public class SwitchYardServicesProvider { //implements ServicesProvider {
         return ((name != null) && (name.trim().length() > 0));
     }
 
-    private static String generateId(final String application, final String name) {
+    public static String generateId(final String application, final String name) {
         return escape(application) + ':' + escape(name);
     }
 

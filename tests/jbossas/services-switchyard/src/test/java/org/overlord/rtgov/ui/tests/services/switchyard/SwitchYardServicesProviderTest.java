@@ -15,6 +15,9 @@
  */
 package org.overlord.rtgov.ui.tests.services.switchyard;
 
+import java.util.Collections;
+import java.util.Comparator;
+
 import javax.inject.Inject;
 
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -28,7 +31,13 @@ import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.overlord.rtgov.ui.client.model.QName;
+import org.overlord.rtgov.ui.client.model.ReferenceBean;
+import org.overlord.rtgov.ui.client.model.ReferenceSummaryBean;
+import org.overlord.rtgov.ui.client.model.ServiceBean;
+import org.overlord.rtgov.ui.client.model.ServiceSummaryBean;
+import org.overlord.rtgov.ui.client.model.ServicesFilterBean;
 import org.overlord.rtgov.ui.provider.ServicesProvider;
+import org.overlord.rtgov.ui.provider.switchyard.SwitchYardServicesProvider;
 
 import static org.junit.Assert.*;
 
@@ -38,8 +47,16 @@ public class SwitchYardServicesProviderTest {
 	@Inject
 	private ServicesProvider _provider;
 	
+	// Application names
 	private static final QName ORDER_APP=new QName("urn:switchyard-quickstart-demo:multiapp:0.1.0", "orders");
 	private static final QName CONSUMER_SERVICE_APP=new QName("urn:switchyard-quickstart-demo:multiapp:0.1.0", "consumer-service");
+	
+	// Service names
+	private static final QName ORDERINPUT_SERVICE_NAME=new QName("urn:switchyard-quickstart-demo:multiapp:0.1.0", "OrderInput");
+	private static final QName ORDERSERVICE_SERVICE_NAME=new QName("urn:switchyard-quickstart-demo:multiapp:0.1.0", "OrderService");
+	
+	// Reference name
+	private static final QName ORDERWEBSERVICE_REF_NAME=new QName("urn:switchyard-quickstart-demo:multiapp:0.1.0","OrderWebService");
     
 	@Deployment(name="rtgov-ui-test", order=0)
     public static WebArchive createDeployment1() {
@@ -60,7 +77,7 @@ public class SwitchYardServicesProviderTest {
                 .withoutTransitivity().asSingleFile();
         
         return ShrinkWrap.createFromZipFile(JavaArchive.class,
-        					TestUtils.copyToTmpFile(archiveFile, "OrderService.jar"));
+        					copyToTmpFile(archiveFile, "OrderService.jar"));
     }
    
     @Deployment(name="switchyard-quickstart-demo-multi-order-consumer", order=3, testable=false)
@@ -109,5 +126,201 @@ public class SwitchYardServicesProviderTest {
 			fail("Failed to get app names: "+e.getMessage());
 		}
         
+    }
+    
+    @Test @OperateOnDeployment(value="rtgov-ui-test")
+    public void testFindServicesNoFilter() {
+    	if (_provider == null) {
+    		fail("Provider not set");
+    	}
+    	
+        try {
+			java.util.List<ServiceSummaryBean> ssbs=_provider.findServices(new ServicesFilterBean());
+			
+			if (ssbs.size() != 2) {
+				fail("Should be 2 services: "+ssbs.size());
+			}
+			
+			Collections.sort(ssbs, new Comparator<ServiceSummaryBean>() {
+				public int compare(ServiceSummaryBean o1, ServiceSummaryBean o2) {
+					return o1.getName().compareTo(o2.getName());
+				}
+			});
+			
+			if (!ssbs.get(0).getName().equals(ORDERINPUT_SERVICE_NAME.toString())) {
+				fail("Expecting service name '"+ORDERINPUT_SERVICE_NAME+"', but got: "+ssbs.get(0).getName());
+			}
+			
+			if (!ssbs.get(1).getName().equals(ORDERSERVICE_SERVICE_NAME.toString())) {
+				fail("Expecting service name '"+ORDERSERVICE_SERVICE_NAME+"', but got: "+ssbs.get(1).getName());
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("Failed to find services: "+e.getMessage());
+		}
+        
+    }
+        
+    @Test @OperateOnDeployment(value="rtgov-ui-test")
+    public void testFindServicesFilterApp() {
+    	if (_provider == null) {
+    		fail("Provider not set");
+    	}
+    	
+        try {
+        	ServicesFilterBean filter=new ServicesFilterBean();
+        	filter.setApplicationName(ORDER_APP.toString());
+        	
+			java.util.List<ServiceSummaryBean> ssbs=_provider.findServices(filter);
+			
+			if (ssbs.size() != 1) {
+				fail("Should be 1 services: "+ssbs.size());
+			}
+			
+			if (!ssbs.get(0).getName().equals(ORDERSERVICE_SERVICE_NAME.toString())) {
+				fail("Expecting service name '"+ORDERSERVICE_SERVICE_NAME+"', but got: "+ssbs.get(0).getName());
+			}			
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("Failed to find services: "+e.getMessage());
+		}
+        
+    }
+
+    @Test @OperateOnDeployment(value="rtgov-ui-test")
+    public void testFindServicesFilterService() {
+    	if (_provider == null) {
+    		fail("Provider not set");
+    	}
+    	
+        try {
+        	ServicesFilterBean filter=new ServicesFilterBean();
+        	filter.setServiceName(ORDERINPUT_SERVICE_NAME.toString());
+        	
+			java.util.List<ServiceSummaryBean> ssbs=_provider.findServices(filter);
+			
+			if (ssbs.size() != 1) {
+				fail("Should be 1 services: "+ssbs.size());
+			}
+			
+			if (!ssbs.get(0).getName().equals(ORDERINPUT_SERVICE_NAME.toString())) {
+				fail("Expecting service name '"+ORDERINPUT_SERVICE_NAME+"', but got: "+ssbs.get(0).getName());
+			}			
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("Failed to find services: "+e.getMessage());
+		}
+        
+    }
+
+    @Test @OperateOnDeployment(value="rtgov-ui-test")
+    public void testGetService() {
+    	if (_provider == null) {
+    		fail("Provider not set");
+    	}
+    	
+        try {
+        	String uuid=SwitchYardServicesProvider.generateId(CONSUMER_SERVICE_APP.toString(), ORDERINPUT_SERVICE_NAME.toString());
+        	
+			ServiceBean sb=_provider.getService(uuid);
+			
+			if (sb == null) {
+				fail("No service returned");
+			}
+			
+			if (!sb.getApplication().equals(CONSUMER_SERVICE_APP)) {
+				fail("Service Application name incorrect: "+sb.getApplication());
+			}
+			
+			if (!sb.getName().equals(ORDERINPUT_SERVICE_NAME)) {
+				fail("Service name incorrect: "+sb.getName());
+			}
+			
+			if (sb.getReferences().size() != 1) {
+				fail("Expecting 1 reference: "+sb.getReferences().size());
+			}
+			
+			ReferenceSummaryBean rsb=sb.getReferences().get(0);
+			
+			if (!rsb.getApplication().equals(CONSUMER_SERVICE_APP.toString())) {
+				fail("Reference Application name incorrect");
+			}
+			
+			if (!rsb.getName().equals(ORDERWEBSERVICE_REF_NAME.toString())) {
+				fail("Expecting reference name '"+ORDERWEBSERVICE_REF_NAME+"', but got: "+rsb.getName());
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("Failed to get service: "+e.getMessage());
+		}
+        
+    }
+
+    @Test @OperateOnDeployment(value="rtgov-ui-test")
+    public void testGetReference() {
+    	if (_provider == null) {
+    		fail("Provider not set");
+    	}
+    	
+        try {
+        	String uuid=SwitchYardServicesProvider.generateId(CONSUMER_SERVICE_APP.toString(), ORDERWEBSERVICE_REF_NAME.toString());
+        	
+			ReferenceBean rb=_provider.getReference(uuid);
+			
+			if (rb == null) {
+				fail("No reference returned");
+			}
+			
+			if (!rb.getApplication().equals(CONSUMER_SERVICE_APP)) {
+				fail("Reference Application name incorrect: "+rb.getApplication());
+			}
+			
+			if (!rb.getName().equals(ORDERWEBSERVICE_REF_NAME)) {
+				fail("Reference name incorrect: "+rb.getName());
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("Failed to get reference: "+e.getMessage());
+		}
+        
+    }
+
+    public static java.io.File copyToTmpFile(java.io.File source, String filename) {
+        String tmpdir=System.getProperty("java.io.tmpdir");
+        java.io.File dir=new java.io.File(tmpdir+java.io.File.separator+"rtgovtests"+System.currentTimeMillis());
+        
+        dir.mkdir();
+        
+        dir.deleteOnExit();
+        
+        java.io.File ret=new java.io.File(dir, filename);
+        ret.deleteOnExit();
+        
+        // Copy contents to the tmp file
+        try {
+            java.io.FileInputStream fis=new java.io.FileInputStream(source);
+            java.io.FileOutputStream fos=new java.io.FileOutputStream(ret);
+            
+            byte[] b=new byte[10240];
+            int len=0;
+            
+            while ((len=fis.read(b)) > 0) {
+                fos.write(b, 0, len);
+            }
+            
+            fis.close();
+            
+            fos.flush();
+            fos.close();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail("Failed to copy file '"+filename+"': "+e);
+        }
+        
+        return(ret);
     }
 }
