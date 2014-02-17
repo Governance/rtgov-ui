@@ -18,12 +18,12 @@ package org.overlord.rtgov.ui.server.services;
 import javax.inject.Inject;
 
 import org.jboss.errai.bus.server.annotations.Service;
-import org.jboss.errai.bus.server.annotations.security.RequireAuthentication;
 import org.overlord.rtgov.ui.client.shared.beans.SituationBean;
 import org.overlord.rtgov.ui.client.shared.beans.SituationResultSetBean;
 import org.overlord.rtgov.ui.client.shared.beans.SituationsFilterBean;
 import org.overlord.rtgov.ui.client.shared.exceptions.UiException;
 import org.overlord.rtgov.ui.client.shared.services.ISituationsService;
+import org.overlord.rtgov.ui.server.cdi.RequiresAuthentication;
 
 /**
  * Concrete implementation of the situations service.
@@ -31,7 +31,6 @@ import org.overlord.rtgov.ui.client.shared.services.ISituationsService;
  * @author eric.wittmann@redhat.com
  */
 @Service
-@RequireAuthentication
 public class SituationsService implements ISituationsService {
 
     @Inject ISituationsServiceImpl impl;
@@ -46,6 +45,7 @@ public class SituationsService implements ISituationsService {
      * @see org.overlord.rtgov.ui.client.shared.services.ISituationsService#search(org.overlord.rtgov.ui.client.shared.beans.SituationsFilterBean, int, java.lang.String, boolean)
      */
     @Override
+    @RequiresAuthentication
     public SituationResultSetBean search(SituationsFilterBean filters, int page, String sortColumn,
             boolean ascending) throws UiException {
         return impl.search(filters, page, sortColumn, ascending);
