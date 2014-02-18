@@ -1,6 +1,7 @@
 package org.overlord.rtgov.ui.server.services.impl;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.overlord.rtgov.analytics.situation.Situation;
+import org.overlord.rtgov.ui.client.shared.beans.ResolutionState;
 import org.overlord.rtgov.ui.client.shared.beans.SituationsFilterBean;
 import org.overlord.rtgov.ui.server.services.impl.RTGovRepository.SituationsResult;
 import org.springframework.test.context.ContextConfiguration;
@@ -84,6 +86,48 @@ public class RTGovRepositoryTest extends AbstractTransactionalJUnit4SpringContex
         Assert.assertTrue(1 == situations.getTotalCount());
         Assert.assertEquals(openSituation, situations.getSituations().get(0));
     }
+    
+	@Test
+	public void assignSituation() throws Exception {
+		Situation situation = new Situation();
+		situation.setId("assignSituation");
+		situation.setTimestamp(System.currentTimeMillis());
+		entityManager.persist(situation);
+		Situation reload = rtGovRepository.getSituation(situation.getId());
+		assertEquals(situation, reload);
+		assertFalse(reload.getProperties().containsKey("assignedTo"));
+		assertFalse(reload.getProperties().containsKey("resolutionState"));
+		rtGovRepository.assignSituation(situation.getId(), "junit");
+		reload = rtGovRepository.getSituation(situation.getId());
+		assertEquals("junit",reload.getProperties().get("assignedTo"));
+	}
+    
+	@Test
+	public void deassignSituation() throws Exception {
+		Situation situation = new Situation();
+		situation.setId("deassignSituation");
+		situation.setTimestamp(System.currentTimeMillis());
+		entityManager.persist(situation);
+		rtGovRepository.assignSituation(situation.getId(), "junit");
+		Situation reload = rtGovRepository.getSituation(situation.getId());
+		assertEquals("junit",reload.getProperties().get("assignedTo"));
+		rtGovRepository.deassignSituation(situation.getId());
+		reload = rtGovRepository.getSituation(situation.getId());
+		assertFalse(reload.getProperties().containsKey("assignedTo"));
+	}
+    
+	@Test
+	public void updateResolutionState() throws Exception {
+		Situation situation = new Situation();
+		situation.setId("updateResolutionState");
+		situation.setTimestamp(System.currentTimeMillis());
+		entityManager.persist(situation);
+		Situation reload = rtGovRepository.getSituation(situation.getId());
+		assertFalse(reload.getProperties().containsKey(RTGovRepository.RESOLUTION_STATE_PROPERTY));
+		rtGovRepository.updateResolutionState(situation.getId(),ResolutionState.IN_PROGRESS);
+		reload = rtGovRepository.getSituation(situation.getId());
+		assertEquals(ResolutionState.IN_PROGRESS.name(), reload.getProperties().get(RTGovRepository.RESOLUTION_STATE_PROPERTY));
+	}
 
     private SituationsResult findSituationsByFilterBean(Situation openSituation) throws Exception {
         String resolutionState = openSituation.getProperties().get("resolutionState");

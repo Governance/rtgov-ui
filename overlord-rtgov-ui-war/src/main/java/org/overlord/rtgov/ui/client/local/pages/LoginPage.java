@@ -15,29 +15,32 @@
  */
 package org.overlord.rtgov.ui.client.local.pages;
 
+import static org.jboss.errai.bus.client.api.base.MessageBuilder.createMessage;
+import static org.jboss.errai.bus.client.protocols.SecurityCommands.AuthRequest;
+import static org.jboss.errai.bus.server.service.ErraiService.AUTHORIZATION_SVC_SUBJECT;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import org.jboss.errai.bus.client.ErraiBus;
-import org.jboss.errai.bus.client.api.base.MessageBuilder;
 import org.jboss.errai.bus.client.api.messaging.Message;
+import org.jboss.errai.bus.client.api.messaging.MessageBus;
 import org.jboss.errai.bus.client.api.messaging.MessageCallback;
-import org.jboss.errai.bus.client.protocols.SecurityCommands;
 import org.jboss.errai.bus.client.protocols.SecurityParts;
-import org.jboss.errai.bus.server.service.ErraiService;
 import org.jboss.errai.common.client.protocols.MessageParts;
-import org.jboss.errai.ui.nav.client.local.DefaultPage;
 import org.jboss.errai.ui.nav.client.local.Page;
-import org.jboss.errai.ui.shared.api.annotations.Bound;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
+import org.overlord.rtgov.ui.client.local.ClientMessages;
+import org.overlord.rtgov.ui.client.local.services.NotificationService;
+import org.overlord.rtgov.ui.client.shared.beans.NotificationBean;
+import org.overlord.rtgov.ui.client.shared.exceptions.UiException;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 
@@ -45,44 +48,51 @@ import com.google.gwt.user.client.ui.TextBox;
 @Page(path = "login")
 @Dependent
 public class LoginPage extends AbstractPage {
-
+	private static final String LOGIN_CLIENT_SUBJECT = "LoginClient";
+	@Inject
+	NotificationService notificationService;
+	@Inject
+	ClientMessages i18n;
 	@Inject
 	@DataField
-	private TextBox username;
-
+	TextBox username;
 	@Inject
 	@DataField
-	private PasswordTextBox password;
-
+	PasswordTextBox password;
 	@Inject
-	@DataField
-	private Anchor login;
+	@DataField("btn-login")
+	Button loginButton;
 
-	@EventHandler("login")
+	@EventHandler("btn-login")
 	private void loginClicked(ClickEvent event) {
-		ErraiBus.get().send(MessageBuilder.createMessage(ErraiService.AUTHORIZATION_SVC_SUBJECT)
-		        .command(SecurityCommands.AuthRequest)
-		        .with(MessageParts.ReplyTo, "LoginClient")
-		        .with(SecurityParts.Name, username.getValue())
-		        .with(SecurityParts.Password, password.getValue())
-		        .done().getMessage());
-		event.preventDefault();
+		final NotificationBean notificationBean = notificationService.startProgressNotification(
+				i18n.format("login.title"), //$NON-NLS-1$
+				i18n.format("login.login-msg")); //$NON-NLS-1$
+		MessageBus bus = ErraiBus.get();
+		bus.subscribe(LOGIN_CLIENT_SUBJECT, new MessageCallback() {
+			@Override
+			public void callback(final Message message) {
+				String userName = (String) message.getParts().get(SecurityParts.Name.name());
+				if (message.getCommandType().equals("FailedAuth")) {
+					notificationService.completeProgressNotification(notificationBean.getUuid(),
+							i18n.format("login.login-error"),
+							new UiException(i18n.format("login.login-error-msg", userName)));
+				} else if (message.getCommandType().equals("SuccessfulAuth")) {
+					notificationService.completeProgressNotification(notificationBean.getUuid(),
+							i18n.format("login.login-success"), //$NON-NLS-1$
+							i18n.format("login.login-success-msg", userName));
+					History.back();
+				}
+			}
+		});
+		bus.send(createMessage(AUTHORIZATION_SVC_SUBJECT).command(AuthRequest)
+				.with(MessageParts.ReplyTo, LOGIN_CLIENT_SUBJECT).with(SecurityParts.Name.name(), username.getValue())
+				.with(SecurityParts.Password, password.getValue()).done().getMessage());
 	}
-    
+
 	@PostConstruct
 	public void buildUI() {
-        ErraiBus.get().subscribe("LoginClient", new MessageCallback() {
-          @Override
-          public void callback(final Message message) {
-            if (message.getCommandType().equals("FailedAuth")) {
-            	username.setStyleName(".alert-error");
-            	password.setStyleName("alert-error",true);
-            }
-            else if (message.getCommandType().equals("SuccessfulAuth")) {
-                History.back();
-            }
-          }
-        });
+
 	}
 
 }

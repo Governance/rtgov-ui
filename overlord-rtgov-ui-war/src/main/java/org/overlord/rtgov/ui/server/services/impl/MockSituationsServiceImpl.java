@@ -18,8 +18,11 @@ package org.overlord.rtgov.ui.server.services.impl;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeSet;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
 
@@ -43,6 +46,7 @@ import org.overlord.rtgov.ui.server.services.ISituationsServiceImpl;
 @ApplicationScoped
 @Alternative
 public class MockSituationsServiceImpl implements ISituationsServiceImpl {
+    private Map<String,SituationSummaryBean> idToSituation = new HashMap<String,SituationSummaryBean>();
 
     /**
      * Constructor.
@@ -50,6 +54,55 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
     public MockSituationsServiceImpl() {
     }
     
+    @PostConstruct
+    public void init() {
+    	
+    	SituationSummaryBean situation = new SituationSummaryBean();
+        situation.setSituationId("1"); //$NON-NLS-1$
+        situation.setSeverity("critical"); //$NON-NLS-1$
+        situation.setType("Rate Limit Exceeded"); //$NON-NLS-1$
+        situation.setSubject("{urn:namespace}ImportantService|VeryImportantOperation"); //$NON-NLS-1$
+        situation.setTimestamp(new Date());
+        situation.setDescription("Some description of the Situation goes here in this column so that it can be read by the user."); //$NON-NLS-1$
+        situation.getProperties().put("Property-1", "Property one Value"); //$NON-NLS-1$ //$NON-NLS-2$
+        situation.getProperties().put("Property-2", "Property two Value"); //$NON-NLS-1$ //$NON-NLS-2$
+        situation.getProperties().put("Property-3", "Property three Value"); //$NON-NLS-1$ //$NON-NLS-2$
+        situation.getProperties().put("resolutionState", ResolutionState.UNRESOLVED.name()); //$NON-NLS-1$ //$NON-NLS-2$
+        idToSituation.put(situation.getSituationId(),situation);
+
+        situation = new SituationSummaryBean();
+        situation.setSituationId("2"); //$NON-NLS-1$
+        situation.setSeverity("high"); //$NON-NLS-1$
+        situation.setType("SLA Violation"); //$NON-NLS-1$
+        situation.setSubject("{urn:namespace}ServiceA|OperationB"); //$NON-NLS-1$
+        situation.setTimestamp(new Date());
+        situation.setDescription("Some description of the Situation goes here in this column so that it can be read by the user."); //$NON-NLS-1$
+        situation.getProperties().put("resolutionState", ResolutionState.UNRESOLVED.name()); //$NON-NLS-1$ //$NON-NLS-2$
+        idToSituation.put(situation.getSituationId(),situation);
+
+        situation = new SituationSummaryBean();
+        situation.setSituationId("3"); //$NON-NLS-1$
+        situation.setSeverity("high"); //$NON-NLS-1$
+        situation.setType("SLA Violation"); //$NON-NLS-1$
+        situation.setSubject("{urn:namespace}ServiceA|OperationB"); //$NON-NLS-1$
+        situation.setTimestamp(new Date());
+        situation.setDescription("Some description of the Situation goes here in this column so that it can be read by the user."); //$NON-NLS-1$
+        situation.getProperties().put("Property-1", "Property one Value"); //$NON-NLS-1$ //$NON-NLS-2$
+        situation.getProperties().put("Property-2", "Property two Value"); //$NON-NLS-1$ //$NON-NLS-2$
+        situation.getProperties().put("resolutionState", ResolutionState.UNRESOLVED.name()); //$NON-NLS-1$ //$NON-NLS-2$
+        idToSituation.put(situation.getSituationId(),situation);
+
+        situation = new SituationSummaryBean();
+        situation.setSituationId("4"); //$NON-NLS-1$
+        situation.setSeverity("low"); //$NON-NLS-1$
+        situation.setType("Rate Limit Approaching"); //$NON-NLS-1$
+        situation.setSubject("{urn:namespace}SomeService|AnotherOperation"); //$NON-NLS-1$
+        situation.setTimestamp(new Date());
+        situation.setDescription("Some description of the Situation goes here in this column so that it can be read by the user."); //$NON-NLS-1$
+        situation.getProperties().put("resolutionState", ResolutionState.RESOLVED.name()); //$NON-NLS-1$ //$NON-NLS-2$
+        idToSituation.put(situation.getSituationId(),situation);
+    	
+    }
     /**
      * @see org.overlord.rtgov.ui.server.services.ISituationsServiceImpl#search(SituationsFilterBean, int, String, boolean)
      */
@@ -62,52 +115,7 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
         rval.setItemsPerPage(20);
         rval.setStartIndex(0);
         rval.setTotalResults(4);
-
-        SituationSummaryBean situation = new SituationSummaryBean();
-        situation.setSituationId("1"); //$NON-NLS-1$
-        situation.setSeverity("critical"); //$NON-NLS-1$
-        situation.setType("Rate Limit Exceeded"); //$NON-NLS-1$
-        situation.setSubject("{urn:namespace}ImportantService|VeryImportantOperation"); //$NON-NLS-1$
-        situation.setTimestamp(new Date());
-        situation.setDescription("Some description of the Situation goes here in this column so that it can be read by the user."); //$NON-NLS-1$
-        situation.getProperties().put("Property-1", "Property one Value"); //$NON-NLS-1$ //$NON-NLS-2$
-        situation.getProperties().put("Property-2", "Property two Value"); //$NON-NLS-1$ //$NON-NLS-2$
-        situation.getProperties().put("Property-3", "Property three Value"); //$NON-NLS-1$ //$NON-NLS-2$
-        situation.getProperties().put("resolutionState", ResolutionState.OPEN.toString()); //$NON-NLS-1$ //$NON-NLS-2$
-        situations.add(situation);
-
-        situation = new SituationSummaryBean();
-        situation.setSituationId("2"); //$NON-NLS-1$
-        situation.setSeverity("high"); //$NON-NLS-1$
-        situation.setType("SLA Violation"); //$NON-NLS-1$
-        situation.setSubject("{urn:namespace}ServiceA|OperationB"); //$NON-NLS-1$
-        situation.setTimestamp(new Date());
-        situation.setDescription("Some description of the Situation goes here in this column so that it can be read by the user."); //$NON-NLS-1$
-        situation.getProperties().put("resolutionState", ResolutionState.CLOSED.toString()); //$NON-NLS-1$ //$NON-NLS-2$
-        situations.add(situation);
-
-        situation = new SituationSummaryBean();
-        situation.setSituationId("3"); //$NON-NLS-1$
-        situation.setSeverity("high"); //$NON-NLS-1$
-        situation.setType("SLA Violation"); //$NON-NLS-1$
-        situation.setSubject("{urn:namespace}ServiceA|OperationB"); //$NON-NLS-1$
-        situation.setTimestamp(new Date());
-        situation.setDescription("Some description of the Situation goes here in this column so that it can be read by the user."); //$NON-NLS-1$
-        situation.getProperties().put("Property-1", "Property one Value"); //$NON-NLS-1$ //$NON-NLS-2$
-        situation.getProperties().put("Property-2", "Property two Value"); //$NON-NLS-1$ //$NON-NLS-2$
-        situation.getProperties().put("resolutionState", ResolutionState.IN_PROGRESS.toString()); //$NON-NLS-1$ //$NON-NLS-2$
-        situations.add(situation);
-
-        situation = new SituationSummaryBean();
-        situation.setSituationId("4"); //$NON-NLS-1$
-        situation.setSeverity("low"); //$NON-NLS-1$
-        situation.setType("Rate Limit Approaching"); //$NON-NLS-1$
-        situation.setSubject("{urn:namespace}SomeService|AnotherOperation"); //$NON-NLS-1$
-        situation.setTimestamp(new Date());
-        situation.setDescription("Some description of the Situation goes here in this column so that it can be read by the user."); //$NON-NLS-1$
-        situation.getProperties().put("resolutionState", ResolutionState.RESOLVED.toString()); //$NON-NLS-1$ //$NON-NLS-2$
-        situations.add(situation);
-        
+        situations.addAll(idToSituation.values());
         sort(situations, sortColumn, ascending);
 
         return rval;
@@ -158,17 +166,17 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
      */
     @Override
     public SituationBean get(String situationId) throws UiException {
-        SituationBean situation = new SituationBean();
-        situation.setSituationId("1"); //$NON-NLS-1$
-        situation.setSeverity("critical"); //$NON-NLS-1$
-        situation.setType("Rate Limit Exceeded"); //$NON-NLS-1$
-        situation.setSubject("{urn:namespace}ImportantService|VeryImportantOperation"); //$NON-NLS-1$
-        situation.setTimestamp(new Date());
-        situation.setDescription("Some description of the Situation goes here in this column so that it can be read by the user."); //$NON-NLS-1$
-        situation.getProperties().put("Property-1", "Property one Value"); //$NON-NLS-1$ //$NON-NLS-2$
-        situation.getProperties().put("Property-2", "Property two Value"); //$NON-NLS-1$ //$NON-NLS-2$
-        situation.getProperties().put("Property-3", "Property three Value"); //$NON-NLS-1$ //$NON-NLS-2$
-        situation.getProperties().put("resolutionState", "Open"); //$NON-NLS-1$ //$NON-NLS-2$
+    	
+    	SituationSummaryBean situationSummaryBean = idToSituation.get(situationId);
+
+    	SituationBean situation = new SituationBean();
+        situation.setSituationId(situationSummaryBean.getSituationId()); //$NON-NLS-1$
+        situation.setSeverity(situationSummaryBean.getSeverity()); //$NON-NLS-1$
+        situation.setType(situationSummaryBean.getType()); //$NON-NLS-1$
+        situation.setSubject(situationSummaryBean.getSubject()); //$NON-NLS-1$
+        situation.setTimestamp(situationSummaryBean.getTimestamp());
+        situation.setDescription(situationSummaryBean.getDescription()); //$NON-NLS-1$
+        situation.setProperties(situationSummaryBean.getProperties()); //$NON-NLS-1$ //$NON-NLS-2$
         situation.getContext().put("Context-1", "This is the value of the context 1 property."); //$NON-NLS-1$ //$NON-NLS-2$
         situation.getContext().put("Context-2", "This is the value of the context 2 property."); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -277,5 +285,22 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
         System.out.println("Resubmitted message for situation: " + situationId); //$NON-NLS-1$
         System.out.println(message);
     }
+    
+    @Override
+    public void assign(String situationId, String userName) throws UiException {
+        idToSituation.get(situationId).getProperties().put("assignedTo", userName);
+    }
+
+	@Override
+	public void deassign(String situationId) throws UiException {
+		SituationSummaryBean situationSummaryBean = idToSituation.get(situationId);
+		situationSummaryBean.getProperties().remove("assignedTo");
+		situationSummaryBean.getProperties().remove("resolutionState");
+	}
+
+	@Override
+	public void updateResolutionState(String situationId, ResolutionState resolutionState) {
+		idToSituation.get(situationId).getProperties().put("resolutionState", resolutionState.name());
+	}
 
 }

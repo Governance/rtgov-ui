@@ -15,6 +15,10 @@
  */
 package org.overlord.rtgov.ui.client.local.pages;
 
+import static org.overlord.rtgov.ui.client.shared.beans.ResolutionState.IN_PROGRESS;
+import static org.overlord.rtgov.ui.client.shared.beans.ResolutionState.RESOLVED;
+import static org.overlord.rtgov.ui.client.shared.beans.ResolutionState.WAITING;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -40,6 +44,7 @@ import org.overlord.rtgov.ui.client.local.util.DOMUtil;
 import org.overlord.rtgov.ui.client.local.util.DataBindingDateTimeConverter;
 import org.overlord.rtgov.ui.client.local.widgets.common.SourceEditor;
 import org.overlord.rtgov.ui.client.shared.beans.NotificationBean;
+import org.overlord.rtgov.ui.client.shared.beans.ResolutionState;
 import org.overlord.rtgov.ui.client.shared.beans.SituationBean;
 import org.overlord.rtgov.ui.client.shared.beans.TraceNodeBean;
 import org.overlord.sramp.ui.client.local.widgets.common.HtmlSnippet;
@@ -117,6 +122,16 @@ public class SituationDetailsPage extends AbstractPage {
     SourceEditor messageEditor;
     @Inject  @DataField("btn-resubmit")
     Button resubmitButton;
+    @Inject @DataField("btn-assign")
+    Button assignButton;
+    @Inject @DataField("btn-deassign")
+    Button deassignButton;
+    @Inject @DataField("btn-start")
+    Button startButton;
+    @Inject @DataField("btn-stop")
+    Button stopButton;
+    @Inject @DataField("btn-resolve")
+    Button resolveButton;
 
     @Inject @DataField("situation-details-loading-spinner")
     protected HtmlSnippet loading;
@@ -151,7 +166,11 @@ public class SituationDetailsPage extends AbstractPage {
     protected void onPageShowing() {
         pageContent.addClassName("hide"); //$NON-NLS-1$
         loading.getElement().removeClassName("hide"); //$NON-NLS-1$
-        situationsService.get(id, new IRpcServiceInvocationHandler<SituationBean>() {
+        loadSituationAndUpdatePageData();
+    }
+
+	private void loadSituationAndUpdatePageData() {
+		situationsService.get(id, new IRpcServiceInvocationHandler<SituationBean>() {
             @Override
             public void onReturn(SituationBean data) {
                 updateMetaData(data);
@@ -161,7 +180,7 @@ public class SituationDetailsPage extends AbstractPage {
                 notificationService.sendErrorNotification(i18n.format("situation-details.error-getting-detail-info"), error); //$NON-NLS-1$
             }
         });
-    }
+	}
 
     /**
      * Called when the situation is loaded.
@@ -179,6 +198,32 @@ public class SituationDetailsPage extends AbstractPage {
             messageEditor.setValue(situation.getMessage().getContent());
         } else {
             messageEditor.setValue(""); //$NON-NLS-1$
+        }
+        if (situation.getAssignedTo() != null) {
+			assignButton.getElement().addClassName("hide"); //$NON-NLS-1$
+			deassignButton.getElement().removeClassName("hide"); //$NON-NLS-1$
+			if (ResolutionState.UNRESOLVED == ResolutionState.valueOf(situation.getResolutionState())
+					|| ResolutionState.WAITING == ResolutionState.valueOf(situation.getResolutionState())) {
+				startButton.getElement().removeClassName("hide");
+			} else {
+				startButton.getElement().addClassName("hide");
+			}
+			if (ResolutionState.IN_PROGRESS == ResolutionState.valueOf(situation.getResolutionState())) {
+				stopButton.getElement().removeClassName("hide");
+			} else {
+				stopButton.getElement().addClassName("hide");
+			}
+			if (ResolutionState.IN_PROGRESS == ResolutionState.valueOf(situation.getResolutionState())) {
+				resolveButton.getElement().removeClassName("hide");
+			} else {
+				resolveButton.getElement().addClassName("hide");
+			}
+        } else {
+        	deassignButton.getElement().addClassName("hide"); //$NON-NLS-1$
+        	startButton.getElement().addClassName("hide");
+        	stopButton.getElement().addClassName("hide");
+        	resolveButton.getElement().addClassName("hide");
+        	assignButton.getElement().removeClassName("hide"); //$NON-NLS-1$
         }
     }
 
@@ -216,5 +261,35 @@ public class SituationDetailsPage extends AbstractPage {
             }
         });
     }
+    
+	@EventHandler("btn-assign")
+	protected void onAssignButtonClick(ClickEvent event) {
+		situationsService.assign(id, IRpcServiceInvocationHandler.VOID);
+		loadSituationAndUpdatePageData();
+	}
+
+	@EventHandler("btn-deassign")
+	protected void onDeassignButtonClick(ClickEvent event) {
+		situationsService.deassign(id, IRpcServiceInvocationHandler.VOID);
+		loadSituationAndUpdatePageData();
+	}
+
+	@EventHandler("btn-start")
+	protected void onStartButtonClick(ClickEvent event) {
+		situationsService.updateResolutionState(id, IN_PROGRESS.name(), IRpcServiceInvocationHandler.VOID);
+		loadSituationAndUpdatePageData();
+	}
+
+	@EventHandler("btn-stop")
+	protected void onStopButtonClick(ClickEvent event) {
+		situationsService.updateResolutionState(id, WAITING.name(), IRpcServiceInvocationHandler.VOID);
+		loadSituationAndUpdatePageData();
+	}
+
+	@EventHandler("btn-resolve")
+	protected void onResolveButtonClick(ClickEvent event) {
+		situationsService.updateResolutionState(id, RESOLVED.name(), IRpcServiceInvocationHandler.VOID);
+		loadSituationAndUpdatePageData();
+	}
 
 }

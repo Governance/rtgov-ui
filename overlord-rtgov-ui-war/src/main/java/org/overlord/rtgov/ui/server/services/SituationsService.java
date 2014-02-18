@@ -15,9 +15,14 @@
  */
 package org.overlord.rtgov.ui.server.services;
 
+import static org.jboss.errai.bus.server.api.RpcContext.getQueueSession;
+
 import javax.inject.Inject;
 
 import org.jboss.errai.bus.server.annotations.Service;
+import org.jboss.errai.bus.server.security.auth.AuthSubject;
+import org.jboss.errai.bus.server.service.ErraiService;
+import org.overlord.rtgov.ui.client.shared.beans.ResolutionState;
 import org.overlord.rtgov.ui.client.shared.beans.SituationBean;
 import org.overlord.rtgov.ui.client.shared.beans.SituationResultSetBean;
 import org.overlord.rtgov.ui.client.shared.beans.SituationsFilterBean;
@@ -45,7 +50,6 @@ public class SituationsService implements ISituationsService {
      * @see org.overlord.rtgov.ui.client.shared.services.ISituationsService#search(org.overlord.rtgov.ui.client.shared.beans.SituationsFilterBean, int, java.lang.String, boolean)
      */
     @Override
-    @RequiresAuthentication
     public SituationResultSetBean search(SituationsFilterBean filters, int page, String sortColumn,
             boolean ascending) throws UiException {
         return impl.search(filters, page, sortColumn, ascending);
@@ -66,5 +70,24 @@ public class SituationsService implements ISituationsService {
     public void resubmit(String situationId, String message) throws UiException {
         impl.resubmit(situationId, message);
     }
+
+	@Override
+	@RequiresAuthentication
+	public void assign(String situationId) throws UiException {
+		AuthSubject authSubject = getQueueSession().getAttribute(AuthSubject.class, ErraiService.SESSION_AUTH_DATA);
+		impl.assign(situationId, authSubject.getUsername());
+	}
+
+	@Override
+	@RequiresAuthentication
+	public void deassign(String situationId) throws UiException {
+		impl.deassign(situationId);
+	}
+
+	@Override
+	@RequiresAuthentication
+	public void updateResolutionState(String situationId, String resolutionState) throws UiException {
+		impl.updateResolutionState(situationId, ResolutionState.valueOf(resolutionState));
+	}
 
 }
