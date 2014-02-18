@@ -2,6 +2,9 @@ package org.overlord.rtgov.ui.server.services.impl;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
+import static org.overlord.rtgov.ui.client.shared.beans.ResolutionState.IN_PROGRESS;
+import static org.overlord.rtgov.ui.server.services.impl.RTGovRepository.ASSIGNED_TO_PROPERTY;
+import static org.overlord.rtgov.ui.server.services.impl.RTGovRepository.RESOLUTION_STATE_PROPERTY;
 
 import java.util.Map;
 
@@ -117,13 +120,29 @@ public class RTGovRepositoryTest extends AbstractTransactionalJUnit4SpringContex
 	}
     
 	@Test
+	public void deassignSituationResetOpenResolution() throws Exception {
+		Situation situation = new Situation();
+		situation.setId("deassignSituation");
+		situation.setTimestamp(System.currentTimeMillis());
+		entityManager.persist(situation);
+		rtGovRepository.assignSituation(situation.getId(), "junit");
+		rtGovRepository.updateResolutionState(situation.getId(),IN_PROGRESS);
+		Situation reload = rtGovRepository.getSituation(situation.getId());
+		assertEquals("junit",reload.getProperties().get(ASSIGNED_TO_PROPERTY));
+		rtGovRepository.deassignSituation(situation.getId());
+		reload = rtGovRepository.getSituation(situation.getId());
+		assertFalse(reload.getProperties().containsKey(RESOLUTION_STATE_PROPERTY));
+		assertFalse(reload.getProperties().containsKey(ASSIGNED_TO_PROPERTY));
+	}
+    
+	@Test
 	public void updateResolutionState() throws Exception {
 		Situation situation = new Situation();
 		situation.setId("updateResolutionState");
 		situation.setTimestamp(System.currentTimeMillis());
 		entityManager.persist(situation);
 		Situation reload = rtGovRepository.getSituation(situation.getId());
-		assertFalse(reload.getProperties().containsKey(RTGovRepository.RESOLUTION_STATE_PROPERTY));
+		assertFalse(reload.getProperties().containsKey(RESOLUTION_STATE_PROPERTY));
 		rtGovRepository.updateResolutionState(situation.getId(),ResolutionState.IN_PROGRESS);
 		reload = rtGovRepository.getSituation(situation.getId());
 		assertEquals(ResolutionState.IN_PROGRESS.name(), reload.getProperties().get(RTGovRepository.RESOLUTION_STATE_PROPERTY));
