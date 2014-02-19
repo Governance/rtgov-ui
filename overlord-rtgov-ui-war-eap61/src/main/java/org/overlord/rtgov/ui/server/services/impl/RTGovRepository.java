@@ -15,6 +15,9 @@
  */
 package org.overlord.rtgov.ui.server.services.impl;
 
+import static org.overlord.rtgov.ui.client.shared.beans.ResolutionState.RESOLVED;
+
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,6 +31,7 @@ import org.overlord.rtgov.activity.model.ActivityTypeId;
 import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.analytics.situation.Situation;
 import org.overlord.rtgov.analytics.situation.Situation.Severity;
+import org.overlord.rtgov.ui.client.shared.beans.ResolutionState;
 import org.overlord.rtgov.ui.client.shared.beans.SituationsFilterBean;
 import org.overlord.rtgov.ui.server.i18n.Messages;
 
@@ -37,7 +41,9 @@ import org.overlord.rtgov.ui.server.i18n.Messages;
  */
 public class RTGovRepository {
 
-    private static final int MILLISECONDS_PER_DAY = 86400000;
+	public static final String RESOLUTION_STATE_PROPERTY = "resolutionState";
+	public static final String ASSIGNED_TO_PROPERTY = "assignedTo";
+	private static final int MILLISECONDS_PER_DAY = 86400000;
 	private static final String OVERLORD_RTGOV_DB = "overlord-rtgov-situations"; //$NON-NLS-1$
     private static volatile Messages i18n = new Messages();
 
@@ -309,4 +315,49 @@ public class RTGovRepository {
     		return (_totalCount);
     	}
     }
+
+	public void assignSituation(String situationId, String userName) {
+		if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest(i18n.format("RTGovRepository.AssSit", situationId)); //$NON-NLS-1$
+        }
+        EntityManager em=getEntityManager();
+        try {
+        	Situation situation = em.find(Situation.class, situationId);
+            situation.getProperties().put(ASSIGNED_TO_PROPERTY, userName);
+        } finally {
+            closeEntityManager(em);
+        }
+	}
+
+	public void closeSituation(String situationId) {
+		if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest(i18n.format("RTGovRepository.DeassSit", situationId)); //$NON-NLS-1$
+        }
+        EntityManager em=getEntityManager();
+        try {
+        	Situation situation = em.find(Situation.class, situationId);
+            Map<String, String> properties = situation.getProperties();
+			properties.remove(ASSIGNED_TO_PROPERTY);
+			// remove current state if not already resolved
+			String resolutionState = properties.get(RESOLUTION_STATE_PROPERTY);
+			if (resolutionState != null && RESOLVED != ResolutionState.valueOf(resolutionState)) {
+				properties.remove(RESOLUTION_STATE_PROPERTY);
+			}
+        } finally {
+            closeEntityManager(em);
+        }
+	}
+
+	public void updateResolutionState(String situationId, ResolutionState resolutionState) {
+		if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest(i18n.format("RTGovRepository.UpdRState", situationId)); //$NON-NLS-1$
+        }
+        EntityManager em=getEntityManager();
+        try {
+        	Situation situation = em.find(Situation.class, situationId);
+            situation.getProperties().put(RESOLUTION_STATE_PROPERTY,resolutionState.name());
+        } finally {
+            closeEntityManager(em);
+        }
+	}
 }

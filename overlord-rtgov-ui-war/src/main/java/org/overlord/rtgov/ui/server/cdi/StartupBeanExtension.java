@@ -27,24 +27,24 @@ import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessBean;
 
 /**
- *
+ * 
  * @author eric.wittmann@redhat.com
  */
 public class StartupBeanExtension implements Extension {
+	private final Set<Bean<?>> startupBeans = new LinkedHashSet<Bean<?>>();
 
-    private final Set<Bean<?>> startupBeans = new LinkedHashSet<Bean<?>>();
+	<X> void processBean(@Observes ProcessBean<X> event) {
+		if (event.getAnnotated().isAnnotationPresent(Startup.class)
+		        && event.getAnnotated().isAnnotationPresent(ApplicationScoped.class)) {
+			startupBeans.add(event.getBean());
+		}
+	}
 
-    <X> void processBean(@Observes ProcessBean<X> event) {
-        if (event.getAnnotated().isAnnotationPresent(Startup.class)
-                && event.getAnnotated().isAnnotationPresent(ApplicationScoped.class)) {
-            startupBeans.add(event.getBean());
-        }
-    }
-
-    void afterDeploymentValidation(@Observes AfterDeploymentValidation event, BeanManager manager) {
-        for (Bean<?> bean : startupBeans) {
-            // the call to toString() is a cheat to force the bean to be initialized
-            manager.getReference(bean, bean.getBeanClass(), manager.createCreationalContext(bean)).toString();
-        }
-    }
+	void afterDeploymentValidation(@Observes AfterDeploymentValidation event, BeanManager manager) {
+		for (Bean<?> bean : startupBeans) {
+			// the call to toString() is a cheat to force the bean to be
+			// initialized
+			manager.getReference(bean, bean.getBeanClass(), manager.createCreationalContext(bean)).toString();
+		}
+	}
 }

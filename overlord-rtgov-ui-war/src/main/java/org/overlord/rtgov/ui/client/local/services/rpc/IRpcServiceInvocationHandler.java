@@ -33,5 +33,17 @@ public interface IRpcServiceInvocationHandler<T> {
      * @param error
      */
     public void onError(Throwable error);
+    
+	IRpcServiceInvocationHandler<Void> VOID = new IRpcServiceInvocationHandler<Void>() {
+
+		@Override
+		public void onReturn(Void data) {
+		}
+
+		@Override
+		public void onError(Throwable error) {
+
+		}
+	};
 
 }

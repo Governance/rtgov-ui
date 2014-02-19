@@ -24,6 +24,7 @@ import org.jboss.errai.common.client.api.RemoteCallback;
 import org.overlord.rtgov.ui.client.local.services.rpc.DelegatingErrorCallback;
 import org.overlord.rtgov.ui.client.local.services.rpc.DelegatingRemoteCallback;
 import org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHandler;
+import org.overlord.rtgov.ui.client.shared.beans.ResolutionState;
 import org.overlord.rtgov.ui.client.shared.beans.SituationBean;
 import org.overlord.rtgov.ui.client.shared.beans.SituationResultSetBean;
 import org.overlord.rtgov.ui.client.shared.beans.SituationsFilterBean;
@@ -89,5 +90,47 @@ public class SituationsRpcService {
             errorCallback.error(null, e);
         }
     }
+    
+    /**
+     * @see org.overlord.rtgov.ui.client.shared.services.ISituationsService#assign(String)
+     */
+    public void assign(String situationId, IRpcServiceInvocationHandler<Void> handler) {
+        RemoteCallback<Void> successCallback = new DelegatingRemoteCallback<Void>(handler);
+        ErrorCallback<?> errorCallback = new DelegatingErrorCallback(handler);
+        try {
+            remoteSituationsService.call(successCallback, errorCallback).assign(situationId);
+        } catch (UiException e) {
+            errorCallback.error(null, e);
+        }
+    }
+    
+    /**
+     * @see org.overlord.rtgov.ui.client.shared.services.ISituationsService#deassign(String)
+     */
+    public void close(String situationId, IRpcServiceInvocationHandler<Void> handler) {
+        RemoteCallback<Void> successCallback = new DelegatingRemoteCallback<Void>(handler);
+        ErrorCallback<?> errorCallback = new DelegatingErrorCallback(handler);
+        try {
+            remoteSituationsService.call(successCallback, errorCallback).deassign(situationId);
+        } catch (UiException e) {
+            errorCallback.error(null, e);
+        }
+    }
+
+	/**
+	 * @see org.overlord.rtgov.ui.client.shared.services.ISituationsService#updateResolutionState(String,
+	 *      ResolutionState)
+	 */
+	public void updateResolutionState(String situationId, String resolutionState,
+			IRpcServiceInvocationHandler<Void> handler) {
+		RemoteCallback<Void> successCallback = new DelegatingRemoteCallback<Void>(handler);
+		ErrorCallback<?> errorCallback = new DelegatingErrorCallback(handler);
+		try {
+			remoteSituationsService.call(successCallback, errorCallback).updateResolutionState(situationId,
+					resolutionState);
+		} catch (UiException e) {
+			errorCallback.error(null, e);
+		}
+	}
 
 }

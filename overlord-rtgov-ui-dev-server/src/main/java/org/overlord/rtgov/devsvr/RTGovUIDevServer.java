@@ -19,9 +19,16 @@ import java.util.EnumSet;
 
 import javax.servlet.DispatcherType;
 
+import org.eclipse.jetty.security.ConstraintMapping;
+import org.eclipse.jetty.security.ConstraintSecurityHandler;
+import org.eclipse.jetty.security.HashLoginService;
+import org.eclipse.jetty.security.SecurityHandler;
+import org.eclipse.jetty.security.authentication.BasicAuthenticator;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.util.security.Constraint;
+import org.eclipse.jetty.util.security.Credential;
 import org.jboss.errai.bus.server.servlet.DefaultBlockingServlet;
 import org.jboss.weld.environment.servlet.BeanManagerResourceBindingListener;
 import org.jboss.weld.environment.servlet.Listener;
@@ -36,6 +43,8 @@ import org.overlord.commons.gwt.server.filters.GWTCacheControlFilter;
 import org.overlord.commons.gwt.server.filters.ResourceCacheControlFilter;
 import org.overlord.commons.ui.header.OverlordHeaderDataJS;
 import org.overlord.rtgov.ui.server.RtgovUI;
+
+import com.google.common.collect.Lists;
 
 /**
  * A dev server for DTGov.
@@ -148,10 +157,42 @@ public class RTGovUIDevServer extends ErraiDevServer {
             rtgovUI.addServlet(resources, "*." + fileType);
         }
 
+        rtgovUI.setSecurityHandler(createSecurityHandler());
         handlers.addHandler(rtgovUI);
     }
 
-    /**
+	/**
+	 * Creates a basic auth security handler.
+	 */
+	private SecurityHandler createSecurityHandler() {
+		HashLoginService hashLoginService = new HashLoginService();
+		for (String user : Lists.newArrayList("testuser_1","testuser_2","admin_1","admin_2")) {
+			String[] roles = new String[] { "ROLE_USER" };
+			if (user.startsWith("admin"))
+				roles = new String[] { "ROLE_ADMIN" };
+			hashLoginService.putUser(user, Credential.getCredential(user), roles);
+		}
+		hashLoginService.setName("RTGovRealm");
+		Constraint constraint = new Constraint();
+		constraint.setName(Constraint.__BASIC_AUTH);
+		constraint.setRoles(new String[] { "ROLE_USER", "ROLE_ADMIN" });
+		constraint.setAuthenticate(true);
+		String[] protectedMethods = new String[] { "GET", "HEAD", "POST", "PUT", "DELETE", "TRACE", "CONNECT" };
+		ConstraintSecurityHandler csh = new ConstraintSecurityHandler();
+		csh.setAuthenticator(new BasicAuthenticator());
+		csh.setRealmName("RTGovRealm");
+		for (String method : protectedMethods) {
+			ConstraintMapping cm = new ConstraintMapping();
+			cm.setConstraint(constraint);
+			cm.setPathSpec("/*");
+			cm.setMethod(method);
+			csh.addConstraintMapping(cm);
+		}
+		csh.setLoginService(hashLoginService);
+		return csh;
+	}
+
+	/**
      * @see org.overlord.commons.dev.server.DevServer#postStart(org.overlord.commons.dev.server.DevServerEnvironment)
      */
     @Override

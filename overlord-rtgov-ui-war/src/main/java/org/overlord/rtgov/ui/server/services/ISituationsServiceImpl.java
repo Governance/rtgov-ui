@@ -16,6 +16,7 @@
 package org.overlord.rtgov.ui.server.services;
 
 import org.jboss.errai.bus.server.annotations.Remote;
+import org.overlord.rtgov.ui.client.shared.beans.ResolutionState;
 import org.overlord.rtgov.ui.client.shared.beans.SituationBean;
 import org.overlord.rtgov.ui.client.shared.beans.SituationResultSetBean;
 import org.overlord.rtgov.ui.client.shared.beans.SituationsFilterBean;
@@ -54,5 +55,27 @@ public interface ISituationsServiceImpl {
      * @throws UiException
      */
     public void resubmit(String situationId, String message) throws UiException;
+    
+    /**
+     * Assigns a situation to the currently logged in user.
+     * @param situationId
+     * @param userName
+     * @throws UiException
+     */
+    void assign(String situationId, String userName) throws UiException;
+    
+    /**
+     * Deassign (close) a situation from an assigned user.
+     * @param situationId
+     * @throws UiException
+     */
+    void close(String situationId) throws UiException;
+
+    /**
+     * Updates a situation's resolutionState.
+     * @param situationId
+     * @throws UiException
+     */
+	void updateResolutionState(String situationId, ResolutionState resolutionState);
 
 }

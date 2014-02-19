@@ -147,11 +147,22 @@ public class SituationSummaryBean {
 	 * @return the resolutionState
 	 */
     public String getResolutionState() {
-        String resolutionState = ResolutionState.OPEN.toString();
+        String resolutionState = ResolutionState.UNRESOLVED.name();
         if (properties != null && properties.get("resolutionState") != null) {
             resolutionState = properties.get("resolutionState");
         }
         return resolutionState;
+    }
+    
+    /**
+	 * @return the assignedTo User
+	 */
+    public String getAssignedTo() {
+        String assignedTo = null;
+        if (properties != null && properties.get("assignedTo") != null) {
+        	assignedTo = properties.get("assignedTo");
+        }
+        return assignedTo;
     }
 
 	/**

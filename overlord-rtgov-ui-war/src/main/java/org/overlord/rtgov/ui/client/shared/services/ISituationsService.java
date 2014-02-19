@@ -53,5 +53,24 @@ public interface ISituationsService {
      * @throws UiException
      */
     public void resubmit(String situationId, String message) throws UiException;
+    /**
+     * Assign a situation to the current uUser.
+     * @param situationId
+     * @throws UiException
+     */
+    public void assign(String situationId) throws UiException;
+    /**
+     * Deassign a situation from an assigned user.
+     * @param situationId
+     * @throws UiException
+     */
+    public void deassign(String situationId) throws UiException;
+
+    /**
+     * Updates a situation with the given resolutionState.
+     * @param situationId
+     * @throws UiException
+     */
+	public void updateResolutionState(String situationId, String resolutionState) throws UiException;
 
 }

@@ -15,6 +15,11 @@
  */
 package org.overlord.rtgov.ui.client.local.pages;
 
+import static org.overlord.rtgov.ui.client.shared.beans.ResolutionState.IN_PROGRESS;
+import static org.overlord.rtgov.ui.client.shared.beans.ResolutionState.REOPENED;
+import static org.overlord.rtgov.ui.client.shared.beans.ResolutionState.RESOLVED;
+import static org.overlord.rtgov.ui.client.shared.beans.ResolutionState.WAITING;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -40,6 +45,7 @@ import org.overlord.rtgov.ui.client.local.util.DOMUtil;
 import org.overlord.rtgov.ui.client.local.util.DataBindingDateTimeConverter;
 import org.overlord.rtgov.ui.client.local.widgets.common.SourceEditor;
 import org.overlord.rtgov.ui.client.shared.beans.NotificationBean;
+import org.overlord.rtgov.ui.client.shared.beans.ResolutionState;
 import org.overlord.rtgov.ui.client.shared.beans.SituationBean;
 import org.overlord.rtgov.ui.client.shared.beans.TraceNodeBean;
 import org.overlord.sramp.ui.client.local.widgets.common.HtmlSnippet;
@@ -117,6 +123,18 @@ public class SituationDetailsPage extends AbstractPage {
     SourceEditor messageEditor;
     @Inject  @DataField("btn-resubmit")
     Button resubmitButton;
+    @Inject @DataField("btn-assign")
+    Button assignButton;
+    @Inject @DataField("btn-close")
+    Button closeButton;
+    @Inject @DataField("btn-start")
+    Button startButton;
+    @Inject @DataField("btn-stop")
+    Button stopButton;
+    @Inject @DataField("btn-resolve")
+    Button resolveButton;
+    @Inject @DataField("btn-reopen")
+    Button reopenButton;
 
     @Inject @DataField("situation-details-loading-spinner")
     protected HtmlSnippet loading;
@@ -151,7 +169,11 @@ public class SituationDetailsPage extends AbstractPage {
     protected void onPageShowing() {
         pageContent.addClassName("hide"); //$NON-NLS-1$
         loading.getElement().removeClassName("hide"); //$NON-NLS-1$
-        situationsService.get(id, new IRpcServiceInvocationHandler<SituationBean>() {
+        loadSituationAndUpdatePageData();
+    }
+
+	private void loadSituationAndUpdatePageData() {
+		situationsService.get(id, new IRpcServiceInvocationHandler<SituationBean>() {
             @Override
             public void onReturn(SituationBean data) {
                 updateMetaData(data);
@@ -161,7 +183,7 @@ public class SituationDetailsPage extends AbstractPage {
                 notificationService.sendErrorNotification(i18n.format("situation-details.error-getting-detail-info"), error); //$NON-NLS-1$
             }
         });
-    }
+	}
 
     /**
      * Called when the situation is loaded.
@@ -179,6 +201,41 @@ public class SituationDetailsPage extends AbstractPage {
             messageEditor.setValue(situation.getMessage().getContent());
         } else {
             messageEditor.setValue(""); //$NON-NLS-1$
+        }
+		if (situation.isAssignedToCurrentUser() || (situation.getAssignedTo() != null && situation.isTakeoverPossible())) {
+			if (situation.isAssignedToCurrentUser()) {
+				assignButton.getElement().addClassName("hide");
+			} else {
+				assignButton.getElement().removeClassName("hide");
+			}
+			closeButton.getElement().removeClassName("hide"); //$NON-NLS-1$
+			ResolutionState resolutionState = ResolutionState.valueOf(situation.getResolutionState());
+			if (ResolutionState.UNRESOLVED == resolutionState
+					|| ResolutionState.WAITING == resolutionState
+					|| ResolutionState.REOPENED == resolutionState) {
+				startButton.getElement().removeClassName("hide");
+			} else {
+				startButton.getElement().addClassName("hide");
+			}
+			if (ResolutionState.IN_PROGRESS == resolutionState) {
+				stopButton.getElement().removeClassName("hide");
+				resolveButton.getElement().removeClassName("hide");
+			} else {
+				resolveButton.getElement().addClassName("hide");
+				stopButton.getElement().addClassName("hide");
+			}
+			if (ResolutionState.RESOLVED == resolutionState) {
+				reopenButton.getElement().removeClassName("hide");
+			} else {
+				reopenButton.getElement().addClassName("hide");
+			}
+        } else {
+        	closeButton.getElement().addClassName("hide"); 
+        	startButton.getElement().addClassName("hide");
+        	reopenButton.getElement().addClassName("hide");
+        	stopButton.getElement().addClassName("hide");
+        	resolveButton.getElement().addClassName("hide");
+        	assignButton.getElement().removeClassName("hide"); 
         }
     }
 
@@ -216,5 +273,41 @@ public class SituationDetailsPage extends AbstractPage {
             }
         });
     }
+    
+	@EventHandler("btn-assign")
+	protected void onAssignButtonClick(ClickEvent event) {
+		situationsService.assign(id, IRpcServiceInvocationHandler.VOID);
+		loadSituationAndUpdatePageData();
+	}
+
+	@EventHandler("btn-close")
+	protected void onDeassignButtonClick(ClickEvent event) {
+		situationsService.close(id, IRpcServiceInvocationHandler.VOID);
+		loadSituationAndUpdatePageData();
+	}
+
+	@EventHandler("btn-start")
+	protected void onStartButtonClick(ClickEvent event) {
+		situationsService.updateResolutionState(id, IN_PROGRESS.name(), IRpcServiceInvocationHandler.VOID);
+		loadSituationAndUpdatePageData();
+	}
+
+	@EventHandler("btn-stop")
+	protected void onStopButtonClick(ClickEvent event) {
+		situationsService.updateResolutionState(id, WAITING.name(), IRpcServiceInvocationHandler.VOID);
+		loadSituationAndUpdatePageData();
+	}
+
+	@EventHandler("btn-resolve")
+	protected void onResolveButtonClick(ClickEvent event) {
+		situationsService.updateResolutionState(id, RESOLVED.name(), IRpcServiceInvocationHandler.VOID);
+		loadSituationAndUpdatePageData();
+	}
+
+	@EventHandler("btn-reopen")
+	protected void onReopenButtonClick(ClickEvent event) {
+		situationsService.updateResolutionState(id, REOPENED.name(), IRpcServiceInvocationHandler.VOID);
+		loadSituationAndUpdatePageData();
+	}
 
 }

@@ -15,9 +15,13 @@
  */
 package org.overlord.rtgov.ui.server.services;
 
+import static org.jboss.errai.bus.server.api.RpcContext.getServletRequest;
+
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 import org.jboss.errai.bus.server.annotations.Service;
+import org.overlord.rtgov.ui.client.shared.beans.ResolutionState;
 import org.overlord.rtgov.ui.client.shared.beans.SituationBean;
 import org.overlord.rtgov.ui.client.shared.beans.SituationResultSetBean;
 import org.overlord.rtgov.ui.client.shared.beans.SituationsFilterBean;
@@ -52,17 +56,42 @@ public class SituationsService implements ISituationsService {
     /**
      * @see org.overlord.ISituationsService.ui.client.shared.services.ISituationsService#getService(java.lang.String)
      */
-    @Override
-    public SituationBean get(String situationId) throws UiException {
-        return impl.get(situationId);
-    }
-    
-    /**
+	@Override
+	public SituationBean get(String situationId) throws UiException {
+		HttpServletRequest servletRequest = (HttpServletRequest) getServletRequest();
+		SituationBean situationBean = impl.get(situationId);
+		if (situationBean.getAssignedTo() != null
+				&& situationBean.getAssignedTo().equals(servletRequest.getRemoteUser())) {
+			situationBean.setAssignedToCurrentUser(true);
+		}
+		if (servletRequest.isUserInRole("ROLE_ADMIN")) {
+			situationBean.setTakeoverPossible(true);
+		}
+		return situationBean;
+	}
+
+	/**
      * @see org.overlord.rtgov.ui.client.shared.services.ISituationsService#resubmit(java.lang.String, java.lang.String)
      */
     @Override
     public void resubmit(String situationId, String message) throws UiException {
         impl.resubmit(situationId, message);
     }
+
+	@Override
+	public void assign(String situationId) throws UiException {
+		HttpServletRequest servletRequest = (HttpServletRequest) getServletRequest();
+		impl.assign(situationId, servletRequest.getRemoteUser());
+	}
+
+	@Override
+	public void deassign(String situationId) throws UiException {
+		impl.close(situationId);
+	}
+
+	@Override
+	public void updateResolutionState(String situationId, String resolutionState) throws UiException {
+		impl.updateResolutionState(situationId, ResolutionState.valueOf(resolutionState));
+	}
 
 }

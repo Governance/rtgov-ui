@@ -37,6 +37,7 @@ import org.overlord.rtgov.call.trace.model.Task;
 import org.overlord.rtgov.call.trace.model.TraceNode;
 import org.overlord.rtgov.ui.client.shared.beans.CallTraceBean;
 import org.overlord.rtgov.ui.client.shared.beans.MessageBean;
+import org.overlord.rtgov.ui.client.shared.beans.ResolutionState;
 import org.overlord.rtgov.ui.client.shared.beans.SituationBean;
 import org.overlord.rtgov.ui.client.shared.beans.SituationResultSetBean;
 import org.overlord.rtgov.ui.client.shared.beans.SituationSummaryBean;
@@ -367,4 +368,19 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
 		}
 
     }
+
+	@Override
+	public void assign(String situationId,String userName) throws UiException {
+		_repository.assignSituation(situationId, userName);
+	}
+
+	@Override
+	public void close(String situationId) throws UiException {
+		_repository.closeSituation(situationId);
+	}
+
+	@Override
+	public void updateResolutionState(String situationId, ResolutionState resolutionState) {
+		_repository.updateResolutionState(situationId, resolutionState);
+	}
 }

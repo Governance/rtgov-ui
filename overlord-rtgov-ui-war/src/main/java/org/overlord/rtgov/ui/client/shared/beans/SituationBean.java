@@ -36,6 +36,9 @@ public class SituationBean extends SituationSummaryBean implements Serializable 
     private Map<String, String> context = new HashMap<String, String>();
     private MessageBean message;
     private CallTraceBean callTrace;
+    private boolean isAssignedToCurrentUser;
+
+	private boolean isTakeoverPossible;
 
     /**
      * Constructor.
@@ -95,5 +98,21 @@ public class SituationBean extends SituationSummaryBean implements Serializable 
     public void setCallTrace(CallTraceBean callTrace) {
         this.callTrace = callTrace;
     }
+
+	public boolean isAssignedToCurrentUser() {
+		return isAssignedToCurrentUser;
+	}
+
+	public void setAssignedToCurrentUser(boolean isAssignedToCurrentUser) {
+		this.isAssignedToCurrentUser = isAssignedToCurrentUser;
+	}
+
+	public void setTakeoverPossible(boolean isTakeoverPossible) {
+		this.isTakeoverPossible = isTakeoverPossible;
+	}
+
+	public boolean isTakeoverPossible() {
+		return isTakeoverPossible;
+	}
 
 }
