@@ -86,4 +86,27 @@
     <url-pattern>/js/overlord-header-data.js</url-pattern>
   </servlet-mapping>
 
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>EVERYTHING</web-resource-name>
+			<url-pattern>/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>ROLE_USER</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+	<login-config>
+		<auth-method>BASIC</auth-method>
+		<realm-name>RTGovRealm</realm-name>
+	</login-config>
+
+	<security-role>
+		<role-name>ROLE_USER</role-name>
+	</security-role>
+
+	<security-role>
+		<role-name>ROLE_ADMIN</role-name>
+	</security-role>
+
 </web-app>

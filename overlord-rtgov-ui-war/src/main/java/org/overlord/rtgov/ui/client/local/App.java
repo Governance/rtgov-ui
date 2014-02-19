@@ -18,16 +18,10 @@ package org.overlord.rtgov.ui.client.local;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
-import org.jboss.errai.bus.client.ErraiBus;
-import org.jboss.errai.bus.client.api.messaging.Message;
-import org.jboss.errai.bus.client.api.messaging.MessageCallback;
-import org.jboss.errai.bus.client.protocols.SecurityCommands;
 import org.jboss.errai.ioc.client.api.EntryPoint;
 import org.jboss.errai.ui.nav.client.local.Navigation;
 import org.jboss.errai.ui.shared.api.annotations.Bundle;
 
-import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
 
 /**
@@ -46,16 +40,7 @@ public class App {
 
 	@PostConstruct
 	public void buildUI() {
-		IsWidget contentPanel = navigation.getContentPanel();
-		rootPanel.add(contentPanel);
-		ErraiBus.get().subscribe("LoginClient", new MessageCallback() {
-			@Override
-			public void callback(final Message message) {
-				if (SecurityCommands.SecurityChallenge.name().equals(message.getCommandType())) {
-					History.newItem("login");
-				}
-			}
-		});
+		rootPanel.add(navigation.getContentPanel());
 	}
 
 }

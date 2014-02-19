@@ -106,7 +106,7 @@ public class RTGovRepositoryTest extends AbstractTransactionalJUnit4SpringContex
 	}
     
 	@Test
-	public void deassignSituation() throws Exception {
+	public void closeSituationAndRemoveAssignment() throws Exception {
 		Situation situation = new Situation();
 		situation.setId("deassignSituation");
 		situation.setTimestamp(System.currentTimeMillis());
@@ -114,13 +114,13 @@ public class RTGovRepositoryTest extends AbstractTransactionalJUnit4SpringContex
 		rtGovRepository.assignSituation(situation.getId(), "junit");
 		Situation reload = rtGovRepository.getSituation(situation.getId());
 		assertEquals("junit",reload.getProperties().get("assignedTo"));
-		rtGovRepository.deassignSituation(situation.getId());
+		rtGovRepository.closeSituation(situation.getId());
 		reload = rtGovRepository.getSituation(situation.getId());
 		assertFalse(reload.getProperties().containsKey("assignedTo"));
 	}
     
 	@Test
-	public void deassignSituationResetOpenResolution() throws Exception {
+	public void closeSituationResetOpenResolution() throws Exception {
 		Situation situation = new Situation();
 		situation.setId("deassignSituation");
 		situation.setTimestamp(System.currentTimeMillis());
@@ -129,7 +129,7 @@ public class RTGovRepositoryTest extends AbstractTransactionalJUnit4SpringContex
 		rtGovRepository.updateResolutionState(situation.getId(),IN_PROGRESS);
 		Situation reload = rtGovRepository.getSituation(situation.getId());
 		assertEquals("junit",reload.getProperties().get(ASSIGNED_TO_PROPERTY));
-		rtGovRepository.deassignSituation(situation.getId());
+		rtGovRepository.closeSituation(situation.getId());
 		reload = rtGovRepository.getSituation(situation.getId());
 		assertFalse(reload.getProperties().containsKey(RESOLUTION_STATE_PROPERTY));
 		assertFalse(reload.getProperties().containsKey(ASSIGNED_TO_PROPERTY));

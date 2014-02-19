@@ -42,11 +42,5 @@
   "situation-details.resubmit-message-msg" : "Please wait while we resubmit the message for situation '{0}.",
   "situation-details.message-resubmitted" : "Message Resubmitted Successfully",
   "situation-details.resubmit-success-msg" : "Successfully resubmitted message for '{0}'.",
-  "situation-details.resubmit-error" : "Message Resubmit Failed",
-  "login.title" : "Login",
-  "login.login-msg" : "standby..",
-  "login.login-success" : "Login Successfully",
-  "login.login-success-msg" : "Successfull login for user '{0}'.",
-  "login.login-error" : "Login Failed",
-  "login.login-error-msg" : "Login error for user '{0}'."
+  "situation-details.resubmit-error" : "Message Resubmit Failed"
 }

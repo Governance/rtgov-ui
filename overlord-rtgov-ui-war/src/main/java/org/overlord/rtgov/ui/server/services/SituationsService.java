@@ -15,20 +15,18 @@
  */
 package org.overlord.rtgov.ui.server.services;
 
-import static org.jboss.errai.bus.server.api.RpcContext.getQueueSession;
+import static org.jboss.errai.bus.server.api.RpcContext.getServletRequest;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 import org.jboss.errai.bus.server.annotations.Service;
-import org.jboss.errai.bus.server.security.auth.AuthSubject;
-import org.jboss.errai.bus.server.service.ErraiService;
 import org.overlord.rtgov.ui.client.shared.beans.ResolutionState;
 import org.overlord.rtgov.ui.client.shared.beans.SituationBean;
 import org.overlord.rtgov.ui.client.shared.beans.SituationResultSetBean;
 import org.overlord.rtgov.ui.client.shared.beans.SituationsFilterBean;
 import org.overlord.rtgov.ui.client.shared.exceptions.UiException;
 import org.overlord.rtgov.ui.client.shared.services.ISituationsService;
-import org.overlord.rtgov.ui.server.cdi.RequiresAuthentication;
 
 /**
  * Concrete implementation of the situations service.
@@ -58,12 +56,21 @@ public class SituationsService implements ISituationsService {
     /**
      * @see org.overlord.ISituationsService.ui.client.shared.services.ISituationsService#getService(java.lang.String)
      */
-    @Override
-    public SituationBean get(String situationId) throws UiException {
-        return impl.get(situationId);
-    }
-    
-    /**
+	@Override
+	public SituationBean get(String situationId) throws UiException {
+		HttpServletRequest servletRequest = (HttpServletRequest) getServletRequest();
+		SituationBean situationBean = impl.get(situationId);
+		if (situationBean.getAssignedTo() != null
+				&& situationBean.getAssignedTo().equals(servletRequest.getRemoteUser())) {
+			situationBean.setAssignedToCurrentUser(true);
+		}
+		if (servletRequest.isUserInRole("ROLE_ADMIN")) {
+			situationBean.setTakeoverPossible(true);
+		}
+		return situationBean;
+	}
+
+	/**
      * @see org.overlord.rtgov.ui.client.shared.services.ISituationsService#resubmit(java.lang.String, java.lang.String)
      */
     @Override
@@ -72,20 +79,17 @@ public class SituationsService implements ISituationsService {
     }
 
 	@Override
-	@RequiresAuthentication
 	public void assign(String situationId) throws UiException {
-		AuthSubject authSubject = getQueueSession().getAttribute(AuthSubject.class, ErraiService.SESSION_AUTH_DATA);
-		impl.assign(situationId, authSubject.getUsername());
+		HttpServletRequest servletRequest = (HttpServletRequest) getServletRequest();
+		impl.assign(situationId, servletRequest.getRemoteUser());
 	}
 
 	@Override
-	@RequiresAuthentication
 	public void deassign(String situationId) throws UiException {
-		impl.deassign(situationId);
+		impl.close(situationId);
 	}
 
 	@Override
-	@RequiresAuthentication
 	public void updateResolutionState(String situationId, String resolutionState) throws UiException {
 		impl.updateResolutionState(situationId, ResolutionState.valueOf(resolutionState));
 	}

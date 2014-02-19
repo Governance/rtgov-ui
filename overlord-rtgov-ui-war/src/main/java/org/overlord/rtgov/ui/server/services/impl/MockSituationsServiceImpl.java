@@ -15,6 +15,8 @@
  */
 package org.overlord.rtgov.ui.server.services.impl;
 
+import static org.overlord.rtgov.ui.client.shared.beans.ResolutionState.RESOLVED;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -292,10 +294,14 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
     }
 
 	@Override
-	public void deassign(String situationId) throws UiException {
+	public void close(String situationId) throws UiException {
 		SituationSummaryBean situationSummaryBean = idToSituation.get(situationId);
-		situationSummaryBean.getProperties().remove("assignedTo");
-		situationSummaryBean.getProperties().remove("resolutionState");
+		Map<String, String> properties = situationSummaryBean.getProperties();
+		properties.remove("assignedTo");
+		String resolutionState = properties.get("resolutionState");
+		if (resolutionState != null && RESOLVED != ResolutionState.valueOf(resolutionState)) {
+			properties.remove("resolutionState");
+		}
 	}
 
 	@Override

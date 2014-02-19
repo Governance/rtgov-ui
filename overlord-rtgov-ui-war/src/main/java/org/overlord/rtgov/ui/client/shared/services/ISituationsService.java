@@ -16,7 +16,6 @@
 package org.overlord.rtgov.ui.client.shared.services;
 
 import org.jboss.errai.bus.server.annotations.Remote;
-import org.overlord.rtgov.ui.client.shared.beans.ResolutionState;
 import org.overlord.rtgov.ui.client.shared.beans.SituationBean;
 import org.overlord.rtgov.ui.client.shared.beans.SituationResultSetBean;
 import org.overlord.rtgov.ui.client.shared.beans.SituationsFilterBean;

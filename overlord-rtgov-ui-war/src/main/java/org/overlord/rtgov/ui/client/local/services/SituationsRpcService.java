@@ -107,7 +107,7 @@ public class SituationsRpcService {
     /**
      * @see org.overlord.rtgov.ui.client.shared.services.ISituationsService#deassign(String)
      */
-    public void deassign(String situationId, IRpcServiceInvocationHandler<Void> handler) {
+    public void close(String situationId, IRpcServiceInvocationHandler<Void> handler) {
         RemoteCallback<Void> successCallback = new DelegatingRemoteCallback<Void>(handler);
         ErrorCallback<?> errorCallback = new DelegatingErrorCallback(handler);
         try {

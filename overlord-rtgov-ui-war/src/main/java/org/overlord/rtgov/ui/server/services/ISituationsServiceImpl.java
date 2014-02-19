@@ -65,11 +65,11 @@ public interface ISituationsServiceImpl {
     void assign(String situationId, String userName) throws UiException;
     
     /**
-     * Deassign a situation from an assigned user.
+     * Deassign (close) a situation from an assigned user.
      * @param situationId
      * @throws UiException
      */
-    void deassign(String situationId) throws UiException;
+    void close(String situationId) throws UiException;
 
     /**
      * Updates a situation's resolutionState.

@@ -375,8 +375,8 @@ public class RTGovSituationsServiceImpl implements ISituationsServiceImpl {
 	}
 
 	@Override
-	public void deassign(String situationId) throws UiException {
-		_repository.deassignSituation(situationId);
+	public void close(String situationId) throws UiException {
+		_repository.closeSituation(situationId);
 	}
 
 	@Override

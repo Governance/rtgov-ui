@@ -15,6 +15,9 @@
  */
 package org.overlord.rtgov.ui.server.services.impl;
 
+import static org.overlord.rtgov.ui.client.shared.beans.ResolutionState.RESOLVED;
+
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -326,15 +329,20 @@ public class RTGovRepository {
         }
 	}
 
-	public void deassignSituation(String situationId) {
+	public void closeSituation(String situationId) {
 		if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest(i18n.format("RTGovRepository.DeassSit", situationId)); //$NON-NLS-1$
         }
         EntityManager em=getEntityManager();
         try {
         	Situation situation = em.find(Situation.class, situationId);
-            situation.getProperties().remove(ASSIGNED_TO_PROPERTY);
-            situation.getProperties().remove(RESOLUTION_STATE_PROPERTY);
+            Map<String, String> properties = situation.getProperties();
+			properties.remove(ASSIGNED_TO_PROPERTY);
+			// remove current state if not already resolved
+			String resolutionState = properties.get(RESOLUTION_STATE_PROPERTY);
+			if (resolutionState != null && RESOLVED != ResolutionState.valueOf(resolutionState)) {
+				properties.remove(RESOLUTION_STATE_PROPERTY);
+			}
         } finally {
             closeEntityManager(em);
         }

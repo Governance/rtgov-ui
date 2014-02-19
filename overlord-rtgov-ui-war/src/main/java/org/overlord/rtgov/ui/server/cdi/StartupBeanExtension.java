@@ -15,34 +15,16 @@
  */
 package org.overlord.rtgov.ui.server.cdi;
 
-import static java.util.Collections.emptySet;
-import static org.jboss.errai.bus.client.api.base.MessageBuilder.createMessage;
-import static org.jboss.errai.config.rebind.ProxyUtil.createCallSignature;
-
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterDeploymentValidation;
-import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.Extension;
-import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.enterprise.inject.spi.ProcessBean;
-
-import org.jboss.errai.bus.client.api.messaging.Message;
-import org.jboss.errai.bus.client.api.messaging.MessageCallback;
-import org.jboss.errai.bus.server.annotations.Remote;
-import org.jboss.errai.bus.server.annotations.Service;
-import org.jboss.errai.bus.server.api.ServerMessageBus;
-import org.jboss.errai.bus.server.security.auth.rules.RolesRequiredRule;
 
 /**
  * 
@@ -50,34 +32,6 @@ import org.jboss.errai.bus.server.security.auth.rules.RolesRequiredRule;
  */
 public class StartupBeanExtension implements Extension {
 	private final Set<Bean<?>> startupBeans = new LinkedHashSet<Bean<?>>();
-	private final Map<Class<?>, Set<String>> remoteInterfaceMethods = new HashMap<Class<?>, Set<String>>();
-
-	<T> void observeResources(@Observes final ProcessAnnotatedType<T> event) {
-		final AnnotatedType<T> type = event.getAnnotatedType();
-		if (!type.isAnnotationPresent(Service.class)) {
-			return;
-		}
-		Class<T> ¢lass = type.getJavaClass();
-		Class<?> remoteInterface = null;
-		for (Class<?> _interface : ¢lass.getInterfaces()) {
-			if (_interface.isAnnotationPresent(Remote.class)) {
-				remoteInterface = _interface;
-				break;
-			}
-
-		}
-		if (remoteInterface == null) {
-			return;
-		}
-		HashSet<String> remoteMethods = new HashSet<String>();
-		remoteInterfaceMethods.put(remoteInterface, remoteMethods);
-		for (Method method : ¢lass.getMethods()) {
-			if (!method.isAnnotationPresent(RequiresAuthentication.class)) {
-				continue;
-			}
-			remoteMethods.add(createCallSignature(remoteInterface, method));
-		}
-	}
 
 	<X> void processBean(@Observes ProcessBean<X> event) {
 		if (event.getAnnotated().isAnnotationPresent(Startup.class)
@@ -92,29 +46,5 @@ public class StartupBeanExtension implements Extension {
 			// initialized
 			manager.getReference(bean, bean.getBeanClass(), manager.createCreationalContext(bean)).toString();
 		}
-		@SuppressWarnings("unchecked")
-		Bean<ServerMessageBus> bean = (Bean<ServerMessageBus>) manager
-		        .resolve(manager.getBeans(ServerMessageBus.class));
-		final ServerMessageBus messageBus = manager.getContext(bean.getScope()).get(bean,
-		        manager.createCreationalContext(bean));
-		messageBus.send(createMessage(StartupBeanExtension.class.getSimpleName()).getMessage());
-		messageBus.subscribe(StartupBeanExtension.class.getSimpleName(), new MessageCallback() {
-
-			@Override
-			public void callback(Message message) {
-				for (Entry<Class<?>, Set<String>> entry : remoteInterfaceMethods.entrySet()) {
-					String remoteInterfaceName = entry.getKey().getName();
-					final Set<String> signatures = entry.getValue();
-					messageBus.addRule(remoteInterfaceName + ":RPC", new RolesRequiredRule(emptySet(), messageBus) {
-						public boolean decision(Message message) {
-							if (signatures.contains(message.getCommandType())) {
-								return super.decision(message);
-							}
-							return true;
-						};
-					});
-				}
-			}
-		});
 	}
 }

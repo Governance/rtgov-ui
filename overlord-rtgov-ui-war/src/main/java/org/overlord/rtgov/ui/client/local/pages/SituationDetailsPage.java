@@ -16,6 +16,7 @@
 package org.overlord.rtgov.ui.client.local.pages;
 
 import static org.overlord.rtgov.ui.client.shared.beans.ResolutionState.IN_PROGRESS;
+import static org.overlord.rtgov.ui.client.shared.beans.ResolutionState.REOPENED;
 import static org.overlord.rtgov.ui.client.shared.beans.ResolutionState.RESOLVED;
 import static org.overlord.rtgov.ui.client.shared.beans.ResolutionState.WAITING;
 
@@ -124,14 +125,16 @@ public class SituationDetailsPage extends AbstractPage {
     Button resubmitButton;
     @Inject @DataField("btn-assign")
     Button assignButton;
-    @Inject @DataField("btn-deassign")
-    Button deassignButton;
+    @Inject @DataField("btn-close")
+    Button closeButton;
     @Inject @DataField("btn-start")
     Button startButton;
     @Inject @DataField("btn-stop")
     Button stopButton;
     @Inject @DataField("btn-resolve")
     Button resolveButton;
+    @Inject @DataField("btn-reopen")
+    Button reopenButton;
 
     @Inject @DataField("situation-details-loading-spinner")
     protected HtmlSnippet loading;
@@ -199,31 +202,40 @@ public class SituationDetailsPage extends AbstractPage {
         } else {
             messageEditor.setValue(""); //$NON-NLS-1$
         }
-        if (situation.getAssignedTo() != null) {
-			assignButton.getElement().addClassName("hide"); //$NON-NLS-1$
-			deassignButton.getElement().removeClassName("hide"); //$NON-NLS-1$
-			if (ResolutionState.UNRESOLVED == ResolutionState.valueOf(situation.getResolutionState())
-					|| ResolutionState.WAITING == ResolutionState.valueOf(situation.getResolutionState())) {
+		if (situation.isAssignedToCurrentUser() || (situation.getAssignedTo() != null && situation.isTakeoverPossible())) {
+			if (situation.isAssignedToCurrentUser()) {
+				assignButton.getElement().addClassName("hide");
+			} else {
+				assignButton.getElement().removeClassName("hide");
+			}
+			closeButton.getElement().removeClassName("hide"); //$NON-NLS-1$
+			ResolutionState resolutionState = ResolutionState.valueOf(situation.getResolutionState());
+			if (ResolutionState.UNRESOLVED == resolutionState
+					|| ResolutionState.WAITING == resolutionState
+					|| ResolutionState.REOPENED == resolutionState) {
 				startButton.getElement().removeClassName("hide");
 			} else {
 				startButton.getElement().addClassName("hide");
 			}
-			if (ResolutionState.IN_PROGRESS == ResolutionState.valueOf(situation.getResolutionState())) {
+			if (ResolutionState.IN_PROGRESS == resolutionState) {
 				stopButton.getElement().removeClassName("hide");
-			} else {
-				stopButton.getElement().addClassName("hide");
-			}
-			if (ResolutionState.IN_PROGRESS == ResolutionState.valueOf(situation.getResolutionState())) {
 				resolveButton.getElement().removeClassName("hide");
 			} else {
 				resolveButton.getElement().addClassName("hide");
+				stopButton.getElement().addClassName("hide");
+			}
+			if (ResolutionState.RESOLVED == resolutionState) {
+				reopenButton.getElement().removeClassName("hide");
+			} else {
+				reopenButton.getElement().addClassName("hide");
 			}
         } else {
-        	deassignButton.getElement().addClassName("hide"); //$NON-NLS-1$
+        	closeButton.getElement().addClassName("hide"); 
         	startButton.getElement().addClassName("hide");
+        	reopenButton.getElement().addClassName("hide");
         	stopButton.getElement().addClassName("hide");
         	resolveButton.getElement().addClassName("hide");
-        	assignButton.getElement().removeClassName("hide"); //$NON-NLS-1$
+        	assignButton.getElement().removeClassName("hide"); 
         }
     }
 
@@ -268,9 +280,9 @@ public class SituationDetailsPage extends AbstractPage {
 		loadSituationAndUpdatePageData();
 	}
 
-	@EventHandler("btn-deassign")
+	@EventHandler("btn-close")
 	protected void onDeassignButtonClick(ClickEvent event) {
-		situationsService.deassign(id, IRpcServiceInvocationHandler.VOID);
+		situationsService.close(id, IRpcServiceInvocationHandler.VOID);
 		loadSituationAndUpdatePageData();
 	}
 
@@ -289,6 +301,12 @@ public class SituationDetailsPage extends AbstractPage {
 	@EventHandler("btn-resolve")
 	protected void onResolveButtonClick(ClickEvent event) {
 		situationsService.updateResolutionState(id, RESOLVED.name(), IRpcServiceInvocationHandler.VOID);
+		loadSituationAndUpdatePageData();
+	}
+
+	@EventHandler("btn-reopen")
+	protected void onReopenButtonClick(ClickEvent event) {
+		situationsService.updateResolutionState(id, REOPENED.name(), IRpcServiceInvocationHandler.VOID);
 		loadSituationAndUpdatePageData();
 	}
 
