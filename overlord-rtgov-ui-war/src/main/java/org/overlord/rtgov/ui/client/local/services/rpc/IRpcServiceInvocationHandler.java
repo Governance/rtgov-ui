@@ -15,6 +15,11 @@
  */
 package org.overlord.rtgov.ui.client.local.services.rpc;
 
+import javax.inject.Inject;
+
+import org.overlord.rtgov.ui.client.local.services.NotificationService;
+
+
 /**
  * An async handler interface for making service invocations.
  *
@@ -34,7 +39,19 @@ public interface IRpcServiceInvocationHandler<T> {
      */
     public void onError(Throwable error);
     
-	IRpcServiceInvocationHandler<Void> VOID = new IRpcServiceInvocationHandler<Void>() {
+	class VoidInvocationHandler implements IRpcServiceInvocationHandler<Void> {
+		@Inject
+		private NotificationService notificationService;
+		private String title;
+
+		public VoidInvocationHandler() {
+			super();
+		}
+
+		public VoidInvocationHandler(String title) {
+			super();
+			this.title = title;
+		}
 
 		@Override
 		public void onReturn(Void data) {
@@ -42,8 +59,11 @@ public interface IRpcServiceInvocationHandler<T> {
 
 		@Override
 		public void onError(Throwable error) {
-
+			notificationService.sendErrorNotification(title, error);
 		}
-	};
+
+	}
+
+
 
 }

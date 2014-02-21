@@ -23,6 +23,8 @@
   "resolutionState.unresolved" : "Unresolved",
   "resolutionState.resolved" : "Resolved",
   "resolutionState.in_progress" : "In Progress",
+  "resolutionState.waiting" : "Waiting",
+  "resolutionState.reopened" : "Reopened",
   "situation-table.properties" : "Properties Preview",
   "call-trace-details.selected-node" : "Selected Node",
   "call-trace-details.summary" : "Summary",

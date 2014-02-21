@@ -19,6 +19,7 @@ import javax.inject.Inject;
 
 import org.overlord.rtgov.ui.client.local.ClientMessages;
 import org.overlord.rtgov.ui.client.local.widgets.common.AbstractFilterListBox;
+import org.overlord.rtgov.ui.client.shared.beans.ResolutionState;
 
 public class ResolutionStateListBox extends AbstractFilterListBox {
 
@@ -37,9 +38,11 @@ public class ResolutionStateListBox extends AbstractFilterListBox {
     @Override
     protected void configureItems() {
         this.addItem(i18n.format("any"), ""); //$NON-NLS-1$ //$NON-NLS-2$
-        this.addItem(i18n.format("resolutionState.unresolved"), "unresolved"); //$NON-NLS-1$ //$NON-NLS-2$
-        this.addItem(i18n.format("resolutionState.resolved"), "resolved"); //$NON-NLS-1$ //$NON-NLS-2$
-        this.addItem(i18n.format("resolutionState.in_progress"), "in_progress"); //$NON-NLS-1$ //$NON-NLS-2$
+        this.addItem(i18n.format("resolutionState.unresolved"), ResolutionState.UNRESOLVED.name()); //$NON-NLS-1$ //$NON-NLS-2$
+        this.addItem(i18n.format("resolutionState.resolved"), ResolutionState.RESOLVED.name()); //$NON-NLS-1$ //$NON-NLS-2$
+        this.addItem(i18n.format("resolutionState.in_progress"), ResolutionState.IN_PROGRESS.name()); //$NON-NLS-1$ //$NON-NLS-2$
+        this.addItem(i18n.format("resolutionState.waiting"), ResolutionState.WAITING.name()); //$NON-NLS-1$ //$NON-NLS-2$
+        this.addItem(i18n.format("resolutionState.reopened"), ResolutionState.REOPENED.name()); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**

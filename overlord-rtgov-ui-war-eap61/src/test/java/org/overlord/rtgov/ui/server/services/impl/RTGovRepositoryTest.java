@@ -9,6 +9,8 @@ import static org.overlord.rtgov.ui.server.services.impl.RTGovRepository.RESOLUT
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.persistence.Cache;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -17,6 +19,13 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnitUtil;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.metamodel.Metamodel;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.Status;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
 
 import junit.framework.Assert;
 
@@ -32,14 +41,15 @@ import org.springframework.test.context.junit4.AbstractTransactionalJUnit4Spring
 @ContextConfiguration
 public class RTGovRepositoryTest extends AbstractTransactionalJUnit4SpringContextTests {
 
-    RTGovRepository rtGovRepository;
+    private static final String USER_TRANSACTION = "java:comp/UserTransaction";
+	RTGovRepository rtGovRepository;
     @PersistenceContext
     EntityManager entityManager;
     @Inject
     EntityManagerFactory entityManagerFactory;
 
     @Before
-    public void init() {
+    public void init() throws NamingException {
         this.rtGovRepository = new RTGovRepository(new EntityManagerFactoryDelegate(this.entityManagerFactory) {
             @Override
             public EntityManager createEntityManager() {
@@ -51,6 +61,36 @@ public class RTGovRepositoryTest extends AbstractTransactionalJUnit4SpringContex
                 return entityManager;
             }
         });
+        InitialContext initialContext = new InitialContext();
+		initialContext.rebind(USER_TRANSACTION, new UserTransaction() {
+			
+			@Override
+			public void setTransactionTimeout(int arg0) throws SystemException {
+			}
+			
+			@Override
+			public void setRollbackOnly() throws IllegalStateException, SystemException {
+			}
+			
+			@Override
+			public void rollback() throws IllegalStateException, SecurityException, SystemException {
+			}
+			
+			@Override
+			public int getStatus() throws SystemException {
+				return Status.STATUS_ACTIVE;
+			}
+			
+			@Override
+			public void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException,
+					RollbackException, SecurityException, SystemException {
+				
+			}
+			
+			@Override
+			public void begin() throws NotSupportedException, SystemException {
+			}
+		});
     }
 
     @Test
@@ -76,12 +116,12 @@ public class RTGovRepositoryTest extends AbstractTransactionalJUnit4SpringContex
         Situation openSituation = new Situation();
         openSituation.setId("openSituation");
         openSituation.setTimestamp(System.currentTimeMillis());
-        openSituation.getProperties().put("resolutionState", "Open");
+        openSituation.getProperties().put("resolutionState", ResolutionState.REOPENED.name());
         entityManager.persist(openSituation);
         Situation closedSituation = new Situation();
         closedSituation.setId("closedSituation");
         closedSituation.setTimestamp(System.currentTimeMillis());
-        closedSituation.getProperties().put("resolutionState", "Closed");
+        closedSituation.getProperties().put("resolutionState", ResolutionState.RESOLVED.name());
         entityManager.persist(closedSituation);
 
         SituationsResult situations = findSituationsByFilterBean(openSituation);
@@ -90,6 +130,20 @@ public class RTGovRepositoryTest extends AbstractTransactionalJUnit4SpringContex
         Assert.assertEquals(openSituation, situations.getSituations().get(0));
     }
     
+    @Test
+    public void getSituationsByUnresolvedResolutionState() throws Exception {
+        Situation unresolvedSituation = new Situation();
+        unresolvedSituation.setId("unresolvedSituation");
+        unresolvedSituation.setTimestamp(System.currentTimeMillis());
+        entityManager.persist(unresolvedSituation);
+        SituationsFilterBean situationsFilterBean = new SituationsFilterBean();
+        situationsFilterBean.setResolutionState(ResolutionState.UNRESOLVED.name());
+        SituationsResult situations = rtGovRepository.getSituations(situationsFilterBean, 1, 50, null, true);
+        Assert.assertNotNull(situations);
+        Assert.assertTrue(1 == situations.getTotalCount());
+        Assert.assertEquals(unresolvedSituation, situations.getSituations().get(0));
+    }
+
 	@Test
 	public void assignSituation() throws Exception {
 		Situation situation = new Situation();

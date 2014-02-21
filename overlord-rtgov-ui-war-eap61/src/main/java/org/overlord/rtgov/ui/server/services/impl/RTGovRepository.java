@@ -21,10 +21,13 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.naming.InitialContext;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import javax.transaction.Status;
+import javax.transaction.UserTransaction;
 
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityTypeId;
@@ -40,7 +43,7 @@ import org.overlord.rtgov.ui.server.i18n.Messages;
  *
  */
 public class RTGovRepository {
-
+	private static final String USER_TRANSACTION = "java:comp/UserTransaction";
 	public static final String RESOLUTION_STATE_PROPERTY = "resolutionState";
 	public static final String ASSIGNED_TO_PROPERTY = "assignedTo";
 	private static final int MILLISECONDS_PER_DAY = 86400000;
@@ -166,8 +169,11 @@ public class RTGovRepository {
                 if (queryString.length() > 0) {
                     queryString.append("AND "); //$NON-NLS-1$
                 }
-                queryString.append("key(sit.properties) = 'resolutionState' and value(sit.properties)='"
-                        + filter.getResolutionState() + "'");
+				if (ResolutionState.UNRESOLVED == ResolutionState.valueOf(filter.getResolutionState())) {
+					queryString.append("'resolutionState' not in indices(sit.properties)");
+				} else {
+					queryString.append("sit.properties['resolutionState']='" + filter.getResolutionState() + "'");
+				}
             }
 
         	if (queryString.length() > 0) {
@@ -316,48 +322,78 @@ public class RTGovRepository {
     	}
     }
 
-	public void assignSituation(String situationId, String userName) {
+	public void assignSituation(final String situationId, final String userName) {
 		if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest(i18n.format("RTGovRepository.AssSit", situationId)); //$NON-NLS-1$
-        }
-        EntityManager em=getEntityManager();
-        try {
-        	Situation situation = em.find(Situation.class, situationId);
-            situation.getProperties().put(ASSIGNED_TO_PROPERTY, userName);
-        } finally {
-            closeEntityManager(em);
-        }
-	}
-
-	public void closeSituation(String situationId) {
-		if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest(i18n.format("RTGovRepository.DeassSit", situationId)); //$NON-NLS-1$
-        }
-        EntityManager em=getEntityManager();
-        try {
-        	Situation situation = em.find(Situation.class, situationId);
-            Map<String, String> properties = situation.getProperties();
-			properties.remove(ASSIGNED_TO_PROPERTY);
-			// remove current state if not already resolved
-			String resolutionState = properties.get(RESOLUTION_STATE_PROPERTY);
-			if (resolutionState != null && RESOLVED != ResolutionState.valueOf(resolutionState)) {
-				properties.remove(RESOLUTION_STATE_PROPERTY);
+			LOG.finest(i18n.format("RTGovRepository.AssSit", situationId)); //$NON-NLS-1$
+		}
+		doInTransaction(new EntityManagerCallback.Void() {
+			@Override
+			public void doExecute(EntityManager entityManager) {
+				Situation situation = entityManager.find(Situation.class, situationId);
+				situation.getProperties().put(ASSIGNED_TO_PROPERTY, userName);
 			}
-        } finally {
-            closeEntityManager(em);
-        }
+		});
 	}
 
-	public void updateResolutionState(String situationId, ResolutionState resolutionState) {
+	public void closeSituation(final String situationId) {
 		if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest(i18n.format("RTGovRepository.UpdRState", situationId)); //$NON-NLS-1$
-        }
-        EntityManager em=getEntityManager();
-        try {
-        	Situation situation = em.find(Situation.class, situationId);
-            situation.getProperties().put(RESOLUTION_STATE_PROPERTY,resolutionState.name());
-        } finally {
-            closeEntityManager(em);
-        }
+			LOG.finest(i18n.format("RTGovRepository.DeassSit", situationId)); //$NON-NLS-1$
+		}
+		doInTransaction(new EntityManagerCallback.Void() {
+			@Override
+			public void doExecute(EntityManager entityManager) {
+				Situation situation = entityManager.find(Situation.class, situationId);
+				Map<String, String> properties = situation.getProperties();
+				properties.remove(ASSIGNED_TO_PROPERTY);
+				// remove current state if not already resolved
+				String resolutionState = properties.get(RESOLUTION_STATE_PROPERTY);
+				if (resolutionState != null && RESOLVED != ResolutionState.valueOf(resolutionState)) {
+					properties.remove(RESOLUTION_STATE_PROPERTY);
+				}
+			}
+		});
 	}
+
+	public void updateResolutionState(final String situationId, final ResolutionState resolutionState) {
+		if (LOG.isLoggable(Level.FINEST)) {
+			LOG.finest(i18n.format("RTGovRepository.UpdRState", situationId)); //$NON-NLS-1$
+		}
+		doInTransaction(new EntityManagerCallback.Void() {
+			@Override
+			public void doExecute(EntityManager entityManager) {
+				Situation situation = entityManager.find(Situation.class, situationId);
+				situation.getProperties().put(RESOLUTION_STATE_PROPERTY, resolutionState.name());
+			}
+		});
+	}
+	
+	private <T> T doInTransaction(EntityManagerCallback<T> callback) {
+		EntityManager entityManager = getEntityManager();
+		UserTransaction userTransaction = null;
+		T result = null;
+		try {
+			userTransaction = (UserTransaction) new InitialContext().lookup(USER_TRANSACTION);
+			boolean handleTransaction = userTransaction.getStatus() != Status.STATUS_ACTIVE;
+			if (handleTransaction) {
+				userTransaction.begin();
+				entityManager.joinTransaction();
+			}
+			result = callback.execute(entityManager);
+			if (handleTransaction) {
+				userTransaction.commit();
+			}
+		} catch (Exception exception) {
+			try {
+				if (userTransaction != null && userTransaction.getStatus() == Status.STATUS_ACTIVE) {
+					userTransaction.rollback();
+				}
+			} catch (Exception rollbackException) {
+				rollbackException.printStackTrace();
+			}
+		} finally {
+			closeEntityManager(entityManager);
+		}
+		return result;
+	}
+
 }

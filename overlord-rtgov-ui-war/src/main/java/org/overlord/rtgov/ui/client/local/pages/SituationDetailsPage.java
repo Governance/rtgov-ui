@@ -75,6 +75,8 @@ public class SituationDetailsPage extends AbstractPage {
     protected SituationsRpcService situationsService;
     @Inject
     protected NotificationService notificationService;
+    @Inject
+    protected IRpcServiceInvocationHandler.VoidInvocationHandler voidInvocationHandler;
 
     @PageState
     private String id;
@@ -276,37 +278,37 @@ public class SituationDetailsPage extends AbstractPage {
     
 	@EventHandler("btn-assign")
 	protected void onAssignButtonClick(ClickEvent event) {
-		situationsService.assign(id, IRpcServiceInvocationHandler.VOID);
+		situationsService.assign(id, voidInvocationHandler);
 		loadSituationAndUpdatePageData();
 	}
 
 	@EventHandler("btn-close")
 	protected void onDeassignButtonClick(ClickEvent event) {
-		situationsService.close(id, IRpcServiceInvocationHandler.VOID);
+		situationsService.close(id, voidInvocationHandler);
 		loadSituationAndUpdatePageData();
 	}
 
 	@EventHandler("btn-start")
 	protected void onStartButtonClick(ClickEvent event) {
-		situationsService.updateResolutionState(id, IN_PROGRESS.name(), IRpcServiceInvocationHandler.VOID);
+		situationsService.updateResolutionState(id, IN_PROGRESS.name(), voidInvocationHandler);
 		loadSituationAndUpdatePageData();
 	}
 
 	@EventHandler("btn-stop")
 	protected void onStopButtonClick(ClickEvent event) {
-		situationsService.updateResolutionState(id, WAITING.name(), IRpcServiceInvocationHandler.VOID);
+		situationsService.updateResolutionState(id, WAITING.name(), voidInvocationHandler);
 		loadSituationAndUpdatePageData();
 	}
 
 	@EventHandler("btn-resolve")
 	protected void onResolveButtonClick(ClickEvent event) {
-		situationsService.updateResolutionState(id, RESOLVED.name(), IRpcServiceInvocationHandler.VOID);
+		situationsService.updateResolutionState(id, RESOLVED.name(), voidInvocationHandler);
 		loadSituationAndUpdatePageData();
 	}
 
 	@EventHandler("btn-reopen")
 	protected void onReopenButtonClick(ClickEvent event) {
-		situationsService.updateResolutionState(id, REOPENED.name(), IRpcServiceInvocationHandler.VOID);
+		situationsService.updateResolutionState(id, REOPENED.name(), voidInvocationHandler);
 		loadSituationAndUpdatePageData();
 	}
 
