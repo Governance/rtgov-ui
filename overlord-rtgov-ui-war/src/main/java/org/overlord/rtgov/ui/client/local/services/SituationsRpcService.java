@@ -24,11 +24,11 @@ import org.jboss.errai.common.client.api.RemoteCallback;
 import org.overlord.rtgov.ui.client.local.services.rpc.DelegatingErrorCallback;
 import org.overlord.rtgov.ui.client.local.services.rpc.DelegatingRemoteCallback;
 import org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHandler;
-import org.overlord.rtgov.ui.client.shared.beans.ResolutionState;
-import org.overlord.rtgov.ui.client.shared.beans.SituationBean;
-import org.overlord.rtgov.ui.client.shared.beans.SituationResultSetBean;
-import org.overlord.rtgov.ui.client.shared.beans.SituationsFilterBean;
-import org.overlord.rtgov.ui.client.shared.exceptions.UiException;
+import org.overlord.rtgov.ui.client.model.ResolutionState;
+import org.overlord.rtgov.ui.client.model.SituationBean;
+import org.overlord.rtgov.ui.client.model.SituationResultSetBean;
+import org.overlord.rtgov.ui.client.model.SituationsFilterBean;
+import org.overlord.rtgov.ui.client.model.UiException;
 import org.overlord.rtgov.ui.client.shared.services.ISituationsService;
 
 /**

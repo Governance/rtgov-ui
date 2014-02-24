@@ -37,7 +37,7 @@ import org.overlord.rtgov.ui.client.local.util.DOMUtil;
 import org.overlord.rtgov.ui.client.local.util.DataBindingLongConverter;
 import org.overlord.rtgov.ui.client.local.util.DataBindingQNameLocalPartConverter;
 import org.overlord.rtgov.ui.client.local.util.DataBindingQNameNamespaceConverter;
-import org.overlord.rtgov.ui.client.shared.beans.ReferenceBean;
+import org.overlord.rtgov.ui.client.model.ReferenceBean;
 import org.overlord.sramp.ui.client.local.widgets.common.HtmlSnippet;
 
 import com.google.gwt.dom.client.Element;

@@ -19,7 +19,7 @@ import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
 import org.overlord.rtgov.ui.client.local.animations.FadeInAnimation;
-import org.overlord.rtgov.ui.client.shared.beans.SituationEventBean;
+import org.overlord.rtgov.ui.client.model.SituationEventBean;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 

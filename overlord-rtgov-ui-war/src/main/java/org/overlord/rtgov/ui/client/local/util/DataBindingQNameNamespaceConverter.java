@@ -16,7 +16,7 @@
 package org.overlord.rtgov.ui.client.local.util;
 
 import org.jboss.errai.databinding.client.api.Converter;
-import org.overlord.rtgov.ui.client.shared.beans.QName;
+import org.overlord.rtgov.ui.client.model.QName;
 
 /**
  * Converts between a QName and a String, pulling out just the namespace.

@@ -35,9 +35,9 @@ import org.overlord.rtgov.ui.client.local.events.MouseOutEvent;
 import org.overlord.rtgov.ui.client.local.services.notification.Notification;
 import org.overlord.rtgov.ui.client.local.services.notification.NotificationConstants;
 import org.overlord.rtgov.ui.client.local.services.notification.NotificationWidget;
-import org.overlord.rtgov.ui.client.shared.beans.NotificationBean;
-import org.overlord.rtgov.ui.client.shared.beans.NotificationType;
-import org.overlord.rtgov.ui.client.shared.exceptions.UiException;
+import org.overlord.rtgov.ui.client.model.NotificationBean;
+import org.overlord.rtgov.ui.client.model.NotificationType;
+import org.overlord.rtgov.ui.client.model.UiException;
 
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;

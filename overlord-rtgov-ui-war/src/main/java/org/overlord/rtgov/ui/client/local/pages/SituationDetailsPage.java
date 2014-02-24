@@ -15,10 +15,10 @@
  */
 package org.overlord.rtgov.ui.client.local.pages;
 
-import static org.overlord.rtgov.ui.client.shared.beans.ResolutionState.IN_PROGRESS;
-import static org.overlord.rtgov.ui.client.shared.beans.ResolutionState.REOPENED;
-import static org.overlord.rtgov.ui.client.shared.beans.ResolutionState.RESOLVED;
-import static org.overlord.rtgov.ui.client.shared.beans.ResolutionState.WAITING;
+import static org.overlord.rtgov.ui.client.model.ResolutionState.IN_PROGRESS;
+import static org.overlord.rtgov.ui.client.model.ResolutionState.REOPENED;
+import static org.overlord.rtgov.ui.client.model.ResolutionState.RESOLVED;
+import static org.overlord.rtgov.ui.client.model.ResolutionState.WAITING;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -44,10 +44,10 @@ import org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHand
 import org.overlord.rtgov.ui.client.local.util.DOMUtil;
 import org.overlord.rtgov.ui.client.local.util.DataBindingDateTimeConverter;
 import org.overlord.rtgov.ui.client.local.widgets.common.SourceEditor;
-import org.overlord.rtgov.ui.client.shared.beans.NotificationBean;
-import org.overlord.rtgov.ui.client.shared.beans.ResolutionState;
-import org.overlord.rtgov.ui.client.shared.beans.SituationBean;
-import org.overlord.rtgov.ui.client.shared.beans.TraceNodeBean;
+import org.overlord.rtgov.ui.client.model.NotificationBean;
+import org.overlord.rtgov.ui.client.model.ResolutionState;
+import org.overlord.rtgov.ui.client.model.SituationBean;
+import org.overlord.rtgov.ui.client.model.TraceNodeBean;
 import org.overlord.sramp.ui.client.local.widgets.common.HtmlSnippet;
 
 import com.google.gwt.dom.client.Element;

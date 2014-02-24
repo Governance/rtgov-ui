@@ -24,6 +24,22 @@
       <type>war</type>
     </dependency>
     
+    <dependency>
+      <groupId>org.overlord.rtgov.ui</groupId>
+      <artifactId>rtgov-ui-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overlord.rtgov.ui</groupId>
+      <artifactId>rtgov-ui-situations</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overlord.rtgov.ui</groupId>
+      <artifactId>rtgov-ui-services-switchyard</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    
     <!-- Third Party libs -->
     <dependency>
       <groupId>org.jboss.ejb3</groupId>
@@ -76,80 +92,7 @@
         <scope>provided</scope>
     </dependency>
     
-    <!-- RTGov dependencies -->
-    <dependency>
-        <groupId>org.overlord.rtgov.common</groupId>
-        <artifactId>rtgov-common</artifactId>
-        <version>${rtgov.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>org.overlord.rtgov.integration</groupId>
-        <artifactId>rtgov-jbossas</artifactId>
-        <version>${rtgov.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>org.overlord.rtgov.activity-management</groupId>
-        <artifactId>activity</artifactId>
-        <version>${rtgov.version}</version>
-        <scope>provided</scope>
-    </dependency>
-    <dependency>
-        <groupId>org.overlord.rtgov.active-queries</groupId>
-        <artifactId>active-collection</artifactId>
-        <version>${rtgov.version}</version>
-        <scope>provided</scope>
-    </dependency>
-    <dependency>
-        <groupId>org.overlord.rtgov.activity-analysis</groupId>
-        <artifactId>analytics</artifactId>
-        <version>${rtgov.version}</version>
-        <scope>provided</scope>
-    </dependency>
-    <dependency>
-        <groupId>org.overlord.rtgov.activity-analysis</groupId>
-        <artifactId>call-trace</artifactId>
-        <version>${rtgov.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>org.overlord.rtgov.activity-management</groupId>
-        <artifactId>activity-store-jpa</artifactId>
-        <version>${rtgov.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>org.overlord.rtgov.activity-management</groupId>
-        <artifactId>activity-server-jee</artifactId>
-        <version>${rtgov.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>org.overlord.rtgov.integration</groupId>
-        <artifactId>rtgov-jbossas</artifactId>
-        <version>${rtgov.version}</version>
-    </dependency>
 
-    <!-- ServiceActivator/dmr -->
-    <dependency>
-      <groupId>org.jboss.msc</groupId>
-      <artifactId>jboss-msc</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.as</groupId>
-      <artifactId>jboss-as-server</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    
-    <!-- SwitchYard dependencies -->
-    <dependency>
-      <groupId>org.switchyard</groupId>
-      <artifactId>switchyard-remote</artifactId>
-      <version>${switchyard.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.switchyard</groupId>
-      <artifactId>switchyard-serial</artifactId>
-      <version>${switchyard.version}</version>
-    </dependency>
-        
     <!-- Other JBoss-only dependencies -->
     <dependency>
       <groupId>org.jboss.errai</groupId>

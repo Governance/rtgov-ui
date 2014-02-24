@@ -6,8 +6,8 @@
       http://java.sun.com/xml/ns/javaee/beans_1_0.xsd">
 
     <alternatives>
-        <class>org.overlord.rtgov.ui.server.services.impl.RTGovSituationsServiceImpl</class>
-        <class>org.overlord.rtgov.ui.server.services.impl.SwitchYardServicesServiceImpl</class>
-        <class>org.overlord.rtgov.ui.server.services.impl.RTGovSituationEventGenerator</class>
+        <class>org.overlord.rtgov.ui.server.services.impl.SituationsProviderServiceImpl</class>
+        <class>org.overlord.rtgov.ui.server.services.impl.ServicesProviderServiceImpl</class>
+        <class>org.overlord.rtgov.ui.server.services.impl.SituationEventGenerator</class>
     </alternatives>
 </beans>

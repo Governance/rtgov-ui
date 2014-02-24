@@ -9,6 +9,12 @@
   <artifactId>overlord-rtgov-ui-dev-server</artifactId>
 
   <dependencies>
+    <dependency>
+      <groupId>org.overlord.rtgov.ui</groupId>
+      <artifactId>rtgov-ui-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
     <!-- Overlord Commons Dev -->
     <dependency>
       <groupId>org.overlord</groupId>

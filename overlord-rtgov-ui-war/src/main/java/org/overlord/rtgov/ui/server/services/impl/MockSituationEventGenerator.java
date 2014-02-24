@@ -24,7 +24,7 @@ import javax.inject.Inject;
 
 import org.jboss.errai.bus.client.api.base.MessageBuilder;
 import org.jboss.errai.bus.client.api.messaging.RequestDispatcher;
-import org.overlord.rtgov.ui.client.shared.beans.SituationEventBean;
+import org.overlord.rtgov.ui.client.model.SituationEventBean;
 import org.overlord.rtgov.ui.server.services.ISituationEventGenerator;
 
 /**

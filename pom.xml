@@ -88,9 +88,12 @@
   </properties>
 
   <modules>
-  <module>overlord-rtgov-ui-war</module>
-  <module>overlord-rtgov-ui-dev-server</module>
-  <module>overlord-rtgov-ui-war-eap61</module>
+	<module>rtgov-ui-core</module>
+	<module>rtgov-ui-services-switchyard</module>
+	<module>rtgov-ui-situations</module>
+	<module>overlord-rtgov-ui-war</module>
+	<module>overlord-rtgov-ui-dev-server</module>
+	<module>overlord-rtgov-ui-war-eap61</module>
   </modules>
 
   <scm>

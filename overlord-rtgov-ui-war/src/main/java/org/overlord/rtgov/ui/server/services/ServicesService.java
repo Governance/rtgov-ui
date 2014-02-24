@@ -20,13 +20,13 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.jboss.errai.bus.server.annotations.Service;
-import org.overlord.rtgov.ui.client.shared.beans.QName;
-import org.overlord.rtgov.ui.client.shared.beans.ReferenceBean;
-import org.overlord.rtgov.ui.client.shared.beans.ReferenceResultSetBean;
-import org.overlord.rtgov.ui.client.shared.beans.ServiceBean;
-import org.overlord.rtgov.ui.client.shared.beans.ServiceResultSetBean;
-import org.overlord.rtgov.ui.client.shared.beans.ServicesFilterBean;
-import org.overlord.rtgov.ui.client.shared.exceptions.UiException;
+import org.overlord.rtgov.ui.client.model.QName;
+import org.overlord.rtgov.ui.client.model.ReferenceBean;
+import org.overlord.rtgov.ui.client.model.ReferenceResultSetBean;
+import org.overlord.rtgov.ui.client.model.ServiceBean;
+import org.overlord.rtgov.ui.client.model.ServiceResultSetBean;
+import org.overlord.rtgov.ui.client.model.ServicesFilterBean;
+import org.overlord.rtgov.ui.client.model.UiException;
 import org.overlord.rtgov.ui.client.shared.services.IServicesService;
 
 /**
@@ -54,7 +54,7 @@ public class ServicesService implements IServicesService {
     }
 
     /**
-     * @see org.overlord.rtgov.ui.client.shared.services.IServicesService#findServices(org.overlord.rtgov.ui.client.shared.beans.ServicesFilterBean, int, java.lang.String, boolean)
+     * @see org.overlord.rtgov.ui.client.shared.services.IServicesService#findServices(org.overlord.rtgov.ui.client.model.ServicesFilterBean, int, java.lang.String, boolean)
      */
     @Override
     public ServiceResultSetBean findServices(ServicesFilterBean filters, int page, String sortColumn,
@@ -63,7 +63,7 @@ public class ServicesService implements IServicesService {
     }
 
     /**
-     * @see org.overlord.rtgov.ui.client.shared.services.IServicesService#findReferences(org.overlord.rtgov.ui.client.shared.beans.ServicesFilterBean, int, java.lang.String, boolean)
+     * @see org.overlord.rtgov.ui.client.shared.services.IServicesService#findReferences(org.overlord.rtgov.ui.client.model.ServicesFilterBean, int, java.lang.String, boolean)
      */
     @Override
     public ReferenceResultSetBean findReferences(ServicesFilterBean filters, int page,

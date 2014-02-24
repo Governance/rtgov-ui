@@ -36,12 +36,12 @@ import org.overlord.rtgov.ui.client.local.services.NotificationService;
 import org.overlord.rtgov.ui.client.local.services.ServicesRpcService;
 import org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHandler;
 import org.overlord.rtgov.ui.client.local.widgets.common.SortableTemplatedWidgetTable.SortColumn;
-import org.overlord.rtgov.ui.client.shared.beans.QName;
-import org.overlord.rtgov.ui.client.shared.beans.ReferenceResultSetBean;
-import org.overlord.rtgov.ui.client.shared.beans.ReferenceSummaryBean;
-import org.overlord.rtgov.ui.client.shared.beans.ServiceResultSetBean;
-import org.overlord.rtgov.ui.client.shared.beans.ServiceSummaryBean;
-import org.overlord.rtgov.ui.client.shared.beans.ServicesFilterBean;
+import org.overlord.rtgov.ui.client.model.QName;
+import org.overlord.rtgov.ui.client.model.ReferenceResultSetBean;
+import org.overlord.rtgov.ui.client.model.ReferenceSummaryBean;
+import org.overlord.rtgov.ui.client.model.ServiceResultSetBean;
+import org.overlord.rtgov.ui.client.model.ServiceSummaryBean;
+import org.overlord.rtgov.ui.client.model.ServicesFilterBean;
 import org.overlord.sramp.ui.client.local.widgets.bootstrap.Pager;
 import org.overlord.sramp.ui.client.local.widgets.common.HtmlSnippet;
 
