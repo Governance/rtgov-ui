@@ -37,6 +37,16 @@ Another (even easier) way to run the rtgov-ui project is to simply do this:
 
 The "run" profile will be activated, which will launch the application using an embedded Jetty server.
 
+## Running JBoss Integration Tests
+
+First step is to setup a server environment. Download EAP 6.1 and install the latest version of SwitchYard.
+
+Set the JBOSS_HOME environment variable to the home directory of the EAP/SwitchYard installation.
+
+Then run the following from the _tests_ folder:
+
+	$ mvn clean install
+
 ## Contribute fixes and features
 
 This project is open source, and we welcome anybody who wants to participate and contribute!
