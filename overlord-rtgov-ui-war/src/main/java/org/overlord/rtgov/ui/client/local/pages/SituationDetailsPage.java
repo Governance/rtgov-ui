@@ -125,6 +125,12 @@ public class SituationDetailsPage extends AbstractPage {
     SourceEditor messageEditor;
     @Inject  @DataField("btn-resubmit")
     Button resubmitButton;
+    @Inject @DataField @Bound(property="resubmitBy")
+    InlineLabel resubmitBy;
+    @Inject @DataField @Bound(property="resubmitAt")
+    InlineLabel resubmitAt;
+    @Inject @DataField @Bound(property="resubmitResult")
+    InlineLabel resubmitResult;
     @Inject @DataField("btn-assign")
     Button assignButton;
     @Inject @DataField("btn-close")
@@ -204,6 +210,15 @@ public class SituationDetailsPage extends AbstractPage {
         } else {
             messageEditor.setValue(""); //$NON-NLS-1$
         }
+		if (situation.isResubmitError()) {
+			resubmitAt.getElement().addClassName("text-error"); //$NON-NLS-1$
+			resubmitBy.getElement().addClassName("text-error"); //$NON-NLS-1$
+			resubmitResult.getElement().addClassName("text-error"); //$NON-NLS-1$
+		} else {
+			resubmitAt.getElement().removeClassName("text-error"); //$NON-NLS-1$
+			resubmitBy.getElement().removeClassName("text-error"); //$NON-NLS-1$
+			resubmitResult.getElement().removeClassName("text-error"); //$NON-NLS-1$
+		}
 		if (situation.isAssignedToCurrentUser() || (situation.getAssignedTo() != null && situation.isTakeoverPossible())) {
 			if (situation.isAssignedToCurrentUser()) {
 				assignButton.getElement().addClassName("hide");
@@ -274,6 +289,7 @@ public class SituationDetailsPage extends AbstractPage {
                         error);
             }
         });
+        loadSituationAndUpdatePageData();
     }
     
 	@EventHandler("btn-assign")

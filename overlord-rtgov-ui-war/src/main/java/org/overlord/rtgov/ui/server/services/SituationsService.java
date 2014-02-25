@@ -27,6 +27,7 @@ import org.overlord.rtgov.ui.client.model.SituationResultSetBean;
 import org.overlord.rtgov.ui.client.model.SituationsFilterBean;
 import org.overlord.rtgov.ui.client.model.UiException;
 import org.overlord.rtgov.ui.client.shared.services.ISituationsService;
+import org.overlord.rtgov.ui.server.interceptors.IUserContext;
 
 /**
  * Concrete implementation of the situations service.
@@ -34,6 +35,7 @@ import org.overlord.rtgov.ui.client.shared.services.ISituationsService;
  * @author eric.wittmann@redhat.com
  */
 @Service
+@IUserContext.Binding
 public class SituationsService implements ISituationsService {
 
     @Inject ISituationsServiceImpl impl;

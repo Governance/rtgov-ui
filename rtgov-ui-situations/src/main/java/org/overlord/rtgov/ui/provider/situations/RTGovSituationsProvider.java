@@ -58,6 +58,8 @@ import org.overlord.rtgov.ui.provider.ServicesProvider;
 import org.overlord.rtgov.ui.provider.SituationEventListener;
 import org.overlord.rtgov.ui.provider.SituationsProvider;
 
+import com.google.common.base.Throwables;
+
 /**
  * Concrete implementation of the faults service using RTGov situations.
  *
@@ -516,14 +518,16 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
 	    	// provider appropriate for the service rather than situation
 	    	
 	    	provider.resubmit(service, operation, message);
-
-    	} catch (UiException uie) {
-    		throw uie;
-
-    	} catch (Exception e) {
-    		e.printStackTrace();
-    		throw new UiException(i18n.format("RTGovSituationsProvider.ResubmitFailed", situationId+":"+e.getLocalizedMessage()), e); //$NON-NLS-1$
-    	}
+			_situationStore.recordSuccessfulResubmit(situationId);
+		} catch (UiException uiException) {
+			_situationStore.recordResubmitFailure(situationId, Throwables.getStackTraceAsString(uiException));
+			throw uiException;
+		} catch (Exception exception) {
+			_situationStore.recordResubmitFailure(situationId, Throwables.getStackTraceAsString(exception));
+			throw new UiException(
+					i18n.format(
+							"RTGovSituationsProvider.ResubmitFailed", situationId + ":" + exception.getLocalizedMessage()), exception); //$NON-NLS-1$
+		}
     }
     
 	/**

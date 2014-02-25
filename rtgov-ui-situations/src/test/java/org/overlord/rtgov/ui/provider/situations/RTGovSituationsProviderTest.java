@@ -17,6 +17,7 @@ package org.overlord.rtgov.ui.provider.situations;
 
 import static org.junit.Assert.*;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.overlord.rtgov.active.collection.ActiveList;
 import org.overlord.rtgov.activity.model.ActivityTypeId;
@@ -150,6 +151,14 @@ public class RTGovSituationsProviderTest {
 			public void updateResolutionState(String situationId, ResolutionState resolutionState) throws Exception {
 				throw new Exception("Fail");
 			}
+
+			public void recordResubmitFailure(String situationId, String message) {
+				Assert.fail();
+			};
+
+			public void recordSuccessfulResubmit(String situationId) {
+				Assert.fail();
+			};
 		};
 		
 		provider.setSituationStore(sits);
@@ -257,6 +266,14 @@ public class RTGovSituationsProviderTest {
 			public void updateResolutionState(String situationId, ResolutionState resolutionState) throws Exception {
 				throw new Exception("Fail");
 			}
+			public void recordResubmitFailure(String situationId, String message) {
+				Assert.fail();
+			};
+
+			public void recordSuccessfulResubmit(String situationId) {
+				Assert.fail();
+			};
+
 		};
 		
 		provider.setSituationStore(sits);

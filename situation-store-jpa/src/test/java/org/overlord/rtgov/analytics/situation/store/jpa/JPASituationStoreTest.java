@@ -1,12 +1,14 @@
 package org.overlord.rtgov.analytics.situation.store.jpa;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.overlord.rtgov.ui.client.model.ResolutionState.IN_PROGRESS;
 
-import javax.inject.Inject;
+import java.security.Principal;
+
 import javax.naming.NamingException;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.HeuristicMixedException;
@@ -24,6 +26,7 @@ import org.overlord.rtgov.analytics.situation.Situation;
 import org.overlord.rtgov.analytics.situation.store.SituationStore;
 import org.overlord.rtgov.analytics.situation.store.SituationsQuery;
 import org.overlord.rtgov.ui.client.model.ResolutionState;
+import org.overlord.rtgov.ui.server.interceptors.IUserContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 
@@ -35,9 +38,6 @@ public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringCont
 	@PersistenceContext
     private EntityManager _entityManager;
 	
-	@Inject
-	private EntityManagerFactory entityManagerFactory;
-    
     @Before
     public void init() throws NamingException {
         this._situationStore = new JPASituationStore();
@@ -72,39 +72,6 @@ public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringCont
 			public void begin() throws NotSupportedException, SystemException {
 			}
 		});
-        
-        /*
-        InitialContext initialContext = new InitialContext();
-		initialContext.rebind(USER_TRANSACTION, new UserTransaction() {
-			
-			@Override
-			public void setTransactionTimeout(int arg0) throws SystemException {
-			}
-			
-			@Override
-			public void setRollbackOnly() throws IllegalStateException, SystemException {
-			}
-			
-			@Override
-			public void rollback() throws IllegalStateException, SecurityException, SystemException {
-			}
-			
-			@Override
-			public int getStatus() throws SystemException {
-				return Status.STATUS_ACTIVE;
-			}
-			
-			@Override
-			public void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException,
-					RollbackException, SecurityException, SystemException {
-				
-			}
-			
-			@Override
-			public void begin() throws NotSupportedException, SystemException {
-			}
-		});
-		*/
     }
 
     @Test
@@ -224,50 +191,59 @@ public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringCont
         return situations;
     }
 
-    /*
-    private static class EntityManagerFactoryDelegate implements EntityManagerFactory {
-        private final EntityManagerFactory delegate;
+	@Test
+	public void recordResubmit() throws Exception {
+		Situation situation = new Situation();
+		situation.setId("recordResubmit");
+		situation.setTimestamp(System.currentTimeMillis());
+		_entityManager.persist(situation);
+		final String testUserName = "recordResubmit_test";
+		IUserContext.Holder.setSecurityContext(new IUserContext() {
 
-        EntityManagerFactoryDelegate(EntityManagerFactory delegate) {
-            super();
-            this.delegate = delegate;
-        }
+			@Override
+			public Principal getUserPrincipal() {
+				return new Principal() {
 
-        public EntityManager createEntityManager() {
-            return delegate.createEntityManager();
-        }
+					@Override
+					public String getName() {
+						return testUserName;
+					}
+				};
+			}
+		});
+		_situationStore.recordSuccessfulResubmit(situation.getId());
+		Situation reload = _situationStore.getSituation(situation.getId());
+		assertEquals(testUserName, reload.getProperties().get(SituationStore.RESUBMIT_BY_PROPERTY));
+		assertEquals("OK", reload.getProperties().get(SituationStore.RESUBMIT_RESULT_PROPERTY));
+		assertTrue(reload.getProperties().containsKey(SituationStore.RESUBMIT_AT_PROPERTY));
+		assertFalse(reload.getProperties().containsKey(SituationStore.RESUBMIT_FAILURE_PROPERTY));
+	}
 
-        public EntityManager createEntityManager(@SuppressWarnings("rawtypes") Map map) {
-            return delegate.createEntityManager(map);
-        }
+	@Test
+	public void recordResubmitFailure() throws Exception {
+		Situation situation = new Situation();
+		situation.setId("recordResubmitFailure");
+		situation.setTimestamp(System.currentTimeMillis());
+		_entityManager.persist(situation);
+		final String testUserName = "recordResubmitFailure_test";
+		IUserContext.Holder.setSecurityContext(new IUserContext() {
 
-        public CriteriaBuilder getCriteriaBuilder() {
-            return delegate.getCriteriaBuilder();
-        }
+			@Override
+			public Principal getUserPrincipal() {
+				return new Principal() {
 
-        public Metamodel getMetamodel() {
-            return delegate.getMetamodel();
-        }
-
-        public boolean isOpen() {
-            return delegate.isOpen();
-        }
-
-        public void close() {
-            delegate.close();
-        }
-
-        public Map<String, Object> getProperties() {
-            return delegate.getProperties();
-        }
-
-        public Cache getCache() {
-            return delegate.getCache();
-        }
-
-        public PersistenceUnitUtil getPersistenceUnitUtil() {
-            return delegate.getPersistenceUnitUtil();
-        }
-    }
-    */
+					@Override
+					public String getName() {
+						return testUserName;
+					}
+				};
+			}
+		});
+		_situationStore.recordResubmitFailure(situation.getId(), "recordResubmitFailure");
+		Situation reload = _situationStore.getSituation(situation.getId());
+		assertEquals(testUserName, reload.getProperties().get(SituationStore.RESUBMIT_BY_PROPERTY));
+		assertEquals("recordResubmitFailure", reload.getProperties().get(SituationStore.RESUBMIT_FAILURE_PROPERTY));
+		assertTrue(reload.getProperties().containsKey(SituationStore.RESUBMIT_AT_PROPERTY));
+		assertFalse(reload.getProperties().containsKey(SituationStore.RESUBMIT_RESULT_PROPERTY));
+	}
 }

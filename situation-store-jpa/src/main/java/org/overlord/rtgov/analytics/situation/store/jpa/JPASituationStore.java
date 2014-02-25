@@ -15,13 +15,15 @@
  */
 package org.overlord.rtgov.analytics.situation.store.jpa;
 
+import static java.lang.System.currentTimeMillis;
+
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.naming.InitialContext;
 import javax.annotation.Resource;
 import javax.inject.Singleton;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -33,6 +35,7 @@ import org.overlord.rtgov.ui.client.model.ResolutionState;
 import org.overlord.rtgov.analytics.situation.store.SituationStore;
 import org.overlord.rtgov.analytics.situation.store.SituationsQuery;
 import org.overlord.rtgov.ui.provider.situations.Messages;
+import org.overlord.rtgov.ui.server.interceptors.IUserContext;
 
 /**
  * This class provides the JPA based implementation of the SituationsStore interface.
@@ -300,4 +303,45 @@ public class JPASituationStore implements SituationStore {
     		return (_totalCount);
     	}
     }
+
+	@Override
+	public void recordSuccessfulResubmit(final String situationId) {
+		if (LOG.isLoggable(Level.FINEST)) {
+			LOG.finest(i18n.format("JPASituationStore.Resubmit", situationId)); //$NON-NLS-1$
+		}
+		doInTransaction(new EntityManagerCallback.Void() {
+			@Override
+			public void doExecute(EntityManager entityManager) {
+				Situation situation = entityManager.find(Situation.class, situationId);
+				Map<String, String> properties = situation.getProperties();
+				if (IUserContext.Holder.getUserPrincipal() != null) {
+					properties.put(RESUBMIT_BY_PROPERTY, IUserContext.Holder.getUserPrincipal().getName());
+				}
+				properties.put(RESUBMIT_AT_PROPERTY, Long.toString(currentTimeMillis()));
+				properties.put(RESUBMIT_RESULT_PROPERTY, "OK");
+				properties.remove(RESUBMIT_FAILURE_PROPERTY);
+			}
+		});
+	}
+
+	@Override
+	public void recordResubmitFailure(final String situationId, final String message) {
+		if (LOG.isLoggable(Level.FINEST)) {
+			LOG.finest(i18n.format("JPASituationStore.ResubmitFailure", situationId)); //$NON-NLS-1$
+		}
+		doInTransaction(new EntityManagerCallback.Void() {
+			@Override
+			public void doExecute(EntityManager entityManager) {
+				Situation situation = entityManager.find(Situation.class, situationId);
+				Map<String, String> properties = situation.getProperties();
+				if (IUserContext.Holder.getUserPrincipal() != null) {
+					properties.put(RESUBMIT_BY_PROPERTY, IUserContext.Holder.getUserPrincipal().getName());
+				}
+				properties.put(RESUBMIT_AT_PROPERTY, Long.toString(currentTimeMillis()));
+				properties.put(RESUBMIT_FAILURE_PROPERTY, message);
+				properties.remove(RESUBMIT_RESULT_PROPERTY);
+			}
+		});
+
+	}
 }

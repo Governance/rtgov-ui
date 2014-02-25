@@ -15,8 +15,10 @@
  */
 package org.overlord.rtgov.ui.server.services.impl;
 
+import static java.lang.System.currentTimeMillis;
 import static org.overlord.rtgov.ui.client.model.ResolutionState.RESOLVED;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -38,6 +40,7 @@ import org.overlord.rtgov.ui.client.model.SituationSummaryBean;
 import org.overlord.rtgov.ui.client.model.SituationsFilterBean;
 import org.overlord.rtgov.ui.client.model.TraceNodeBean;
 import org.overlord.rtgov.ui.client.model.UiException;
+import org.overlord.rtgov.ui.server.interceptors.IUserContext;
 import org.overlord.rtgov.ui.server.services.ISituationsServiceImpl;
 
 /**
@@ -178,17 +181,17 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
         situation.setSubject(situationSummaryBean.getSubject()); //$NON-NLS-1$
         situation.setTimestamp(situationSummaryBean.getTimestamp());
         situation.setDescription(situationSummaryBean.getDescription()); //$NON-NLS-1$
-        situation.setProperties(situationSummaryBean.getProperties()); //$NON-NLS-1$ //$NON-NLS-2$
+        Map<String, String> properties = situationSummaryBean.getProperties();
+		situation.setProperties(properties); //$NON-NLS-1$ //$NON-NLS-2$
         situation.getContext().put("Context-1", "This is the value of the context 1 property."); //$NON-NLS-1$ //$NON-NLS-2$
         situation.getContext().put("Context-2", "This is the value of the context 2 property."); //$NON-NLS-1$ //$NON-NLS-2$
 
-        MessageBean message = createMockMessage();
-        situation.setMessage(message);
-        
-        CallTraceBean callTrace = createMockCallTrace();
-        situation.setCallTrace(callTrace);
+		MessageBean message = createMockMessage();
+		situation.setMessage(message);
 
-        return situation;
+		CallTraceBean callTrace = createMockCallTrace();
+		situation.setCallTrace(callTrace);
+		return situation;
     }
 
     /**
@@ -281,16 +284,29 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
     /**
      * @see org.overlord.rtgov.ui.server.services.ISituationsServiceImpl#resubmit(java.lang.String, java.lang.String)
      */
-    @Override
-    public void resubmit(String situationId, String message) throws UiException {
-        // Do nothing!
-        System.out.println("Resubmitted message for situation: " + situationId); //$NON-NLS-1$
-        System.out.println(message);
-    }
-    
-    @Override
-    public void assign(String situationId, String userName) throws UiException {
-        idToSituation.get(situationId).getProperties().put("assignedTo", userName);
+	@Override
+	public void resubmit(String situationId, String message) throws UiException {
+		// Do nothing!
+		System.out.println("Resubmitted message for situation: " + situationId); //$NON-NLS-1$
+		System.out.println(message);
+		SituationSummaryBean situationSummaryBean = idToSituation.get(situationId);
+		Map<String, String> properties = situationSummaryBean.getProperties();
+		if (IUserContext.Holder.getUserPrincipal() != null) {
+			properties.put("resubmitBy", IUserContext.Holder.getUserPrincipal().getName());
+		}
+		properties.put("resubmitAt", Long.toString(currentTimeMillis()));
+		if (properties.containsKey("resubmitResult")) {
+			properties.put("resubmitFailure", "Timeout while..");
+			properties.remove("resubmitResult");
+		} else {
+			properties.put("resubmitResult", "OK");
+			properties.remove("resubmitFailure");
+		}
+	}
+
+	@Override
+	public void assign(String situationId, String userName) throws UiException {
+		idToSituation.get(situationId).getProperties().put("assignedTo", userName);
     }
 
 	@Override

@@ -26,6 +26,11 @@ public interface SituationStore {
 
 	public static final String RESOLUTION_STATE_PROPERTY = "resolutionState";
 	public static final String ASSIGNED_TO_PROPERTY = "assignedTo";
+	public static final String RESUBMIT_FAILURE_PROPERTY = "resubmitFailure";
+	public static final String RESUBMIT_RESULT_PROPERTY = "resubmitResult";
+	public static final String RESUBMIT_AT_PROPERTY = "resubmitAt";
+	public static final String RESUBMIT_BY_PROPERTY = "resubmitBy";
+
 
 	/**
      * This method returns the situation associated with the supplied id.
@@ -71,5 +76,24 @@ public interface SituationStore {
      * @throws Exception Failed to update the resolution state
      */
     public void updateResolutionState(String situationId, ResolutionState resolutionState) throws Exception;
+
+	/**
+	 * Record's a successful resubmit of the situation matching the given id
+	 *
+	 * @param situationId
+	 *            The situation id
+	 */
+	public void recordSuccessfulResubmit(String situationId);
+
+	/**
+	 * Record's a failed resubmit of the situation matching the given id
+	 *
+	 * @param situationId
+	 *            The situation id
+	 * @param message
+	 *            The exception message
+	 */
+	public void recordResubmitFailure(String situationId, String message);
+
 
 }

@@ -403,6 +403,25 @@ footer hr {
   float: left;
 }
 
+.message-meta-data-section-header {
+  font-weight: bold;
+  float: left;
+}
+
+.message-meta-data-section-label {
+  white-space: nowrap;
+  min-width: 130px;
+  float: left;
+}
+
+.text-error {
+  color: #b94a48;
+}
+
+.message-meta-data-section-value {
+  float: left;
+}
+
 .reference-details, .service-details {
   border-left: 1px solid rgb(211, 211, 211);
   border-bottom: 1px solid rgb(211, 211, 211);
