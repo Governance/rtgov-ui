@@ -170,7 +170,7 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 	 * @return The JMX server URL
 	 */
 	public String getServerJMX() {
-		if (_serverJMX == null) {
+		if (_serverJMX == null && RTGovProperties.getProperties() != null) {
 			_serverJMX = RTGovProperties.getProperties().getProperty(SWITCHYARD_JMX_URL);
 		}
 		return (_serverJMX);
@@ -443,7 +443,8 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 		        //String appName=stripQuotes(app.getKeyProperty("name"));
 		        
             } catch (Exception e) {
-    			throw new UiException(i18n.format("SwitchYardServicesProvider.GetServiceFailed"), e);
+    			throw new UiException(i18n.format("SwitchYardServicesProvider.GetServiceFailed",
+    								applicationName, serviceName), e);
             }
             
         }
