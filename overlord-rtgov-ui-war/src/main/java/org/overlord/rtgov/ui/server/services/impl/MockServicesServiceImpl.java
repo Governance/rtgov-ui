@@ -23,7 +23,6 @@ import javax.enterprise.inject.Alternative;
 
 import org.overlord.rtgov.ui.client.model.QName;
 import org.overlord.rtgov.ui.client.model.ReferenceBean;
-import org.overlord.rtgov.ui.client.model.ReferenceResultSetBean;
 import org.overlord.rtgov.ui.client.model.ReferenceSummaryBean;
 import org.overlord.rtgov.ui.client.model.ServiceBean;
 import org.overlord.rtgov.ui.client.model.ServiceResultSetBean;
@@ -93,40 +92,6 @@ public class MockServicesServiceImpl implements IServicesServiceImpl {
     }
 
     /**
-     * @see org.overlord.rtgov.ui.server.services.IServicesServiceImpl#findReferences(org.overlord.rtgov.ui.client.model.ServicesFilterBean, int, java.lang.String, boolean)
-     */
-    @Override
-    public ReferenceResultSetBean findReferences(ServicesFilterBean filters, int page,
-            String sortColumn, boolean ascending) throws UiException {
-        ReferenceResultSetBean rval = new ReferenceResultSetBean();
-        List<ReferenceSummaryBean> services = new ArrayList<ReferenceSummaryBean>();
-        rval.setReferences(services);
-        rval.setItemsPerPage(20);
-        rval.setStartIndex(0);
-        rval.setTotalResults(2);
-
-        ReferenceSummaryBean reference = new ReferenceSummaryBean();
-        reference.setReferenceId("1"); //$NON-NLS-1$
-        reference.setName("CreateApplicationService"); //$NON-NLS-1$
-        reference.setApplication("Contract"); //$NON-NLS-1$
-        reference.setIface("org.jboss.demos.services.ICreateApplication"); //$NON-NLS-1$
-        reference.setBindings("SOAP, JMS"); //$NON-NLS-1$
-        reference.setAverageDuration(2837l);
-        services.add(reference);
-
-        reference = new ReferenceSummaryBean();
-        reference.setReferenceId("2"); //$NON-NLS-1$
-        reference.setName("CreateQuoteService"); //$NON-NLS-1$
-        reference.setApplication("Contract"); //$NON-NLS-1$
-        reference.setIface("org.jboss.demos.services.ICreateQuote"); //$NON-NLS-1$
-        reference.setBindings("SOAP"); //$NON-NLS-1$
-        reference.setAverageDuration(2837l);
-        services.add(reference);
-
-        return rval;
-    }
-
-    /**
      * @see org.overlord.dtgov.ui.client.shared.services.IServicesServiceImpl#getService(java.lang.String)
      */
     @Override
@@ -136,6 +101,25 @@ public class MockServicesServiceImpl implements IServicesServiceImpl {
         service.setName(new QName("urn:jboss:demo:services", "CreateApplicationWebservice")); //$NON-NLS-1$ //$NON-NLS-2$
         service.setApplication(new QName("urn:jboss:demos:applications", "Contract")); //$NON-NLS-1$ //$NON-NLS-2$
         service.setServiceInterface("{urn:jboss:demo:create-application}CreateApplicationPT"); //$NON-NLS-1$
+        
+        ReferenceSummaryBean reference = new ReferenceSummaryBean();
+        reference.setReferenceId("1"); //$NON-NLS-1$
+        reference.setName("CreateApplicationService"); //$NON-NLS-1$
+        reference.setApplication("Contract"); //$NON-NLS-1$
+        reference.setIface("org.jboss.demos.services.ICreateApplication"); //$NON-NLS-1$
+        reference.setBindings("SOAP, JMS"); //$NON-NLS-1$
+        reference.setAverageDuration(2837l);
+        service.getReferences().add(reference);
+
+        reference = new ReferenceSummaryBean();
+        reference.setReferenceId("2"); //$NON-NLS-1$
+        reference.setName("CreateQuoteService"); //$NON-NLS-1$
+        reference.setApplication("Contract"); //$NON-NLS-1$
+        reference.setIface("org.jboss.demos.services.ICreateQuote"); //$NON-NLS-1$
+        reference.setBindings("SOAP"); //$NON-NLS-1$
+        reference.setAverageDuration(2837l);
+        service.getReferences().add(reference);
+
         service.setSuccessCount(83);
         service.setFaultCount(4);
         service.setTotalTime(804);

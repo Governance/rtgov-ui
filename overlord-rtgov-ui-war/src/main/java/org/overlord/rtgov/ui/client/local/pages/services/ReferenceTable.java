@@ -15,17 +15,22 @@
  */
 package org.overlord.rtgov.ui.client.local.pages.services;
 
+import java.util.List;
+
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import org.jboss.errai.ui.nav.client.local.TransitionAnchorFactory;
 import org.overlord.rtgov.ui.client.local.ClientMessages;
 import org.overlord.rtgov.ui.client.local.pages.ReferenceDetailsPage;
-import org.overlord.rtgov.ui.client.local.widgets.common.SortableTemplatedWidgetTable;
-import org.overlord.rtgov.ui.client.model.Constants;
 import org.overlord.rtgov.ui.client.model.ReferenceSummaryBean;
+import org.overlord.sramp.ui.client.local.widgets.common.TemplatedWidgetTable;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.InlineLabel;
 
 /**
@@ -34,7 +39,7 @@ import com.google.gwt.user.client.ui.InlineLabel;
  * @author eric.wittmann@redhat.com
  */
 @Dependent
-public class ReferenceTable extends SortableTemplatedWidgetTable {
+public class ReferenceTable extends TemplatedWidgetTable implements HasValue<List<ReferenceSummaryBean>> {
 
     @Inject
     protected ClientMessages i18n;
@@ -48,27 +53,6 @@ public class ReferenceTable extends SortableTemplatedWidgetTable {
     }
 
     /**
-     * @see org.overlord.rtgov.ui.client.local.widgets.common.SortableTemplatedWidgetTable#getDefaultSortColumn()
-     */
-    @Override
-    protected SortColumn getDefaultSortColumn() {
-        SortColumn sortColumn = new SortColumn();
-        sortColumn.columnId = Constants.SORT_COLID_NAME;
-        sortColumn.ascending = true;
-        return sortColumn;
-    }
-
-    /**
-     * @see org.overlord.rtgov.ui.client.local.widgets.common.SortableTemplatedWidgetTable#configureColumnSorting()
-     */
-    @Override
-    protected void configureColumnSorting() {
-        setColumnSortable(0, Constants.SORT_COLID_NAME);
-        setColumnSortable(4, Constants.SORT_COLID_AVERAGE_DURATION);
-        sortBy(Constants.SORT_COLID_NAME, true);
-    }
-
-    /**
      * Adds a single row to the table.
      * @param summaryBean
      */
@@ -77,16 +61,14 @@ public class ReferenceTable extends SortableTemplatedWidgetTable {
 
         Anchor name = toDetailsPageLinkFactory.get("id", summaryBean.getReferenceId()); //$NON-NLS-1$
         name.setText(summaryBean.getName());
-        InlineLabel application = new InlineLabel(summaryBean.getApplication());
         InlineLabel interf4ce = new InlineLabel(summaryBean.getIface());
         InlineLabel bindings = new InlineLabel(summaryBean.getBindings());
         InlineLabel averageDuration = new InlineLabel(formatDuration(summaryBean.getAverageDuration()));
 
         add(rowIdx, 0, name);
-        add(rowIdx, 1, application);
-        add(rowIdx, 2, interf4ce);
-        add(rowIdx, 3, bindings);
-        add(rowIdx, 4, averageDuration);
+        add(rowIdx, 1, interf4ce);
+        add(rowIdx, 2, bindings);
+        add(rowIdx, 3, averageDuration);
     }
 
     /**
@@ -97,5 +79,30 @@ public class ReferenceTable extends SortableTemplatedWidgetTable {
         // TODO implement this!
         return String.valueOf(averageDuration);
     }
+
+	@Override
+	public HandlerRegistration addValueChangeHandler(
+			ValueChangeHandler<List<ReferenceSummaryBean>> handler) {
+        return addHandler(handler, ValueChangeEvent.getType());
+	}
+
+	@Override
+	public List<ReferenceSummaryBean> getValue() {
+        // Not implemented (the table is read-only)
+        return null;
+	}
+
+	@Override
+	public void setValue(List<ReferenceSummaryBean> value) {
+        setValue(value, true);
+	}
+
+	@Override
+	public void setValue(List<ReferenceSummaryBean> value, boolean fireEvents) {
+        clear();
+        for (ReferenceSummaryBean ref : value) {
+            addRow(ref);
+        }
+	}
 
 }

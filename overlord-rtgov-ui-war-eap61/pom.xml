@@ -39,6 +39,28 @@
       <artifactId>rtgov-ui-services-switchyard</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.overlord.rtgov.ui</groupId>
+      <artifactId>situation-store-jpa</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    
+    	<dependency>
+	        <groupId>org.overlord.rtgov.activity-analysis</groupId>
+	        <artifactId>call-trace</artifactId>
+	        <version>${rtgov.version}</version>
+	    </dependency>
+	    <dependency>
+	        <groupId>org.overlord.rtgov.activity-management</groupId>
+	        <artifactId>activity-store-jpa</artifactId>
+	        <version>${rtgov.version}</version>
+	    </dependency>
+	    <dependency>
+	        <groupId>org.overlord.rtgov.integration</groupId>
+	        <artifactId>rtgov-jbossas</artifactId>
+	        <version>${rtgov.version}</version>
+	    </dependency>
+    
     
     <!-- Third Party libs -->
     <dependency>

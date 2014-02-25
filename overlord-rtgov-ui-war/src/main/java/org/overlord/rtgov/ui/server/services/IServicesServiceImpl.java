@@ -20,7 +20,6 @@ import java.util.List;
 import org.jboss.errai.bus.server.annotations.Remote;
 import org.overlord.rtgov.ui.client.model.QName;
 import org.overlord.rtgov.ui.client.model.ReferenceBean;
-import org.overlord.rtgov.ui.client.model.ReferenceResultSetBean;
 import org.overlord.rtgov.ui.client.model.ServiceBean;
 import org.overlord.rtgov.ui.client.model.ServiceResultSetBean;
 import org.overlord.rtgov.ui.client.model.ServicesFilterBean;
@@ -50,17 +49,6 @@ public interface IServicesServiceImpl {
      */
     public ServiceResultSetBean findServices(ServicesFilterBean filters, int page, String sortColumn,
             boolean ascending) throws UiException;
-
-    /**
-     * Search for references using the given filters.
-     * @param filters
-     * @param page
-     * @param sortColumn
-     * @param ascending
-     * @throws UiException
-     */
-    public ReferenceResultSetBean findReferences(ServicesFilterBean filters, int page,
-            String sortColumn, boolean ascending) throws UiException;
 
     /**
      * Fetches a full service by its name.

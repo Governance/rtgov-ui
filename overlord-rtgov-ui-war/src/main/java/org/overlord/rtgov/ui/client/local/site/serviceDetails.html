@@ -144,7 +144,57 @@
                 </tbody>
                 </table>
               </div>
-            </div>
+            </div>            
+            
+            <!-- The References table -->
+            <div class="row-fluid">
+              <div class="span12 details-meta-data-section">
+                <div class="details-meta-data-section-header" data-i18n-key="find-references">References</div>
+                <div class="clearfix"></div>
+                <table data-field="reference-table" class="overlord-table overlord-standalone-table table table-striped table-condensed table-hover">
+                  <thead>
+                    <tr>
+                      <th data-i18n-key="reference-name">Reference Name</th>
+                      <th class="desktop-only" data-i18n-key="interface">Interface</th>
+                      <th class="desktop-only" data-i18n-key="bindings">Bindings</th>
+                      <th class="desktop-only" data-i18n-key="avg-duration">Average Duration</th>
+                    </tr>
+                  </thead>
+                  <tbody data-role="dummy">
+                    <tr>
+                      <td><a href="referenceDetails.html">CreateApplicationRef</a></td>
+                      <td class="desktop-only">org.jboss.demos.services.ICreateApplication</td>
+                      <td class="desktop-only">JMS,SOAP,REST</td>
+                      <td class="desktop-only">0.13s</td>
+                    </tr>
+                    <tr>
+                      <td><a href="referenceDetails.html">CreateQuoteRef</a></td>
+                      <td class="desktop-only">org.jboss.demos.services.ICreateQuote</td>
+                      <td class="desktop-only">JMS,SOAP</td>
+                      <td class="desktop-only">0.22s</td>
+                    </tr>
+                    <tr>
+                      <td><a href="referenceDetails.html">SearchContractRef</a></td>
+                      <td class="desktop-only">org.jboss.demos.services.ISearchContract</td>
+                      <td class="desktop-only">REST</td>
+                      <td class="desktop-only">3.93s</td>
+                    </tr>
+                    <tr>
+                      <td><a href="referenceDetails.html">DomainInformationRef</a></td>
+                       <td class="desktop-only">org.jboss.demos.services.IDomainInformation</td>
+                      <td class="desktop-only">JMS,REST</td>
+                      <td class="desktop-only">0.17s</td>
+                    </tr>
+                    <tr>
+                      <td><a href="referenceDetails.html">FNOLRef</a></td>
+                      <td class="desktop-only">org.jboss.demos.services.IFNOL</td>
+                      <td class="desktop-only">JMS,SOAP,REST</td>
+                      <td class="desktop-only">0.01s</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>            
           </div>
         </div>  <!-- /service-details -->
         
@@ -153,7 +203,7 @@
         <!-- Footer -->
         <footer>
           <hr />
-          <p data-i18n-key="footer">&copy; JBoss Overlord 2013</p>
+          <p data-i18n-key="footer">&copy; JBoss Overlord 2013-4</p>
         </footer>
       </div> <!-- /container -->
       

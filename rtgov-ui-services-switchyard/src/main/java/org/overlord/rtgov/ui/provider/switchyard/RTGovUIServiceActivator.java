@@ -47,7 +47,7 @@ public class RTGovUIServiceActivator  implements ServiceActivator {
 
 
    public static ModelControllerClient getClient() {
-      return controller.createClient(executor);
+	   return controller.createClient(executor);
    }
 
 
@@ -85,7 +85,7 @@ public class RTGovUIServiceActivator  implements ServiceActivator {
             }
          });
          RTGovUIServiceActivator.controller = modelControllerValue.getValue();
-         LOG.info(i18n.format("RTGovUIServiceActivator.Started")); //$NON-NLS-1$
+         LOG.info(i18n.format("RTGovUIServiceActivator.Started: controller="+RTGovUIServiceActivator.controller)); //$NON-NLS-1$
       }
 
 

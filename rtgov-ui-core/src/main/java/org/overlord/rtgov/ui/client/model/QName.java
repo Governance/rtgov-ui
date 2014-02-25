@@ -82,6 +82,17 @@ public class QName implements Serializable {
     public String toString() {
         return "{" + getNamespaceURI() + "}" + getLocalPart(); //$NON-NLS-1$ //$NON-NLS-2$
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj) {
+    	if (obj instanceof QName) {
+    		return (obj.toString().equals(toString()));
+    	}
+    	return (false);
+    }
 
     /**
      * Reverses toString.

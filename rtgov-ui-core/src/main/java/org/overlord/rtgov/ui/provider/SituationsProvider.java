@@ -65,7 +65,7 @@ public interface SituationsProvider {
      * @param id The situation id
      * @throws UiException Failed to retrieve the situation
      */
-    public SituationBean get(String id) throws UiException;
+    public SituationBean getSituation(String id) throws UiException;
 
     /**
      * This method resubmits the supplied message to the service associated

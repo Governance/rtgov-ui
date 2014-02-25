@@ -25,8 +25,6 @@ import javax.inject.Inject;
 
 import org.overlord.rtgov.ui.client.model.QName;
 import org.overlord.rtgov.ui.client.model.ReferenceBean;
-import org.overlord.rtgov.ui.client.model.ReferenceResultSetBean;
-import org.overlord.rtgov.ui.client.model.ReferenceSummaryBean;
 import org.overlord.rtgov.ui.client.model.ServiceBean;
 import org.overlord.rtgov.ui.client.model.ServiceResultSetBean;
 import org.overlord.rtgov.ui.client.model.ServiceSummaryBean;
@@ -82,29 +80,6 @@ public class ServicesProviderServiceImpl implements IServicesServiceImpl {
         serviceResult.setTotalResults(services.size());
         
         return serviceResult;
-    }
-
-    /**
-     * @see org.overlord.rtgov.ui.server.services.IServicesServiceImpl#findReferences(org.overlord.rtgov.ui.client.model.ServicesFilterBean, int)
-     */
-    @Override
-    public ReferenceResultSetBean findReferences(
-            ServicesFilterBean filters, int page, String sortColumn,
-            boolean ascending) throws UiException {
-        final ReferenceResultSetBean referenceResult = new ReferenceResultSetBean();
-        final List<ReferenceSummaryBean> references = new ArrayList<ReferenceSummaryBean>();
-
-        for (ServicesProvider sp : _providers) {
-        	references.addAll(sp.findReferences(filters));
-        }
-        
-        // TODO: Pagination support
-
-        referenceResult.setReferences(references);
-        referenceResult.setItemsPerPage(references.size());
-        referenceResult.setStartIndex(0);
-        referenceResult.setTotalResults(references.size());
-        return referenceResult;
     }
 
     /**

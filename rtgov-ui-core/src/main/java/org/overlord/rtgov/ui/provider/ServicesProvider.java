@@ -20,8 +20,6 @@ import java.util.List;
 import org.overlord.rtgov.ui.client.model.MessageBean;
 import org.overlord.rtgov.ui.client.model.QName;
 import org.overlord.rtgov.ui.client.model.ReferenceBean;
-import org.overlord.rtgov.ui.client.model.ReferenceSummaryBean;
-//import org.overlord.rtgov.ui.client.model.ReferenceSummaryBean;
 import org.overlord.rtgov.ui.client.model.ServiceBean;
 import org.overlord.rtgov.ui.client.model.ServiceSummaryBean;
 import org.overlord.rtgov.ui.client.model.ServicesFilterBean;
@@ -78,14 +76,6 @@ public interface ServicesProvider {
      */
     public List<ServiceSummaryBean> findServices(ServicesFilterBean filters) throws UiException;
     
-    /**
-     * @param filters
-     * @return
-     * @throws UiException
-     * @deprecated No longer support retrieving references on their own - only in the context of a service
-     */
-    public List<ReferenceSummaryBean> findReferences(ServicesFilterBean filters) throws UiException;
-
     /**
      * This method returns the service details associated with a unique id.
      * 
