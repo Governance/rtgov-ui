@@ -21,7 +21,9 @@ import javax.transaction.UserTransaction;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestName;
 import org.overlord.rtgov.analytics.situation.Situation;
 import org.overlord.rtgov.analytics.situation.store.SituationStore;
 import org.overlord.rtgov.analytics.situation.store.SituationsQuery;
@@ -30,8 +32,11 @@ import org.overlord.rtgov.ui.server.interceptors.IUserContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 
+import com.google.common.base.Strings;
+
 @ContextConfiguration
 public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringContextTests {
+    @Rule public TestName name = new TestName();
 
 	private JPASituationStore _situationStore;
     
@@ -72,6 +77,19 @@ public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringCont
 			public void begin() throws NotSupportedException, SystemException {
 			}
 		});
+        IUserContext.Holder.setSecurityContext(new IUserContext() {
+
+            @Override
+            public Principal getUserPrincipal() {
+                return new Principal() {
+
+                    @Override
+                    public String getName() {
+                        return name.getMethodName();
+                    }
+                };
+            }
+        });
     }
 
     @Test
@@ -194,56 +212,45 @@ public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringCont
 	@Test
 	public void recordResubmit() throws Exception {
 		Situation situation = new Situation();
-		situation.setId("recordResubmit");
+		situation.setId(name.getMethodName());
 		situation.setTimestamp(System.currentTimeMillis());
 		_entityManager.persist(situation);
-		final String testUserName = "recordResubmit_test";
-		IUserContext.Holder.setSecurityContext(new IUserContext() {
-
-			@Override
-			public Principal getUserPrincipal() {
-				return new Principal() {
-
-					@Override
-					public String getName() {
-						return testUserName;
-					}
-				};
-			}
-		});
 		_situationStore.recordSuccessfulResubmit(situation.getId());
 		Situation reload = _situationStore.getSituation(situation.getId());
-		assertEquals(testUserName, reload.getProperties().get(SituationStore.RESUBMIT_BY_PROPERTY));
-		assertEquals("OK", reload.getProperties().get(SituationStore.RESUBMIT_RESULT_PROPERTY));
+		assertEquals(name.getMethodName(), reload.getProperties().get(SituationStore.RESUBMIT_BY_PROPERTY));
+		assertEquals(SituationStore.RESUBMIT_RESULT_SUCCESS, reload.getProperties().get(SituationStore.RESUBMIT_RESULT_PROPERTY));
 		assertTrue(reload.getProperties().containsKey(SituationStore.RESUBMIT_AT_PROPERTY));
-		assertFalse(reload.getProperties().containsKey(SituationStore.RESUBMIT_FAILURE_PROPERTY));
+		assertFalse(reload.getProperties().containsKey(SituationStore.RESUBMIT_ERROR_MESSAGE));
 	}
 
-	@Test
-	public void recordResubmitFailure() throws Exception {
-		Situation situation = new Situation();
-		situation.setId("recordResubmitFailure");
-		situation.setTimestamp(System.currentTimeMillis());
-		_entityManager.persist(situation);
-		final String testUserName = "recordResubmitFailure_test";
-		IUserContext.Holder.setSecurityContext(new IUserContext() {
+    @Test
+    public void recordResubmitFailure() throws Exception {
+        Situation situation = new Situation();
+        situation.setId(name.getMethodName());
+        situation.setTimestamp(System.currentTimeMillis());
+        _entityManager.persist(situation);
+        _situationStore.recordResubmitFailure(situation.getId(), name.getMethodName());
+        Situation reload = _situationStore.getSituation(situation.getId());
+        assertEquals(name.getMethodName(), reload.getProperties().get(SituationStore.RESUBMIT_BY_PROPERTY));
+        assertEquals(name.getMethodName(), reload.getProperties().get(SituationStore.RESUBMIT_ERROR_MESSAGE));
+        assertTrue(reload.getProperties().containsKey(SituationStore.RESUBMIT_AT_PROPERTY));
+        assertEquals(SituationStore.RESUBMIT_RESULT_ERROR,
+                reload.getProperties().get(SituationStore.RESUBMIT_RESULT_PROPERTY));
+    }
 
-			@Override
-			public Principal getUserPrincipal() {
-				return new Principal() {
-
-					@Override
-					public String getName() {
-						return testUserName;
-					}
-				};
-			}
-		});
-		_situationStore.recordResubmitFailure(situation.getId(), "recordResubmitFailure");
-		Situation reload = _situationStore.getSituation(situation.getId());
-		assertEquals(testUserName, reload.getProperties().get(SituationStore.RESUBMIT_BY_PROPERTY));
-		assertEquals("recordResubmitFailure", reload.getProperties().get(SituationStore.RESUBMIT_FAILURE_PROPERTY));
-		assertTrue(reload.getProperties().containsKey(SituationStore.RESUBMIT_AT_PROPERTY));
-		assertFalse(reload.getProperties().containsKey(SituationStore.RESUBMIT_RESULT_PROPERTY));
-	}
+    @Test
+    public void recordResubmitErrorMessageMaxLength() throws Exception {
+        Situation situation = new Situation();
+        situation.setId(name.getMethodName());
+        situation.setTimestamp(System.currentTimeMillis());
+        _entityManager.persist(situation);
+        _situationStore.recordResubmitFailure(situation.getId(), Strings.padEnd(name.getMethodName(), 10000, '*'));
+        Situation reload = _situationStore.getSituation(situation.getId());
+        assertEquals(name.getMethodName(), reload.getProperties().get(SituationStore.RESUBMIT_BY_PROPERTY));
+        String errorMessage = reload.getProperties().get(SituationStore.RESUBMIT_ERROR_MESSAGE);
+        assertEquals(Strings.padEnd(name.getMethodName(), 250, '*'), errorMessage);
+        assertTrue(reload.getProperties().containsKey(SituationStore.RESUBMIT_AT_PROPERTY));
+        assertEquals(SituationStore.RESUBMIT_RESULT_ERROR,
+                reload.getProperties().get(SituationStore.RESUBMIT_RESULT_PROPERTY));
+    }
 }

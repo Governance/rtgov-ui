@@ -26,10 +26,13 @@ public interface SituationStore {
 
 	public static final String RESOLUTION_STATE_PROPERTY = "resolutionState";
 	public static final String ASSIGNED_TO_PROPERTY = "assignedTo";
-	public static final String RESUBMIT_FAILURE_PROPERTY = "resubmitFailure";
+	public static final String RESUBMIT_ERROR_MESSAGE = "resubmitErrorMessage";
 	public static final String RESUBMIT_RESULT_PROPERTY = "resubmitResult";
 	public static final String RESUBMIT_AT_PROPERTY = "resubmitAt";
 	public static final String RESUBMIT_BY_PROPERTY = "resubmitBy";
+	public static final String RESUBMIT_RESULT_ERROR = "Error";
+	public static final String RESUBMIT_RESULT_SUCCESS = "Success";
+
 
 
 	/**
