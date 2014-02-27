@@ -18,10 +18,10 @@ package org.overlord.rtgov.ui.client.local.widgets.common;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.overlord.commons.gwt.client.local.widgets.TemplatedWidgetTable;
 import org.overlord.rtgov.ui.client.local.events.TableSortEvent;
 import org.overlord.rtgov.ui.client.local.events.TableSortEvent.Handler;
 import org.overlord.rtgov.ui.client.local.events.TableSortEvent.HasTableSortHandlers;
-import org.overlord.sramp.ui.client.local.widgets.common.TemplatedWidgetTable;
 
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.event.dom.client.ClickEvent;

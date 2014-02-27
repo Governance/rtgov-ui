@@ -27,6 +27,8 @@ import org.jboss.errai.ui.nav.client.local.TransitionAnchor;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
+import org.overlord.commons.gwt.client.local.widgets.HtmlSnippet;
+import org.overlord.commons.gwt.client.local.widgets.Pager;
 import org.overlord.rtgov.ui.client.local.ClientMessages;
 import org.overlord.rtgov.ui.client.local.events.TableSortEvent;
 import org.overlord.rtgov.ui.client.local.pages.services.ServiceFilters;
@@ -39,8 +41,6 @@ import org.overlord.rtgov.ui.client.model.QName;
 import org.overlord.rtgov.ui.client.model.ServiceResultSetBean;
 import org.overlord.rtgov.ui.client.model.ServiceSummaryBean;
 import org.overlord.rtgov.ui.client.model.ServicesFilterBean;
-import org.overlord.sramp.ui.client.local.widgets.bootstrap.Pager;
-import org.overlord.sramp.ui.client.local.widgets.common.HtmlSnippet;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.SpanElement;

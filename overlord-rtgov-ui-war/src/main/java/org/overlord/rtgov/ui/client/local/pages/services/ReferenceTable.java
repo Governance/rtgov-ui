@@ -21,10 +21,10 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import org.jboss.errai.ui.nav.client.local.TransitionAnchorFactory;
+import org.overlord.commons.gwt.client.local.widgets.TemplatedWidgetTable;
 import org.overlord.rtgov.ui.client.local.ClientMessages;
 import org.overlord.rtgov.ui.client.local.pages.ReferenceDetailsPage;
 import org.overlord.rtgov.ui.client.model.ReferenceSummaryBean;
-import org.overlord.sramp.ui.client.local.widgets.common.TemplatedWidgetTable;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;

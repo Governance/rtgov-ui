@@ -19,8 +19,8 @@ import java.util.List;
 
 import javax.enterprise.context.Dependent;
 
+import org.overlord.commons.gwt.client.local.widgets.TemplatedWidgetTable;
 import org.overlord.rtgov.ui.client.model.ReferenceMetric;
-import org.overlord.sramp.ui.client.local.widgets.common.TemplatedWidgetTable;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
