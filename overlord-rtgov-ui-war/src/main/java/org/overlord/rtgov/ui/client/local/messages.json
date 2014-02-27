@@ -40,6 +40,7 @@
   "call-trace-details.duration" : "Duration",
   "call-trace-details.percentage" : "Percentage",
   "call-trace-details.properties" : "Properties",
+  "situation-details.resubmit-details" : "Resubmitted by '{0}' at '{0}': '{0}'",
   "situation-details.resubmit-message-title" : "Resubmitting Message",
   "situation-details.resubmit-message-msg" : "Please wait while we resubmit the message for situation '{0}.",
   "situation-details.message-resubmitted" : "Message Resubmitted Successfully",

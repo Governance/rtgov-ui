@@ -125,12 +125,8 @@ public class SituationDetailsPage extends AbstractPage {
     SourceEditor messageEditor;
     @Inject  @DataField("btn-resubmit")
     Button resubmitButton;
-    @Inject @DataField @Bound(property="resubmitBy")
-    InlineLabel resubmitBy;
-    @Inject @DataField @Bound(property="resubmitAt")
-    InlineLabel resubmitAt;
-    @Inject @DataField @Bound(property="resubmitResult")
-    InlineLabel resubmitResult;
+    @Inject @DataField
+    InlineLabel resubmitDetails;
     @Inject @DataField("btn-assign")
     Button assignButton;
     @Inject @DataField("btn-close")
@@ -210,15 +206,19 @@ public class SituationDetailsPage extends AbstractPage {
         } else {
             messageEditor.setValue(""); //$NON-NLS-1$
         }
-		if (situation.isResubmitError()) {
-			resubmitAt.getElement().addClassName("text-error"); //$NON-NLS-1$
-			resubmitBy.getElement().addClassName("text-error"); //$NON-NLS-1$
-			resubmitResult.getElement().addClassName("text-error"); //$NON-NLS-1$
-		} else {
-			resubmitAt.getElement().removeClassName("text-error"); //$NON-NLS-1$
-			resubmitBy.getElement().removeClassName("text-error"); //$NON-NLS-1$
-			resubmitResult.getElement().removeClassName("text-error"); //$NON-NLS-1$
-		}
+        if (situation.getResubmitBy() != null) {
+            resubmitDetails.setText(i18n.format("situation-details.resubmit-details",
+                    situation.getResubmitBy(), situation.getResubmitAt(), situation.getResubmitResult()));
+            resubmitDetails.setTitle(situation.getResubmitErrorMessage());
+        } else {
+            resubmitDetails.setTitle("");
+            resubmitDetails.setText("");
+        }
+        if (situation.isResubmitError()) {
+            resubmitDetails.getElement().addClassName("text-error"); //$NON-NLS-1$
+        } else {
+            resubmitDetails.getElement().removeClassName("text-error"); //$NON-NLS-1$
+        }
 		if (situation.isAssignedToCurrentUser() || (situation.getAssignedTo() != null && situation.isTakeoverPossible())) {
 			if (situation.isAssignedToCurrentUser()) {
 				assignButton.getElement().addClassName("hide");

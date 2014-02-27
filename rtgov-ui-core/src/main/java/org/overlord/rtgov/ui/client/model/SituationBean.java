@@ -167,4 +167,12 @@ public class SituationBean extends SituationSummaryBean implements Serializable 
                 && !"Success".equals(getProperties().get("resubmitResult"));
     }
 
+    /**
+     *
+     * @return The error message for the last resubmit
+     */
+    public String getResubmitErrorMessage() {
+        return getProperties().get("resubmitErrorMessage");
+    }
+
 }
