@@ -155,7 +155,7 @@ public class SituationBean extends SituationSummaryBean implements Serializable 
      * @return The error message of the last resubmit failure or null
      */
     public String getResubmitResult() {
-        return getProperties().get("resubmitFailure");
+        return getProperties().get("resubmitResult");
     }
 
     /**
@@ -163,7 +163,8 @@ public class SituationBean extends SituationSummaryBean implements Serializable 
      * @return true if the last resubmit failed
      */
     public boolean isResubmitError() {
-        return getProperties().containsKey("resubmitFailure");
+        return getProperties().containsKey("resubmitResult")
+                && !"Success".equals(getProperties().get("resubmitResult"));
     }
 
 }

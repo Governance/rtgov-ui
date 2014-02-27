@@ -18,7 +18,6 @@ package org.overlord.rtgov.ui.server.services.impl;
 import static java.lang.System.currentTimeMillis;
 import static org.overlord.rtgov.ui.client.model.ResolutionState.RESOLVED;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -295,12 +294,12 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
 			properties.put("resubmitBy", IUserContext.Holder.getUserPrincipal().getName());
 		}
 		properties.put("resubmitAt", Long.toString(currentTimeMillis()));
-		if (properties.containsKey("resubmitResult")) {
-			properties.put("resubmitFailure", "Timeout while..");
-			properties.remove("resubmitResult");
+		if ("Success".equals(properties.get("resubmitResult"))) {
+			properties.put("resubmitErrorMessage", "Timeout while..");
+            properties.put("resubmitResult", "Error");
 		} else {
-			properties.put("resubmitResult", "OK");
-			properties.remove("resubmitFailure");
+			properties.put("resubmitResult", "Success");
+			properties.remove("resubmitErrorMessage");
 		}
 	}
 

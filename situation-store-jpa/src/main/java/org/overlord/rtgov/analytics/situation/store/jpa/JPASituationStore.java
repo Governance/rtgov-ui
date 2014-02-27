@@ -37,6 +37,8 @@ import org.overlord.rtgov.analytics.situation.store.SituationsQuery;
 import org.overlord.rtgov.ui.provider.situations.Messages;
 import org.overlord.rtgov.ui.server.interceptors.IUserContext;
 
+import com.google.common.base.Strings;
+
 /**
  * This class provides the JPA based implementation of the SituationsStore interface.
  *
@@ -44,7 +46,8 @@ import org.overlord.rtgov.ui.server.interceptors.IUserContext;
 @Singleton
 public class JPASituationStore implements SituationStore {
 
-	private static final String USER_TRANSACTION = "java:comp/UserTransaction"; //$NON-NLS-1$
+    private static final int PROPERTY_VALUE_MAX_LENGTH = 250;
+    private static final String USER_TRANSACTION = "java:comp/UserTransaction"; //$NON-NLS-1$
 	private static final String OVERLORD_RTGOV_DB = "overlord-rtgov-situations"; //$NON-NLS-1$
 	
     private static volatile Messages i18n = new Messages();
@@ -318,30 +321,34 @@ public class JPASituationStore implements SituationStore {
 					properties.put(RESUBMIT_BY_PROPERTY, IUserContext.Holder.getUserPrincipal().getName());
 				}
 				properties.put(RESUBMIT_AT_PROPERTY, Long.toString(currentTimeMillis()));
-				properties.put(RESUBMIT_RESULT_PROPERTY, "OK");
-				properties.remove(RESUBMIT_FAILURE_PROPERTY);
+				properties.put(RESUBMIT_RESULT_PROPERTY, RESUBMIT_RESULT_SUCCESS);
+				properties.remove(RESUBMIT_ERROR_MESSAGE);
 			}
 		});
 	}
 
-	@Override
-	public void recordResubmitFailure(final String situationId, final String message) {
-		if (LOG.isLoggable(Level.FINEST)) {
-			LOG.finest(i18n.format("JPASituationStore.ResubmitFailure", situationId)); //$NON-NLS-1$
-		}
-		doInTransaction(new EntityManagerCallback.Void() {
-			@Override
-			public void doExecute(EntityManager entityManager) {
-				Situation situation = entityManager.find(Situation.class, situationId);
-				Map<String, String> properties = situation.getProperties();
-				if (IUserContext.Holder.getUserPrincipal() != null) {
-					properties.put(RESUBMIT_BY_PROPERTY, IUserContext.Holder.getUserPrincipal().getName());
-				}
-				properties.put(RESUBMIT_AT_PROPERTY, Long.toString(currentTimeMillis()));
-				properties.put(RESUBMIT_FAILURE_PROPERTY, message);
-				properties.remove(RESUBMIT_RESULT_PROPERTY);
-			}
-		});
+    @Override
+    public void recordResubmitFailure(final String situationId, final String errorMessage) {
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest(i18n.format("JPASituationStore.ResubmitFailure", situationId)); //$NON-NLS-1$
+        }
+        doInTransaction(new EntityManagerCallback.Void() {
+            @Override
+            public void doExecute(EntityManager entityManager) {
+                Situation situation = entityManager.find(Situation.class, situationId);
+                Map<String, String> properties = situation.getProperties();
+                if (IUserContext.Holder.getUserPrincipal() != null) {
+                    properties.put(RESUBMIT_BY_PROPERTY, IUserContext.Holder.getUserPrincipal().getName());
+                }
+                properties.put(RESUBMIT_AT_PROPERTY, Long.toString(currentTimeMillis()));
+                properties.put(RESUBMIT_RESULT_PROPERTY, RESUBMIT_RESULT_ERROR);
+                String message = Strings.nullToEmpty(errorMessage);
+                if (message.length() > PROPERTY_VALUE_MAX_LENGTH) {
+                    message = message.substring(0, PROPERTY_VALUE_MAX_LENGTH);
+                }
+                properties.put(RESUBMIT_ERROR_MESSAGE, message);
+            }
+        });
 
-	}
+    }
 }
