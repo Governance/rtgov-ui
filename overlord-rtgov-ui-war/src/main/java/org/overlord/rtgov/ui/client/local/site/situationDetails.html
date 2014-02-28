@@ -239,16 +239,6 @@
               <!-- Tab:Message -->
               <div class="container-fluid tab-pane fade" id="message">
                 <div class="message-meta-data-section-header" data-i18n-key="message-details">Message Details</div>
-                <div class="clearfix"></div>
-                <div class="message-meta-data-section-label" data-i18n-key="subject">Resubmit By:</div>
-                <div data-field="resubmitBy" class="message-meta-data-section-value" data-role="dummy">User</div>
-                <div class="clearfix"></div>
-                <div class="message-meta-data-section-label" data-i18n-key="subject">Resubmit At:</div>
-                <div data-field="resubmitAt" class="message-meta-data-section-value" data-role="dummy">26.02.2014 10:43</div>
-                <div class="clearfix"></div>
-                <div class="message-meta-data-section-label" data-i18n-key="subject">Resubmit Result:</div>
-                <div data-field="resubmitResult" class="message-meta-data-section-value" data-role="dummy">OK</div>
-                <div class="clearfix"></div>
                 <div id="editor-wrapper" class="source-editor-wrapper span12">
                   <div data-role="dummy" data-field="message-editor" id="editor" class="source-editor">
 &lt;assembly
@@ -264,6 +254,8 @@
                   </div>
                 </div>
                 <button data-field="btn-resubmit" class="btn" name="Resubmit" data-i18n-key="resubmit">Resubmit</button>
+                <div class="clearfix"></div>
+                <div data-field="resubmitDetails" class="message-meta-data-section-value" data-role="dummy">Resubmitted by 'xyz' at 'datetime': Successful</div>
               </div>
               <!-- /Tab:Message -->
               

@@ -79,11 +79,11 @@ public class ClientMessages {
             return pattern;
 
         // TODO add support for actually using { in a message
-        StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder(pattern);
         for (Object arg : args) {
-            String part1 = pattern.substring(0,pattern.indexOf('{'));
-            String part2 = pattern.substring(pattern.indexOf('}') + 1);
-            builder.append(part1).append(arg).append(part2);
+            String part1 = builder.substring(0, builder.toString().indexOf('{'));
+            String part2 = builder.substring(builder.toString().indexOf('}') + 1);
+            builder = new StringBuilder(part1).append(arg).append(part2);
         }
         return builder.toString();
     }
