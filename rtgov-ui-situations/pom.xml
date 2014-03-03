@@ -65,6 +65,13 @@
 			<scope>test</scope>
 	    </dependency>
 
+		<!-- Test only dependencies -->
+	    <dependency>
+	        <groupId>org.overlord.rtgov.activity-management</groupId>
+	        <artifactId>activity-store-mem</artifactId>
+	        <version>${rtgov.version}</version>
+			<scope>test</scope>
+	    </dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

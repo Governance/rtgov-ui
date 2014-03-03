@@ -9,6 +9,11 @@
   <artifactId>overlord-rtgov-ui-war</artifactId>
   <packaging>war</packaging>
   <name>overlord-rtgov-ui-war</name>
+  
+  <properties>
+  	<kibana.distribution.version>kibana-3.0.0milestone5</kibana.distribution.version>
+  </properties>
+  
   <dependencies>
     <dependency>
       <groupId>org.overlord.rtgov.ui</groupId>
@@ -195,6 +200,11 @@
           <warName>${project.artifactId}</warName>
           <outputFileNameMapping>@{artifactId}@-@{baseVersion}@@{dashClassifier?}@.@{extension}@</outputFileNameMapping>
           <packagingExcludes>**/javax/**/*.*,**/client/local/**/*.class,**/rebel.xml</packagingExcludes>
+          <webResources>
+            <resource>
+              <directory>target/kibana-3.0.0milestone5</directory>
+            </resource>
+          </webResources>
         </configuration>
       </plugin>
       <plugin>
@@ -249,6 +259,31 @@
           </filesets>
         </configuration>
       </plugin>
+		<plugin>
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-antrun-plugin</artifactId>
+		    <version>1.6</version>
+		    <executions>
+		        <execution>
+		            <id>prepare</id>
+		            <phase>validate</phase>
+		            <configuration>
+		                <tasks>
+		                    <echo message="prepare phase" />
+		                    <unzip src="src/main/kibana/${kibana.distribution.version}.zip" dest="target/" />
+		                    <move file="target/${kibana.distribution.version}/index.html"
+		                    					toFile="target/${kibana.distribution.version}/analytics.html" />
+		                    <copy todir="target/${kibana.distribution.version}">
+								<fileset dir="src/main/kibana/config"/>
+							</copy>
+		                </tasks>
+		            </configuration>
+		            <goals>
+		                <goal>run</goal>
+		            </goals>
+		        </execution>
+		    </executions>
+		</plugin>
     </plugins>
   </build>
 
