@@ -154,12 +154,16 @@
                   <!-- /Context -->
                 </div>
                 <!-- /Properties & Context -->
-                <button data-field="btn-assign" class="btn" name="Assign" data-i18n-key="assign">Assign</button>
-                <button data-field="btn-close" class="btn" name="Close" data-i18n-key="close">Close</button>
-                <button data-field="btn-reopen" class="btn" name="Reopen" data-i18n-key="reopen">Reopen</button>
-                <button data-field="btn-start" class="btn" name="Start" data-i18n-key="start">Start Progress</button>
-                <button data-field="btn-stop" class="btn" name="Stop" data-i18n-key="stop">Stop Progress</button>
-                <button data-field="btn-resolve" class="btn" name="Resolve" data-i18n-key="resolve">Resolve</button>
+                <div class="row-fluid">
+                  <div class="span12">
+                    <button data-field="btn-assign" class="btn" name="Assign" data-i18n-key="assign">Assign</button>
+                    <button data-field="btn-close" class="btn" name="Close" data-i18n-key="close">Close</button>
+                    <button data-field="btn-reopen" class="btn" name="Reopen" data-i18n-key="reopen">Reopen</button>
+                    <button data-field="btn-start" class="btn" name="Start" data-i18n-key="start">Start Progress</button>
+                    <button data-field="btn-stop" class="btn" name="Stop" data-i18n-key="stop">Stop Progress</button>
+                    <button data-field="btn-resolve" class="btn" name="Resolve" data-i18n-key="resolve">Resolve</button>
+                  </div>
+                </div>
               </div>
               <!-- /Tab:Details -->
               
@@ -239,7 +243,7 @@
               <!-- Tab:Message -->
               <div class="container-fluid tab-pane fade" id="message">
                 <div class="message-meta-data-section-header" data-i18n-key="message-details">Message Details</div>
-                <div id="editor-wrapper" class="source-editor-wrapper span12">
+                <div id="editor-wrapper" class="source-editor-wrapper">
                   <div data-role="dummy" data-field="message-editor" id="editor" class="source-editor">
 &lt;assembly
     xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
