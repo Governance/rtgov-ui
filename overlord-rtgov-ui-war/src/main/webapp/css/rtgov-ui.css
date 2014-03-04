@@ -233,7 +233,6 @@ footer hr {
 }
 
 .source-editor-wrapper {
-  margin-top: 15px;
   background-color: #fff8f8;
   position: relative;
   height: 350px;
@@ -249,8 +248,23 @@ footer hr {
   background: white;
 }
 
+.situation-details #details {
+  padding-bottom: 20px;
+}
+
 .situation-details #message {
   padding-bottom: 15px;
+}
+.situation-details #message .message-meta-data-section-header {
+  float: none;
+  margin-top: 15px;
+  padding-bottom: 15px;
+}
+.situation-details #message .message-meta-data-section-value {
+  border: 1px solid rgb(221, 221, 221);
+  margin-top: 10px;
+  padding: 8px;
+  width: 90%;
 }
 
 .modal-header {
