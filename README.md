@@ -47,6 +47,14 @@ Then run the following from the _tests_ folder:
 
 	$ mvn clean install
 
+## Deploying to JBoss EAP
+
+Once a full build has been performed using:
+
+	$ mvn clean install
+
+from the top level folder, deploy the $rtgov-ui/overlord-rtgov-ui-war-eap61/target/overlord-rtgov-ui.war file into the EAP standalone/deployments folder.
+
 ## Contribute fixes and features
 
 This project is open source, and we welcome anybody who wants to participate and contribute!
