@@ -44,7 +44,7 @@
           "editable": true,
           "type": "histogram",
           "loadingEditor": false,
-          "mode": "min",
+          "mode": "mean",
           "time_field": "timestamp",
           "queries": {
             "mode": "all",
@@ -130,8 +130,10 @@
           "type": "terms",
           "loadingEditor": false,
           "queries": {
-            "mode": "pinned",
-            "ids": []
+            "mode": "all",
+            "ids": [
+              0
+            ]
           },
           "field": "responsetime.serviceType",
           "exclude": [],
@@ -368,7 +370,7 @@
   "index": {
     "interval": "none",
     "pattern": "[logstash-]YYYY.MM.DD",
-    "default": "monitor9/responsetime",
+    "default": "rtgov/responsetime",
     "warm_fields": true
   },
   "style": "light",
