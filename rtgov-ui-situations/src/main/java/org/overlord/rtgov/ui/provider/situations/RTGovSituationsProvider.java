@@ -492,11 +492,12 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
 	    	
 			String parts[]=sit.getSubject().split("\\x7C");
 			
-			if (parts.length != 2) {
+			if (parts.length < 2 || parts.length > 3) {
 				throw new UiException(i18n.format("RTGovSituationsProvider.InvalidSubject", sit.getSubject(),
 											parts.length));
 			}
 			
+			// Ignore optional third part, as this names the fault
 			String service=parts[0];
 			String operation=parts[1];
 
