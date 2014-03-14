@@ -39,6 +39,88 @@ public interface IRpcServiceInvocationHandler<T> {
      */
     public void onError(Throwable error);
     
+    /**
+     * The result of IRpcServiceInvocationHandler call's.
+     */
+    interface RpcResult<T> {
+
+        /**
+         *
+         * @return the Data of the Rpc Call or null in case of
+         *         {@link #isError()}
+         */
+        T getData();
+
+        /**
+         *
+         * @return the Error of the Rpc Call or null if successful
+         */
+        Throwable getError();
+
+        /**
+         *
+         * @return true in case of any Error
+         */
+        boolean isError();
+
+        class DefaultResult<T> implements RpcResult<T> {
+            private T data;
+            private Throwable error;
+
+            public DefaultResult(T data, Throwable error) {
+                super();
+                this.data = data;
+                this.error = error;
+            }
+
+            @Override
+            public T getData() {
+                return data;
+            }
+
+            @Override
+            public Throwable getError() {
+                return error;
+            }
+
+            @Override
+            public boolean isError() {
+                return getError() != null;
+            }
+        }
+    }
+
+    class RpcServiceInvocationHandlerAdapter<T> implements IRpcServiceInvocationHandler<T> {
+
+        @Override
+        public void onReturn(T data) {
+            try {
+                doOnReturn(data);
+            } finally {
+                doOnComplete(new RpcResult.DefaultResult<T>(data, null));
+            }
+        }
+
+        public void doOnReturn(T data) {
+        }
+
+        @Override
+        public void onError(Throwable error) {
+            try {
+                doOnError(error);
+            } finally {
+                doOnComplete(new RpcResult.DefaultResult<T>(null, error));
+            }
+        }
+
+        public void doOnError(Throwable error) {
+        }
+
+        public void doOnComplete(RpcResult<T> result) {
+        }
+
+    }
+
 	class VoidInvocationHandler implements IRpcServiceInvocationHandler<Void> {
 		@Inject
 		private NotificationService notificationService;

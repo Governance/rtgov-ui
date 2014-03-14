@@ -42,6 +42,7 @@ import org.overlord.rtgov.ui.client.local.pages.situations.SituationPropertiesTa
 import org.overlord.rtgov.ui.client.local.services.NotificationService;
 import org.overlord.rtgov.ui.client.local.services.SituationsRpcService;
 import org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHandler;
+import org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHandler.RpcServiceInvocationHandlerAdapter;
 import org.overlord.rtgov.ui.client.local.util.DOMUtil;
 import org.overlord.rtgov.ui.client.local.util.DataBindingDateTimeConverter;
 import org.overlord.rtgov.ui.client.local.widgets.common.SourceEditor;
@@ -270,26 +271,29 @@ public class SituationDetailsPage extends AbstractPage {
      * @param event
      */
     @EventHandler("btn-resubmit")
-    protected void onDeleteClick(ClickEvent event) {
+    protected void onResubmitClick(ClickEvent event) {
         final NotificationBean notificationBean = notificationService.startProgressNotification(
                 i18n.format("situation-details.resubmit-message-title"), //$NON-NLS-1$
                 i18n.format("situation-details.resubmit-message-msg", this.situation.getModel().getSubject())); //$NON-NLS-1$
         situationsService.resubmit(situation.getModel().getSituationId(), this.messageEditor.getValue(), 
-                new IRpcServiceInvocationHandler<Void>() {
+                new RpcServiceInvocationHandlerAdapter<Void>() {
             @Override
-            public void onReturn(Void data) {
+            public void doOnReturn(Void data) {
                 notificationService.completeProgressNotification(notificationBean.getUuid(),
                         i18n.format("situation-details.message-resubmitted"), //$NON-NLS-1$
                         i18n.format("situation-details.resubmit-success-msg", situation.getModel().getSubject())); //$NON-NLS-1$
             }
             @Override
-            public void onError(Throwable error) {
+            public void doOnError(Throwable error) {
                 notificationService.completeProgressNotification(notificationBean.getUuid(),
                         i18n.format("situation-details.resubmit-error"), //$NON-NLS-1$
                         error);
             }
+            @Override
+            public void doOnComplete(RpcResult<Void> result) {
+                loadSituationAndUpdatePageData();
+            }
         });
-        loadSituationAndUpdatePageData();
     }
     
 	@EventHandler("btn-assign")
