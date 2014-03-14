@@ -58,7 +58,7 @@
     <s-ramp-ui.version>0.4.0-SNAPSHOT</s-ramp-ui.version>
 
     <!-- Third party libraries -->
-    <overlord-commons.version>2.0.0-SNAPSHOT</overlord-commons.version>
+    <overlord-commons.version>2.0.1-SNAPSHOT</overlord-commons.version>
     <commons.io.version>2.4</commons.io.version>
     <commons.lang3.version>3.1</commons.lang3.version>
     <commons.config.version>1.8</commons.config.version>
@@ -260,6 +260,33 @@
           <argLine>-Xmx256M -XX:MaxPermSize=512m</argLine>
         </configuration>
       </plugin>
+	  <plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-checkstyle-plugin</artifactId>
+		<configuration>
+			<configLocation>checkstyle/checkstyle.xml</configLocation>
+			<consoleOutput>false</consoleOutput>
+			<suppressionsLocation>checkstyle/suppressions.xml</suppressionsLocation>
+			<failsOnError>false</failsOnError>
+			<useFile />
+		</configuration>
+		<dependencies>
+			<dependency>
+				<groupId>org.overlord</groupId>
+				<artifactId>overlord-commons-build</artifactId>
+				<version>${overlord-commons.version}</version>
+			</dependency>
+		</dependencies>
+		<executions>
+			<execution>
+				<id>check-style</id>
+				<phase>site</phase>
+				<goals>
+					<goal>checkstyle</goal>
+				</goals>
+			</execution>
+		</executions>
+	  </plugin>      
     </plugins>
   </build>
 
