@@ -144,6 +144,9 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
                 } else if (sortColumn.equals(Constants.SORT_COLID_SUBJECT)) {
                     c1 = sit1.getSubject();
                     c2 = sit2.getSubject();
+                } else if (sortColumn.equals(Constants.SORT_COLID_RESOLUTION_STATE)) {
+                    c1 = sit1.getResolutionState();
+                    c2 = sit2.getResolutionState();
                 } else {
                     c1 = sit1.getTimestamp();
                     c2 = sit2.getTimestamp();

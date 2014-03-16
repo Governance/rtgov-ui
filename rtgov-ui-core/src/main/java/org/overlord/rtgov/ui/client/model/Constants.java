@@ -28,6 +28,7 @@ public class Constants {
     // Sort columns for situations
     public static final String SORT_COLID_TYPE    = "type"; //$NON-NLS-1$
     public static final String SORT_COLID_SUBJECT = "subject"; //$NON-NLS-1$
+    public static final String SORT_COLID_RESOLUTION_STATE = "resolutionState"; //$NON-NLS-1$
     public static final String SORT_COLID_TIMESTAMP = "timestamp"; //$NON-NLS-1$
 
 }

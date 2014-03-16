@@ -73,8 +73,9 @@ public class SituationTable extends SortableTemplatedWidgetTable {
     @Override
     protected void configureColumnSorting() {
         setColumnSortable(1, Constants.SORT_COLID_TYPE);
-        setColumnSortable(2, Constants.SORT_COLID_SUBJECT);
-        setColumnSortable(3, Constants.SORT_COLID_TIMESTAMP);
+        setColumnSortable(2, Constants.SORT_COLID_RESOLUTION_STATE);
+        setColumnSortable(3, Constants.SORT_COLID_SUBJECT);
+        setColumnSortable(4, Constants.SORT_COLID_TIMESTAMP);
         sortBy(Constants.SORT_COLID_TIMESTAMP, false);
     }
 

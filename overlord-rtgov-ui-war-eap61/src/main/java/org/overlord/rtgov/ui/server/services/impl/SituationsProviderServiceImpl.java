@@ -92,6 +92,18 @@ public class SituationsProviderServiceImpl implements ISituationsServiceImpl {
     					return ret;
     				}
             	};
+			} else if (sortColumn.equals(Constants.SORT_COLID_RESOLUTION_STATE)) {
+				comp = new java.util.Comparator<SituationSummaryBean>() {
+
+					@Override
+					public int compare(SituationSummaryBean o1, SituationSummaryBean o2) {
+						int ret = o1.getResolutionState().compareTo(o2.getResolutionState());
+						if (!ascending) {
+							ret = 0 - ret;
+						}
+						return ret;
+					}
+				};
         	} else if (sortColumn.equals(Constants.SORT_COLID_TYPE)) {
         		comp = new java.util.Comparator<SituationSummaryBean>() {
 
