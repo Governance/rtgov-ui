@@ -86,6 +86,13 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 		// TODO:
 		return (true);
 	}
+    
+	@Override
+	public boolean isResubmitSupported(String service, String operation) {
+	    // TODO: proper determination of isResubmitSupported for service/operation
+	    boolean isResubmitSupported = true;
+	    return isServiceKnown(service) && isResubmitSupported;
+	}
 
 	/**
 	 * This method sets the comma separated list of SwitchYard server URLs.

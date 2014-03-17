@@ -47,6 +47,17 @@ public interface ServicesProvider {
 	 * @return Whether this provider knows the service
 	 */
 	public boolean isServiceKnown(String service);
+ 
+    /**
+     * This method determines whether this provider support's a resubmit of the
+     * supplied service operation.
+     * 
+     * @param service The service
+     * @param operation The operation
+     * @return Whether this provider support's a resubmit for the given service
+     *         and operation
+     */
+    public boolean isResubmitSupported(String service, String operation);
 
 	/**
 	 * This method resubmits the supplied message to the target service

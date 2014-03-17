@@ -507,7 +507,7 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
 	    	ServicesProvider provider=null;
 	    	
 	    	for (ServicesProvider sp : _providers) {
-	    		if (sp.isServiceKnown(service)) {
+	    		if (sp.isResubmitSupported(service, operation)) {
 	    			provider = sp;
 	    			break;
 	    		}
