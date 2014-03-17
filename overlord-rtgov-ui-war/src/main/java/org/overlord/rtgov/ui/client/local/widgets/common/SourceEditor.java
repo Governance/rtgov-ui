@@ -57,6 +57,25 @@ public class SourceEditor extends Widget implements HasValue<String> {
         String id = getElement().getId();
         initACE(id);
     }
+    
+    /**
+     * To Set/UnSet the readOnly flag of the encapsulated ACE editor
+     * 
+     * @param readOnly
+     */
+    public void setReadOnly(boolean readOnly) {
+        String id = getElement().getId();
+        setReadOnly(id, readOnly);
+    }
+    
+    /**
+     * Delegate for ACE editor's 'setReadOnly ' function
+     * @param id
+     * @param readOnly
+     */
+    public native void setReadOnly(String id, boolean readOnly) /*-{
+        $wnd.ace.edit(id).setReadOnly(readOnly);
+    }-*/;
 
     /**
      * Initializes the ACE editor.

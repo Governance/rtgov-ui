@@ -42,7 +42,8 @@ public class SituationBean extends SituationSummaryBean implements Serializable 
     private MessageBean message;
     private CallTraceBean callTrace;
     private boolean isAssignedToCurrentUser;
-	private boolean isTakeoverPossible;
+    private boolean isTakeoverPossible;
+    private boolean isResubmitPossible;
 
     /**
      * Constructor.
@@ -175,4 +176,17 @@ public class SituationBean extends SituationSummaryBean implements Serializable 
         return getProperties().get("resubmitErrorMessage");
     }
 
+    /**
+     * @return the isResubmitPossible
+     */
+    public boolean isResubmitPossible() {
+        return isResubmitPossible;
+    }
+
+    /**
+     * @param isResubmitPossible the isResubmitPossible to set
+     */
+    public void setResubmitPossible(boolean isResubmitPossible) {
+        this.isResubmitPossible = isResubmitPossible;
+    }
 }

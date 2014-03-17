@@ -207,6 +207,8 @@ public class SituationDetailsPage extends AbstractPage {
         } else {
             messageEditor.setValue(""); //$NON-NLS-1$
         }
+        resubmitButton.setEnabled(situation.isResubmitPossible());
+        messageEditor.setReadOnly(!situation.isResubmitPossible());
         if (situation.getResubmitBy() != null) {
             resubmitDetails.setText(i18n.format("situation-details.resubmit-details",
                     situation.getResubmitBy(), situation.getResubmitAt(), situation.getResubmitResult()));

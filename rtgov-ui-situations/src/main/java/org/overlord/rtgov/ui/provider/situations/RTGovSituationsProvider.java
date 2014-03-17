@@ -15,6 +15,9 @@
  */
 package org.overlord.rtgov.ui.provider.situations;
 
+import static com.google.common.collect.Iterables.any;
+import static com.google.common.collect.Iterables.tryFind;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,6 +61,8 @@ import org.overlord.rtgov.ui.provider.ServicesProvider;
 import org.overlord.rtgov.ui.provider.SituationEventListener;
 import org.overlord.rtgov.ui.provider.SituationsProvider;
 
+import com.google.common.base.Optional;
+import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 
 /**
@@ -349,6 +354,7 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
 
 	        CallTraceBean callTrace = getCallTrace(situation);
 	        ret.setCallTrace(callTrace);
+	        ret.setResubmitPossible(any(_providers, new IsResubmitSupported(situation)));
 
     	} catch (UiException uie) {
     		throw uie;
@@ -492,35 +498,20 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
 	            throw new UiException(i18n.format("RTGovSituationsProvider.SitNotFound", situationId)); //$NON-NLS-1$
 	    	}
 	    	
-			String parts[]=sit.getSubject().split("\\x7C");
-			
-			if (parts.length < 2 || parts.length > 3) {
-				throw new UiException(i18n.format("RTGovSituationsProvider.InvalidSubject", sit.getSubject(),
-											parts.length));
-			}
-			
-			// Ignore optional third part, as this names the fault
-			String service=parts[0];
-			String operation=parts[1];
+			final ServiceOperationName operationName = getServiceOperationName(sit);
 
-	    	// Find service provider that can resubmit this message
-	    	ServicesProvider provider=null;
+            // Find service provider that can resubmit this message
+            Optional<ServicesProvider> serviceProvider = tryFind(_providers,
+                    new IsResubmitSupported(operationName));
 	    	
-	    	for (ServicesProvider sp : _providers) {
-	    		if (sp.isResubmitSupported(service, operation)) {
-	    			provider = sp;
-	    			break;
-	    		}
-	    	}
-	    	
-	    	if (provider == null) {
+	    	if (!serviceProvider.isPresent()) {
 	            throw new UiException(i18n.format("RTGovSituationsProvider.ResubmitProviderNotFound", situationId)); //$NON-NLS-1$
 	    	}
 	    	
 	    	// TODO: Change to specify service, rather than situation - also possibly locate the
 	    	// provider appropriate for the service rather than situation
 	    	
-	    	provider.resubmit(service, operation, message);
+	    	serviceProvider.get().resubmit(operationName.getService(), operationName.getOperation(), message);
 			_situationStore.recordSuccessfulResubmit(situationId);
 		} catch (UiException uiException) {
 			_situationStore.recordResubmitFailure(situationId, Throwables.getStackTraceAsString(uiException));
@@ -605,7 +596,7 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
 			throw new UiException(e);
 		}
 	}
-    
+
     /**
      * This class provides a simple activity server adapter that passes requests
      * through to the activity store.
@@ -654,5 +645,68 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
 			return (_activityStore.query(query));
 		}
     	
+    }
+    
+    private static ServiceOperationName getServiceOperationName(Situation situation) throws UiException {
+        if (situation == null) {
+            throw new IllegalArgumentException("parameter 'situation' must not be null");
+        }
+        String parts[] = Strings.nullToEmpty(situation.getSubject()).split("\\x7C");
+        if (parts.length < 2 || parts.length > 3) {
+            throw new UiException(i18n.format("RTGovSituationsProvider.InvalidSubject",
+                    situation.getSubject(), parts.length));
+        }
+        return new ServiceOperationName(parts[0], parts[1]);
+    }
+    
+    /**
+     * Predicate to test
+     * {@link ServicesProvider#isResubmitSupported(String, String)}
+     */
+    private final class IsResubmitSupported implements com.google.common.base.Predicate<ServicesProvider> {
+        private final ServiceOperationName operationName;
+
+        private IsResubmitSupported(Situation situation) throws UiException {
+            this(getServiceOperationName(situation));
+        }
+
+        private IsResubmitSupported(ServiceOperationName operationName) {
+            this.operationName = operationName;
+        }
+
+        @Override
+        public boolean apply(ServicesProvider input) {
+            return input.isResubmitSupported(operationName.getService(), operationName.getOperation());
+        }
+    }
+    
+    /**
+     * Simple value object for service and operation name.
+     * 
+     */
+    private static class ServiceOperationName {
+        private String service;
+        private String operation;
+
+        private ServiceOperationName(String service, String operation) {
+            super();
+            this.service = service;
+            this.operation = operation;
+        }
+
+        /**
+         * @return the service
+         */
+        public String getService() {
+            return service;
+        }
+
+        /**
+         * @return the operation
+         */
+        public String getOperation() {
+            return operation;
+        }
+
     }
 }

@@ -251,6 +251,7 @@ public class RTGovSituationsProviderTest {
 					throw new Exception("Incorrect id");
 				}
 				Situation ret=new Situation();
+				ret.setSubject("Service|Operation");
 				ret.setId(id);
 				return (ret);
 			}
