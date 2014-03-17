@@ -33,6 +33,7 @@ public class SituationsFilterBean {
     private String resolutionState;
     private Date timestampFrom;
     private Date timestampTo;
+    private String description;
 
     /**
      * Constructor.
@@ -60,8 +61,15 @@ public class SituationsFilterBean {
 	public String getResolutionState() {
 		return resolutionState;
 	}
+	
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
 
-	/**
+    /**
      * @return the timestampFrom
      */
     public Date getTimestampFrom() {
@@ -114,6 +122,14 @@ public class SituationsFilterBean {
 		this.resolutionState = resolutionState;
 		return this;
 	}
+	
+	/**
+     * @param description the description to set
+     */
+    public SituationsFilterBean setDescription(String description) {
+        this.description = description;
+        return this;
+    }
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -122,6 +138,8 @@ public class SituationsFilterBean {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result
+                + ((description == null) ? 0 : description.hashCode());
 		result = prime * result
 				+ ((resolutionState == null) ? 0 : resolutionState.hashCode());
 		result = prime * result
@@ -146,6 +164,11 @@ public class SituationsFilterBean {
 		if (getClass() != obj.getClass())
 			return false;
 		SituationsFilterBean other = (SituationsFilterBean) obj;
+        if (description == null) {
+            if (other.description != null)
+                return false;
+        } else if (!description.equals(other.description))
+            return false;
 		if (resolutionState == null) {
 			if (other.resolutionState != null)
 				return false;
@@ -174,14 +197,18 @@ public class SituationsFilterBean {
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "SituationsFilterBean [severity=" + severity + ", type=" + type
-				+ ", resolutionState=" + resolutionState + ", timestampFrom="
-				+ timestampFrom + ", timestampTo=" + timestampTo + "]";
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "SituationsFilterBean [severity=" + severity + ", type=" + type + ", resolutionState="
+                + resolutionState + ", timestampFrom=" + timestampFrom + ", timestampTo=" + timestampTo
+                + ", description=" + description + "]";
+    }
+
+	
 
 }

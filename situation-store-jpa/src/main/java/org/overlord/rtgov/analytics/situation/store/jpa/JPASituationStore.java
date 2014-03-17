@@ -15,6 +15,7 @@
  */
 package org.overlord.rtgov.analytics.situation.store.jpa;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.lang.System.currentTimeMillis;
 
 import java.util.Map;
@@ -139,6 +140,13 @@ public class JPASituationStore implements SituationStore {
     	if (sitQuery.getSeverity() != null) {
     		queryString.append("sit.severity = :severity "); //$NON-NLS-1$
     	}
+    	
+    	if (!isNullOrEmpty(sitQuery.getDescription())) {
+            if (queryString.length() > 0) {
+                queryString.append("AND "); //$NON-NLS-1$
+            }
+            queryString.append("upper(sit.description) like '%"+sitQuery.getDescription().toUpperCase()+"%' ");  //$NON-NLS-1$//$NON-NLS-2$
+        }
 
     	if (sitQuery.getType() != null && sitQuery.getType().trim().length() > 0) {
     		if (queryString.length() > 0) {

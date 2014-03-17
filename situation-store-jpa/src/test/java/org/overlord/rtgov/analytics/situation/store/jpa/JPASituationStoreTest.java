@@ -130,6 +130,80 @@ public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringCont
     }
     
     @Test
+    public void findEqualsDescriptionText() throws Exception {
+        Situation situation = new Situation();
+        situation.setId(name.getMethodName());
+        situation.setDescription(name.getMethodName());
+        situation.setTimestamp(System.currentTimeMillis());
+        _entityManager.persist(situation);
+        SituationsQuery sitQuery = new SituationsQuery();
+        sitQuery.setDescription(name.getMethodName());
+        java.util.List<Situation> situations = _situationStore.getSituations(sitQuery);
+        Assert.assertNotNull(situations);
+        Assert.assertTrue(1 == situations.size());
+        Assert.assertEquals(situation, situations.get(0));
+    }
+
+    @Test
+    public void findEndsWithDescriptionText() throws Exception {
+        Situation situation = new Situation();
+        situation.setId(name.getMethodName());
+        situation.setDescription(name.getMethodName());
+        situation.setTimestamp(System.currentTimeMillis());
+        _entityManager.persist(situation);
+        SituationsQuery sitQuery = new SituationsQuery();
+        sitQuery.setDescription(name.getMethodName().substring(5));
+        java.util.List<Situation> situations = _situationStore.getSituations(sitQuery);
+        Assert.assertNotNull(situations);
+        Assert.assertTrue(1 == situations.size());
+        Assert.assertEquals(situation, situations.get(0));
+    }
+
+    @Test
+    public void findStartsWithDescriptionText() throws Exception {
+        Situation situation = new Situation();
+        situation.setId(name.getMethodName());
+        situation.setDescription(name.getMethodName());
+        situation.setTimestamp(System.currentTimeMillis());
+        _entityManager.persist(situation);
+        SituationsQuery sitQuery = new SituationsQuery();
+        sitQuery.setDescription(name.getMethodName().substring(0, 5));
+        java.util.List<Situation> situations = _situationStore.getSituations(sitQuery);
+        Assert.assertNotNull(situations);
+        Assert.assertTrue(1 == situations.size());
+        Assert.assertEquals(situation, situations.get(0));
+    }
+
+    @Test
+    public void findIgnoreCaseDescriptionText() throws Exception {
+        Situation situation = new Situation();
+        situation.setId(name.getMethodName());
+        situation.setDescription(name.getMethodName().toLowerCase());
+        situation.setTimestamp(System.currentTimeMillis());
+        _entityManager.persist(situation);
+        SituationsQuery sitQuery = new SituationsQuery();
+        sitQuery.setDescription(name.getMethodName().substring(5).toUpperCase());
+        java.util.List<Situation> situations = _situationStore.getSituations(sitQuery);
+        Assert.assertNotNull(situations);
+        Assert.assertTrue(1 == situations.size());
+        Assert.assertEquals(situation, situations.get(0));
+    }
+
+    @Test
+    public void findDescriptionTextNegative() throws Exception {
+        Situation situation = new Situation();
+        situation.setId(name.getMethodName());
+        situation.setDescription(name.getMethodName().toLowerCase());
+        situation.setTimestamp(System.currentTimeMillis());
+        _entityManager.persist(situation);
+        SituationsQuery sitQuery = new SituationsQuery();
+        sitQuery.setDescription("other");
+        java.util.List<Situation> situations = _situationStore.getSituations(sitQuery);
+        Assert.assertNotNull(situations);
+        Assert.assertTrue(situations.isEmpty());
+    }
+    
+    @Test
     public void getSituationsByUnresolvedResolutionState() throws Exception {
         Situation unresolvedSituation = new Situation();
         unresolvedSituation.setId("unresolvedSituation");

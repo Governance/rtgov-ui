@@ -15,13 +15,18 @@
  */
 package org.overlord.rtgov.ui.server.services.impl;
 
+import static com.google.common.base.Predicates.and;
+import static com.google.common.base.Predicates.notNull;
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static com.google.common.base.Strings.nullToEmpty;
+import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.System.currentTimeMillis;
 import static org.overlord.rtgov.ui.client.model.ResolutionState.RESOLVED;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
@@ -41,6 +46,9 @@ import org.overlord.rtgov.ui.client.model.TraceNodeBean;
 import org.overlord.rtgov.ui.client.model.UiException;
 import org.overlord.rtgov.ui.server.interceptors.IUserContext;
 import org.overlord.rtgov.ui.server.services.ISituationsServiceImpl;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 
 /**
  * Concrete implementation of the faults service.
@@ -114,15 +122,52 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
     public SituationResultSetBean search(SituationsFilterBean filters, int page, String sortColumn,
             boolean ascending) throws UiException {
         SituationResultSetBean rval = new SituationResultSetBean();
-        ArrayList<SituationSummaryBean> situations = new ArrayList<SituationSummaryBean>();
+        List<SituationSummaryBean> situations = filter(filters, idToSituation.values());
+        sort(situations, sortColumn, ascending);
         rval.setSituations(situations);
         rval.setItemsPerPage(20);
         rval.setStartIndex(0);
-        rval.setTotalResults(4);
-        situations.addAll(idToSituation.values());
-        sort(situations, sortColumn, ascending);
-
+        rval.setTotalResults(situations.size());
         return rval;
+    }
+
+    private List<SituationSummaryBean> filter(final SituationsFilterBean filter,
+            Iterable<SituationSummaryBean> situations) {
+        Predicate<SituationSummaryBean> predicate = notNull();
+        if (!isNullOrEmpty(filter.getDescription())) {
+            predicate = and(predicate, new Predicate<SituationSummaryBean>() {
+                @Override
+                public boolean apply(SituationSummaryBean input) {
+                    return nullToEmpty(input.getDescription()).contains(filter.getDescription());
+                }
+            });
+        }
+        if (!isNullOrEmpty(filter.getResolutionState())) {
+            predicate = and(predicate, new Predicate<SituationSummaryBean>() {
+                @Override
+                public boolean apply(SituationSummaryBean input) {
+                    return nullToEmpty(input.getResolutionState()).equals(filter.getResolutionState());
+                }
+            });
+        }
+        if (!isNullOrEmpty(filter.getSeverity())) {
+            predicate = and(predicate, new Predicate<SituationSummaryBean>() {
+                @Override
+                public boolean apply(SituationSummaryBean input) {
+                    return nullToEmpty(input.getSeverity()).equals(filter.getSeverity());
+                }
+            });
+        }
+        if (!isNullOrEmpty(filter.getType())) {
+            predicate = and(predicate, new Predicate<SituationSummaryBean>() {
+                @Override
+                public boolean apply(SituationSummaryBean input) {
+                    return nullToEmpty(input.getType()).equals(filter.getType());
+                }
+            });
+        }
+        Iterable<SituationSummaryBean> iterable = Iterables.filter(situations, predicate);
+        return newArrayList(iterable);
     }
 
     /**
@@ -131,7 +176,7 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
      * @param sortColumn
      * @param ascending
      */
-    private void sort(ArrayList<SituationSummaryBean> situations, final String sortColumn, final boolean ascending) {
+    private void sort(List<SituationSummaryBean> situations, final String sortColumn, final boolean ascending) {
         TreeSet<SituationSummaryBean> sorted = new TreeSet<SituationSummaryBean>(new Comparator<SituationSummaryBean>() {
             @SuppressWarnings("unchecked")
             @Override

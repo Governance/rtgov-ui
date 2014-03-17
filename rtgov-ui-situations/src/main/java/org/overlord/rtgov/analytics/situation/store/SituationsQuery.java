@@ -23,7 +23,8 @@ import org.overlord.rtgov.analytics.situation.Situation;
  */
 public class SituationsQuery {
 
-	private String _type;
+    private String _type;
+    private String _description;
 	private String _subject;
 	private Situation.Severity _severity;
 	private long _fromTimestamp;
@@ -143,4 +144,19 @@ public class SituationsQuery {
 	public void setResolutionState(String resolutionState) {
 		_resolutionState = resolutionState;
 	}
+
+    /**
+     * @return the _description
+     */
+    public String getDescription() {
+        return _description;
+    }
+
+    /**
+     * @param description the description to set
+     */
+    public void setDescription(String description) {
+        this._description = description;
+    }
+	
 }

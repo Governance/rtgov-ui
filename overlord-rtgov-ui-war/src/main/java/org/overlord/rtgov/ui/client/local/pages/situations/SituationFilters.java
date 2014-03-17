@@ -24,6 +24,7 @@ import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.overlord.commons.gwt.client.local.widgets.DateBox;
 import org.overlord.rtgov.ui.client.model.SituationsFilterBean;
 
+import com.google.common.base.Strings;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
@@ -59,6 +60,8 @@ public class SituationFilters extends Composite implements HasValueChangeHandler
     protected DateBox timestampTo;
     @Inject @DataField
     protected Anchor clearFilters;
+    @Inject @DataField
+    protected TextBox description;
 
     /**
      * Constructor.
@@ -92,6 +95,7 @@ public class SituationFilters extends Composite implements HasValueChangeHandler
         resolutionState.addValueChangeHandler(valueChangeHandler);
         timestampFrom.addValueChangeHandler(valueChangeHandler);
         timestampTo.addValueChangeHandler(valueChangeHandler);
+        description.addValueChangeHandler(valueChangeHandler);
     }
 
     /**
@@ -102,6 +106,7 @@ public class SituationFilters extends Composite implements HasValueChangeHandler
         newState.setSeverity(severity.getValue())
             .setType(type.getValue())
             .setResolutionState(resolutionState.getValue())
+            .setDescription(description.getValue())
             .setTimestampFrom(timestampFrom.getDateValue())
             .setTimestampTo(timestampTo.getDateValue());
 
@@ -127,6 +132,7 @@ public class SituationFilters extends Composite implements HasValueChangeHandler
         resolutionState.setValue(value.getResolutionState() == null ? "" : value.getResolutionState()); //$NON-NLS-1$
         timestampFrom.setDateValue(value.getTimestampFrom() == null ? null : value.getTimestampFrom());
         timestampTo.setDateValue(value.getTimestampTo() == null ? null : value.getTimestampTo());
+        description.setValue(Strings.nullToEmpty(value.getDescription()));
         onFilterValueChange();
     }
 
