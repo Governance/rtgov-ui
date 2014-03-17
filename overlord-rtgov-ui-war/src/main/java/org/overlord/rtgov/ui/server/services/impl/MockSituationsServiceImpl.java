@@ -80,6 +80,7 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
         situation.getProperties().put("Property-2", "Property two Value"); //$NON-NLS-1$ //$NON-NLS-2$
         situation.getProperties().put("Property-3", "Property three Value"); //$NON-NLS-1$ //$NON-NLS-2$
         situation.getProperties().put("resolutionState", ResolutionState.UNRESOLVED.name()); //$NON-NLS-1$ //$NON-NLS-2$
+        situation.getProperties().put("host", "hostA"); //$NON-NLS-1$ //$NON-NLS-2$
         idToSituation.put(situation.getSituationId(),situation);
 
         situation = new SituationSummaryBean();
@@ -90,6 +91,7 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
         situation.setTimestamp(new Date());
         situation.setDescription("Some description of the Situation goes here in this column so that it can be read by the user."); //$NON-NLS-1$
         situation.getProperties().put("resolutionState", ResolutionState.UNRESOLVED.name()); //$NON-NLS-1$ //$NON-NLS-2$
+        situation.getProperties().put("host", "hostA"); //$NON-NLS-1$ //$NON-NLS-2$
         idToSituation.put(situation.getSituationId(),situation);
 
         situation = new SituationSummaryBean();
@@ -102,6 +104,7 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
         situation.getProperties().put("Property-1", "Property one Value"); //$NON-NLS-1$ //$NON-NLS-2$
         situation.getProperties().put("Property-2", "Property two Value"); //$NON-NLS-1$ //$NON-NLS-2$
         situation.getProperties().put("resolutionState", ResolutionState.UNRESOLVED.name()); //$NON-NLS-1$ //$NON-NLS-2$
+        situation.getProperties().put("host", "hostB"); //$NON-NLS-1$ //$NON-NLS-2$
         idToSituation.put(situation.getSituationId(),situation);
 
         situation = new SituationSummaryBean();
@@ -112,6 +115,7 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
         situation.setTimestamp(new Date());
         situation.setDescription("Some description of the Situation goes here in this column so that it can be read by the user."); //$NON-NLS-1$
         situation.getProperties().put("resolutionState", ResolutionState.RESOLVED.name()); //$NON-NLS-1$ //$NON-NLS-2$
+        situation.getProperties().put("host", "hostB"); //$NON-NLS-1$ //$NON-NLS-2$
         idToSituation.put(situation.getSituationId(),situation);
     	
     }
@@ -163,6 +167,22 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
                 @Override
                 public boolean apply(SituationSummaryBean input) {
                     return nullToEmpty(input.getType()).equals(filter.getType());
+                }
+            });
+        }
+        if (!isNullOrEmpty(filter.getSubject())) {
+            predicate = and(predicate, new Predicate<SituationSummaryBean>() {
+                @Override
+                public boolean apply(SituationSummaryBean input) {
+                    return nullToEmpty(input.getSubject()).contains(filter.getSubject());
+                }
+            });
+        }
+        if (!isNullOrEmpty(filter.getHost())) {
+            predicate = and(predicate, new Predicate<SituationSummaryBean>() {
+                @Override
+                public boolean apply(SituationSummaryBean input) {
+                    return nullToEmpty(input.getProperties().get("host")).contains(filter.getHost());
                 }
             });
         }

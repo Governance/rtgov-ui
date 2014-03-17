@@ -24,6 +24,7 @@ import org.overlord.rtgov.ui.client.model.ResolutionState;
  */
 public interface SituationStore {
 
+	public static final String HOST_PROPERTY = "host";
 	public static final String RESOLUTION_STATE_PROPERTY = "resolutionState";
 	public static final String ASSIGNED_TO_PROPERTY = "assignedTo";
 	public static final String RESUBMIT_ERROR_MESSAGE = "resubmitErrorMessage";

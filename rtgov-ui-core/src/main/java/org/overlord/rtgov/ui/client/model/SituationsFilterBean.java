@@ -34,6 +34,8 @@ public class SituationsFilterBean {
     private Date timestampFrom;
     private Date timestampTo;
     private String description;
+    private String subject;
+    private String host;
 
     /**
      * Constructor.
@@ -81,6 +83,20 @@ public class SituationsFilterBean {
      */
     public Date getTimestampTo() {
         return timestampTo;
+    }
+    
+    /**
+     * @return the subject
+     */
+    public String getSubject() {
+        return subject;
+    }
+
+    /**
+     * @return the host
+     */
+    public String getHost() {
+        return host;
     }
 
     /**
@@ -130,6 +146,22 @@ public class SituationsFilterBean {
         this.description = description;
         return this;
     }
+    
+    /**
+     * @param subject the subject to set
+     */
+    public SituationsFilterBean setSubject(String subject) {
+        this.subject = subject;
+        return this;
+    }
+    
+    /**
+     * @param host the description to set
+     */
+    public SituationsFilterBean setHost(String host) {
+        this.host = host;
+        return this;
+    }
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -138,6 +170,10 @@ public class SituationsFilterBean {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+        result = prime * result
+                + ((subject == null) ? 0 : subject.hashCode());
+        result = prime * result
+                + ((host == null) ? 0 : host.hashCode());
 		result = prime * result
                 + ((description == null) ? 0 : description.hashCode());
 		result = prime * result
@@ -164,12 +200,22 @@ public class SituationsFilterBean {
 		if (getClass() != obj.getClass())
 			return false;
 		SituationsFilterBean other = (SituationsFilterBean) obj;
-        if (description == null) {
+		if (description == null) {
             if (other.description != null)
                 return false;
         } else if (!description.equals(other.description))
             return false;
-		if (resolutionState == null) {
+        if (subject == null) {
+            if (other.subject != null)
+                return false;
+        } else if (!subject.equals(other.subject))
+            return false;
+        if (host == null) {
+            if (other.host != null)
+                return false;
+        } else if (!host.equals(other.host))
+            return false;
+        if (resolutionState == null) {
 			if (other.resolutionState != null)
 				return false;
 		} else if (!resolutionState.equals(other.resolutionState))
@@ -197,18 +243,13 @@ public class SituationsFilterBean {
 		return true;
 	}
 
-    /*
-     * (non-Javadoc)
-     * 
+    /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
         return "SituationsFilterBean [severity=" + severity + ", type=" + type + ", resolutionState="
                 + resolutionState + ", timestampFrom=" + timestampFrom + ", timestampTo=" + timestampTo
-                + ", description=" + description + "]";
+                + ", description=" + description + ", subject=" + subject + ", host=" + host + "]";
     }
-
-	
-
 }

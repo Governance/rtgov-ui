@@ -141,6 +141,20 @@ public class JPASituationStore implements SituationStore {
     		queryString.append("sit.severity = :severity "); //$NON-NLS-1$
     	}
     	
+    	if (!isNullOrEmpty(sitQuery.getSubject())) {
+            if (queryString.length() > 0) {
+                queryString.append("AND "); //$NON-NLS-1$
+            }
+            queryString.append("upper(sit.subject) like '%"+sitQuery.getSubject().toUpperCase()+"%' ");  //$NON-NLS-1$//$NON-NLS-2$
+        }
+    	
+    	if (!isNullOrEmpty(sitQuery.getHost())) {
+            if (queryString.length() > 0) {
+                queryString.append("AND "); //$NON-NLS-1$
+            }
+            queryString.append("upper(sit.properties['host']) like '%" + sitQuery.getHost().toUpperCase() + "%'");
+        }
+    	
     	if (!isNullOrEmpty(sitQuery.getDescription())) {
             if (queryString.length() > 0) {
                 queryString.append("AND "); //$NON-NLS-1$

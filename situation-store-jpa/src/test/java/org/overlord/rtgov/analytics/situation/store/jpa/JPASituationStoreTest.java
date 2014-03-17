@@ -130,6 +130,84 @@ public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringCont
     }
     
     @Test
+    public void findByEqualsHostText() throws Exception {
+        Situation situation = new Situation();
+        situation.setId(name.getMethodName());
+        situation.setSubject(name.getMethodName());
+        situation.setTimestamp(System.currentTimeMillis());
+        situation.getProperties().put(SituationStore.HOST_PROPERTY, name.getMethodName());
+        _entityManager.persist(situation);
+        SituationsQuery sitQuery = new SituationsQuery();
+        sitQuery.setHost(name.getMethodName());
+        java.util.List<Situation> situations = _situationStore.getSituations(sitQuery);
+        Assert.assertNotNull(situations);
+        Assert.assertTrue(1 == situations.size());
+        Assert.assertEquals(situation, situations.get(0));
+    }
+    
+    
+    @Test
+    public void findLikeHostText() throws Exception {
+        Situation situation = new Situation();
+        situation.setId(name.getMethodName());
+        situation.setSubject(name.getMethodName());
+        situation.setTimestamp(System.currentTimeMillis());
+        situation.getProperties().put(SituationStore.HOST_PROPERTY, name.getMethodName());
+        _entityManager.persist(situation);
+        SituationsQuery sitQuery = new SituationsQuery();
+        sitQuery.setHost(name.getMethodName().substring(3));
+        java.util.List<Situation> situations = _situationStore.getSituations(sitQuery);
+        Assert.assertNotNull(situations);
+        Assert.assertTrue(1 == situations.size());
+        Assert.assertEquals(situation, situations.get(0));
+    }
+    
+    @Test
+    public void findEqualsSubjectText() throws Exception {
+        Situation situation = new Situation();
+        situation.setId(name.getMethodName());
+        situation.setSubject(name.getMethodName());
+        situation.setTimestamp(System.currentTimeMillis());
+        _entityManager.persist(situation);
+        SituationsQuery sitQuery = new SituationsQuery();
+        sitQuery.setSubject(name.getMethodName());
+        java.util.List<Situation> situations = _situationStore.getSituations(sitQuery);
+        Assert.assertNotNull(situations);
+        Assert.assertTrue(1 == situations.size());
+        Assert.assertEquals(situation, situations.get(0));
+    }
+    
+    @Test
+    public void findLikeSubjectText() throws Exception {
+        Situation situation = new Situation();
+        situation.setId(name.getMethodName());
+        situation.setSubject(name.getMethodName());
+        situation.setTimestamp(System.currentTimeMillis());
+        _entityManager.persist(situation);
+        SituationsQuery sitQuery = new SituationsQuery();
+        sitQuery.setSubject(name.getMethodName().substring(3));
+        java.util.List<Situation> situations = _situationStore.getSituations(sitQuery);
+        Assert.assertNotNull(situations);
+        Assert.assertTrue(1 == situations.size());
+        Assert.assertEquals(situation, situations.get(0));
+    }
+    
+    @Test
+    public void findIgnoreCaseSubjectText() throws Exception {
+        Situation situation = new Situation();
+        situation.setId(name.getMethodName());
+        situation.setSubject(name.getMethodName().toUpperCase());
+        situation.setTimestamp(System.currentTimeMillis());
+        _entityManager.persist(situation);
+        SituationsQuery sitQuery = new SituationsQuery();
+        sitQuery.setSubject(name.getMethodName().substring(3).toLowerCase());
+        java.util.List<Situation> situations = _situationStore.getSituations(sitQuery);
+        Assert.assertNotNull(situations);
+        Assert.assertTrue(1 == situations.size());
+        Assert.assertEquals(situation, situations.get(0));
+    }
+    
+    @Test
     public void findEqualsDescriptionText() throws Exception {
         Situation situation = new Situation();
         situation.setId(name.getMethodName());

@@ -30,6 +30,7 @@ public class SituationsQuery {
 	private long _fromTimestamp;
 	private long _toTimestamp;
     private String _resolutionState;
+    private String _host;
 	
 	/**
 	 * The default constructor.
@@ -157,6 +158,20 @@ public class SituationsQuery {
      */
     public void setDescription(String description) {
         this._description = description;
+    }
+
+    /**
+     * @return the host
+     */
+    public String getHost() {
+        return _host;
+    }
+
+    /**
+     * @param host the host to set
+     */
+    public void setHost(String host) {
+        this._host = host;
     }
 	
 }

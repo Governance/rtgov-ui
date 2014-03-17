@@ -321,7 +321,9 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
     		ret.setToTimestamp(filters.getTimestampTo().getTime()+MILLISECONDS_PER_DAY);
     	}
     	ret.setDescription(filters.getDescription());
-    	ret.setResolutionState(filters.getResolutionState());
+        ret.setResolutionState(filters.getResolutionState());
+        ret.setSubject(filters.getSubject());
+        ret.setHost(filters.getHost());
 
     	return (ret);
     }
