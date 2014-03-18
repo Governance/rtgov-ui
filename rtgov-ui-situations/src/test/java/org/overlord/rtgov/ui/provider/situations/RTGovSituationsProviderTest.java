@@ -115,7 +115,7 @@ public class RTGovSituationsProviderTest {
 			fail("FromTimestamp was incorrect: "+query.getFromTimestamp());
 		}
 		
-		if (query.getToTimestamp() != (toTimestamp+RTGovSituationsProvider.MILLISECONDS_PER_DAY)) {
+		if (query.getToTimestamp() != (toTimestamp)) {
 			fail("ToTimestamp was incorrect: "+query.getToTimestamp());
 		}
 		

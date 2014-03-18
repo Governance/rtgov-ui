@@ -7,6 +7,7 @@
     <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap.min.css" rel="stylesheet" media="screen"></link>
     <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen"></link>
     <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap-datepicker.css" rel="stylesheet" media="screen"></link>
+    <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen"></link>
     <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap-fileupload.min.css" rel="stylesheet" media="screen"></link>
     <link href="../../../../../../../../webapp/css/rtgov-ui.css" rel="stylesheet"></link>
     <link href="../../../../../../../../webapp/css/rtgov-ui-responsive.css" rel="stylesheet"></link>
@@ -17,6 +18,7 @@
     <script type="text/javascript" src="../../../../../../../../webapp/jquery-1.8.3/jquery-1.8.3.min.js"></script>
     <script type="text/javascript" src="../../../../../../../../webapp/bootstrap-2.3.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../../../../webapp/bootstrap-2.3.1/js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="../../../../../../../../webapp/bootstrap-2.3.1/js/bootstrap-datetimepicker.min.js"></script>
     <script type="text/javascript" src="../../../../../../../../webapp/bootstrap-2.3.1/js/bootstrap-fileupload.min.js"></script>
     <script type="text/javascript" src="../../../../../../../../webapp/js/rtgov-ui-responsive.js"></script>
   </head>
@@ -95,9 +97,15 @@
                     </div>
                     <div class="controls controls-row">
                       <label class="filter-label" data-i18n-key="timestamp">Timestamp</label>
-                      <input data-field="timestampFrom" class="span5 filter-date" type="text" placeholder="Any" readonly="readonly"></input>
-                      <span class="span2 desktop-only" style="padding-top: 4px; text-align: center" data-i18n-key="to">to</span>
-                      <input data-field="timestampTo" class="span5 filter-date" type="text" placeholder="Any" readonly="readonly"></input>
+                      <div class="input-append">
+                      <input data-field="timestampFrom" class="filter-date" type="text" placeholder="Any" readonly="readonly"></input>
+                      <span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span>
+                      </div>
+                      <span class="desktop-only" style="padding-top: 4px; text-align: center" data-i18n-key="to">to</span>
+                      <div class="input-append">
+                      <input data-field="timestampTo" class="filter-date" type="text" placeholder="Any" readonly="readonly"></input>
+                      <span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span>
+                      </div>
                     </div>
                     <div class="controls controls-row">
                       <label class="filter-label" data-i18n-key="description">Description</label>

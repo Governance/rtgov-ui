@@ -21,7 +21,7 @@ import javax.inject.Inject;
 
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
-import org.overlord.commons.gwt.client.local.widgets.DateBox;
+import org.overlord.rtgov.ui.client.local.widgets.DateTimePicker;
 import org.overlord.rtgov.ui.client.model.SituationsFilterBean;
 
 import com.google.common.base.Strings;
@@ -55,9 +55,9 @@ public class SituationFilters extends Composite implements HasValueChangeHandler
     @Inject @DataField
     protected ResolutionStateListBox resolutionState;
     @Inject @DataField
-    protected DateBox timestampFrom;
+    protected DateTimePicker timestampFrom;
     @Inject @DataField
-    protected DateBox timestampTo;
+    protected DateTimePicker timestampTo;
     @Inject @DataField
     protected Anchor clearFilters;
     @Inject @DataField
