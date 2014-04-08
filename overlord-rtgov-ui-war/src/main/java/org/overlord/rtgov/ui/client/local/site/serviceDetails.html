@@ -80,71 +80,8 @@
                 <div data-field="serviceInterface" class="details-meta-data-section-value" data-role="dummy">{urn:jboss:demo:create-application}CreateApplicationPT</div>
                 <div class="clearfix"></div>
               </div>
-              <!-- Service Metrics - Message Counts -->
-              <div class="span3 details-meta-data-section">
-                <div class="details-meta-data-section-header" data-i18n-key="message-counts">Message Counts</div>
-                <div class="clearfix"></div>
-                <div class="details-meta-data-section-label" data-i18n-key="total-count">Total Count:</div>
-                <div data-field="total-count" class="details-meta-data-section-value" data-role="dummy">87</div>
-                <div class="clearfix"></div>
-                <div class="details-meta-data-section-label" data-i18n-key="success-count">Success Count:</div>
-                <div data-field="success-count" class="details-meta-data-section-value" data-role="dummy">83</div>
-                <div class="clearfix"></div>
-                <div class="details-meta-data-section-label" data-i18n-key="fault-count">Fault Count:</div>
-                <div data-field="fault-count" class="details-meta-data-section-value" data-role="dummy">4</div>
-                <div class="clearfix"></div>
-                <div class="details-meta-data-section-label" data-i18n-key="success-rate">Success Rate:</div>
-                <div data-field="success-rate" class="details-meta-data-section-value" data-role="dummy" style="font-weight: bold">92%</div>
-                <div class="clearfix"></div>
-              </div>
-              <!-- Service Metrics - Processing Times -->
-              <div class="span3 details-meta-data-section">
-                <div class="details-meta-data-section-header" data-i18n-key="processing-times">Processing Times</div>
-                <div class="clearfix"></div>
-                <div class="details-meta-data-section-label" data-i18n-key="total-time">Total Time:</div>
-                <div data-field="total-time" class="details-meta-data-section-value" data-role="dummy">804</div>
-                <div class="clearfix"></div>
-                <div class="details-meta-data-section-label" data-i18n-key="average-time">Average Time:</div>
-                <div data-field="average-time" class="details-meta-data-section-value" data-role="dummy">41</div>
-                <div class="clearfix"></div>
-                <div class="details-meta-data-section-label" data-i18n-key="min-time">Minimum Time:</div>
-                <div data-field="min-time" class="details-meta-data-section-value" data-role="dummy">3</div>
-                <div class="clearfix"></div>
-                <div class="details-meta-data-section-label" data-i18n-key="max-time">Maximum Time:</div>
-                <div data-field="max-time" class="details-meta-data-section-value" data-role="dummy">101</div>
-                <div class="clearfix"></div>
-              </div>
             </div>
             <hr />
-            <!-- Gateway/Binding Metrics -->
-            <div class="row-fluid">
-              <div class="span12 details-meta-data-section">
-                <div class="details-meta-data-section-header" data-i18n-key="gateway-metrics">Gateway Metrics</div>
-                <div class="clearfix"></div>
-                <table data-field="gateway-table" class="overlord-table overlord-standalone-table table table-striped table-condensed table-hover">
-                <thead>
-                  <tr>
-                    <th data-i18n-key="name">Name</th>
-                    <th data-i18n-key="type">Type</th>
-                    <th class="desktop-only" data-i18n-key="message-count">Message Count</th>
-                    <th class="desktop-only" data-i18n-key="average-time">Average Time</th>
-                    <th class="desktop-only" data-i18n-key="time-percent">Time %</th>
-                    <th class="desktop-only" data-i18n-key="fault-percent">Fault %</th>
-                  </tr>
-                </thead>
-                <tbody data-role="dummy">
-                  <tr>
-                    <td>_CreateApplicationWebservice_soap1</td>
-                    <td>soap</td>
-                    <td class="desktop-only">87</td>
-                    <td class="desktop-only">42</td>
-                    <td class="desktop-only">100%</td>
-                    <td class="desktop-only">0%</td>
-                  </tr>
-                </tbody>
-                </table>
-              </div>
-            </div>            
             
             <!-- The References table -->
             <div class="row-fluid">
@@ -157,7 +94,6 @@
                       <th data-i18n-key="reference-name">Reference Name</th>
                       <th class="desktop-only" data-i18n-key="interface">Interface</th>
                       <th class="desktop-only" data-i18n-key="bindings">Bindings</th>
-                      <th class="desktop-only" data-i18n-key="avg-duration">Average Duration</th>
                     </tr>
                   </thead>
                   <tbody data-role="dummy">
@@ -165,31 +101,26 @@
                       <td><a href="referenceDetails.html">CreateApplicationRef</a></td>
                       <td class="desktop-only">org.jboss.demos.services.ICreateApplication</td>
                       <td class="desktop-only">JMS,SOAP,REST</td>
-                      <td class="desktop-only">0.13s</td>
                     </tr>
                     <tr>
                       <td><a href="referenceDetails.html">CreateQuoteRef</a></td>
                       <td class="desktop-only">org.jboss.demos.services.ICreateQuote</td>
                       <td class="desktop-only">JMS,SOAP</td>
-                      <td class="desktop-only">0.22s</td>
                     </tr>
                     <tr>
                       <td><a href="referenceDetails.html">SearchContractRef</a></td>
                       <td class="desktop-only">org.jboss.demos.services.ISearchContract</td>
                       <td class="desktop-only">REST</td>
-                      <td class="desktop-only">3.93s</td>
                     </tr>
                     <tr>
                       <td><a href="referenceDetails.html">DomainInformationRef</a></td>
                        <td class="desktop-only">org.jboss.demos.services.IDomainInformation</td>
                       <td class="desktop-only">JMS,REST</td>
-                      <td class="desktop-only">0.17s</td>
                     </tr>
                     <tr>
                       <td><a href="referenceDetails.html">FNOLRef</a></td>
                       <td class="desktop-only">org.jboss.demos.services.IFNOL</td>
                       <td class="desktop-only">JMS,SOAP,REST</td>
-                      <td class="desktop-only">0.01s</td>
                     </tr>
                   </tbody>
                 </table>

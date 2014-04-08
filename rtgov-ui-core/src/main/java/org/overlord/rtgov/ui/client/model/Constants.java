@@ -23,7 +23,6 @@ public class Constants {
 
     // Sort columns for services/references
     public static final String SORT_COLID_NAME = "name"; //$NON-NLS-1$
-    public static final String SORT_COLID_AVERAGE_DURATION = "averageDuration"; //$NON-NLS-1$
 
     // Sort columns for situations
     public static final String SORT_COLID_TYPE    = "type"; //$NON-NLS-1$

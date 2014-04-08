@@ -16,8 +16,6 @@
 package org.overlord.rtgov.ui.client.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
@@ -38,13 +36,6 @@ public class ComponentServiceBean implements Serializable {
     private QName application;
     private String serviceInterface;
     private String serviceImplementation;
-    private long successCount;
-    private long faultCount;
-    private long totalTime;
-    private long averageTime;
-    private long minTime;
-    private long maxTime;
-    private List<ReferenceMetric> referenceMetrics = new ArrayList<ReferenceMetric>();
 
     /**
      * Constructor.
@@ -81,48 +72,6 @@ public class ComponentServiceBean implements Serializable {
     }
 
     /**
-     * @return the successCount
-     */
-    public long getSuccessCount() {
-        return successCount;
-    }
-
-    /**
-     * @return the faultCount
-     */
-    public long getFaultCount() {
-        return faultCount;
-    }
-
-    /**
-     * @return the totalTime
-     */
-    public long getTotalTime() {
-        return totalTime;
-    }
-
-    /**
-     * @return the averageTime
-     */
-    public long getAverageTime() {
-        return averageTime;
-    }
-
-    /**
-     * @return the minTime
-     */
-    public long getMinTime() {
-        return minTime;
-    }
-
-    /**
-     * @return the maxTime
-     */
-    public long getMaxTime() {
-        return maxTime;
-    }
-
-    /**
      * @param serviceId the serviceId to set
      */
     public void setServiceId(String serviceId) {
@@ -151,48 +100,6 @@ public class ComponentServiceBean implements Serializable {
     }
 
     /**
-     * @param successCount the successCount to set
-     */
-    public void setSuccessCount(long successCount) {
-        this.successCount = successCount;
-    }
-
-    /**
-     * @param faultCount the faultCount to set
-     */
-    public void setFaultCount(long faultCount) {
-        this.faultCount = faultCount;
-    }
-
-    /**
-     * @param totalTime the totalTime to set
-     */
-    public void setTotalTime(long totalTime) {
-        this.totalTime = totalTime;
-    }
-
-    /**
-     * @param averageTime the averageTime to set
-     */
-    public void setAverageTime(long averageTime) {
-        this.averageTime = averageTime;
-    }
-
-    /**
-     * @param minTime the minTime to set
-     */
-    public void setMinTime(long minTime) {
-        this.minTime = minTime;
-    }
-
-    /**
-     * @param maxTime the maxTime to set
-     */
-    public void setMaxTime(long maxTime) {
-        this.maxTime = maxTime;
-    }
-
-    /**
      * @return the serviceImplementation
      */
     public String getServiceImplementation() {
@@ -204,38 +111,6 @@ public class ComponentServiceBean implements Serializable {
      */
     public void setServiceImplementation(String serviceImplementation) {
         this.serviceImplementation = serviceImplementation;
-    }
-
-    /**
-     * Adds a single reference metric to the bean.
-     * @param name
-     * @param messageCount
-     * @param averageTime
-     * @param timePercent
-     * @param faultPercent
-     */
-    public void addReferenceMetric(String name, long messageCount, long averageTime, int timePercent, int faultPercent) {
-        ReferenceMetric metric = new ReferenceMetric();
-        metric.setName(name);
-        metric.setMessageCount(messageCount);
-        metric.setAverageTime(averageTime);
-        metric.setTimePercent(timePercent);
-        metric.setFaultPercent(faultPercent);
-        this.getReferenceMetrics().add(metric);
-    }
-
-    /**
-     * @return the referenceMetrics
-     */
-    public List<ReferenceMetric> getReferenceMetrics() {
-        return referenceMetrics;
-    }
-
-    /**
-     * @param referenceMetrics the referenceMetrics to set
-     */
-    public void setReferenceMetrics(List<ReferenceMetric> referenceMetrics) {
-        this.referenceMetrics = referenceMetrics;
     }
 
 }

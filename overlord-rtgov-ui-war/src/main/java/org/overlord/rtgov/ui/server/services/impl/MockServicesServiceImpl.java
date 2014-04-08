@@ -76,7 +76,6 @@ public class MockServicesServiceImpl implements IServicesServiceImpl {
         service.setApplication("Contract"); //$NON-NLS-1$
         service.setIface("{urn:jboss:demo:create-application}CreateApplicationPT"); //$NON-NLS-1$
         service.setBindings("SOAP, JMS"); //$NON-NLS-1$
-        service.setAverageDuration(2837l);
         services.add(service);
 
         service = new ServiceSummaryBean();
@@ -85,7 +84,6 @@ public class MockServicesServiceImpl implements IServicesServiceImpl {
         service.setApplication("Contract"); //$NON-NLS-1$
         service.setIface("{urn:jboss:demo:create-application}CreateQuotePT"); //$NON-NLS-1$
         service.setBindings("SOAP"); //$NON-NLS-1$
-        service.setAverageDuration(2837l);
         services.add(service);
 
         return rval;
@@ -108,7 +106,6 @@ public class MockServicesServiceImpl implements IServicesServiceImpl {
         reference.setApplication("Contract"); //$NON-NLS-1$
         reference.setIface("org.jboss.demos.services.ICreateApplication"); //$NON-NLS-1$
         reference.setBindings("SOAP, JMS"); //$NON-NLS-1$
-        reference.setAverageDuration(2837l);
         service.getReferences().add(reference);
 
         reference = new ReferenceSummaryBean();
@@ -117,17 +114,8 @@ public class MockServicesServiceImpl implements IServicesServiceImpl {
         reference.setApplication("Contract"); //$NON-NLS-1$
         reference.setIface("org.jboss.demos.services.ICreateQuote"); //$NON-NLS-1$
         reference.setBindings("SOAP"); //$NON-NLS-1$
-        reference.setAverageDuration(2837l);
         service.getReferences().add(reference);
 
-        service.setSuccessCount(83);
-        service.setFaultCount(4);
-        service.setTotalTime(804);
-        service.setAverageTime(41);
-        service.setMinTime(3);
-        service.setMaxTime(101);
-        service.addGatewayMetric("_CreateApplicationWebservice_soap1", "soap", 87, 42, 90, 0); //$NON-NLS-1$ //$NON-NLS-2$
-        service.addGatewayMetric("_CreateApplicationWebservice_jms1", "jms", 13, 35, 10, 0); //$NON-NLS-1$ //$NON-NLS-2$
         return service;
     }
 
@@ -141,14 +129,6 @@ public class MockServicesServiceImpl implements IServicesServiceImpl {
         reference.setName(new QName("urn:jboss:demo:services", "CreateApplicationService")); //$NON-NLS-1$ //$NON-NLS-2$
         reference.setApplication(new QName("urn:jboss:demos:applications", "Contract")); //$NON-NLS-1$ //$NON-NLS-2$
         reference.setReferenceInterface("org.jboss.demos.services.ICreateApplication"); //$NON-NLS-1$
-        reference.setSuccessCount(83);
-        reference.setFaultCount(4);
-        reference.setTotalTime(804);
-        reference.setAverageTime(41);
-        reference.setMinTime(3);
-        reference.setMaxTime(101);
-        reference.addGatewayMetric("_CreateApplicationWebservice_soap1", "soap", 87, 42, 90, 0); //$NON-NLS-1$ //$NON-NLS-2$
-        reference.addGatewayMetric("_CreateApplicationWebservice_jms1", "jms", 13, 35, 10, 0); //$NON-NLS-1$ //$NON-NLS-2$
         return reference;
     }
 

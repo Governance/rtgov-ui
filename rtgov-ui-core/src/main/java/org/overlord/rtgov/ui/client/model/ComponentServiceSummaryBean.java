@@ -32,7 +32,6 @@ public class ComponentServiceSummaryBean {
     private String application;
     private String iface;
     private String implementation;
-    private long averageDuration;
 
     /**
      * Constructor.
@@ -69,13 +68,6 @@ public class ComponentServiceSummaryBean {
     }
 
     /**
-     * @return the averageDuration
-     */
-    public long getAverageDuration() {
-        return averageDuration;
-    }
-
-    /**
      * @param name the name to set
      */
     public ComponentServiceSummaryBean setName(String name) {
@@ -104,14 +96,6 @@ public class ComponentServiceSummaryBean {
      */
     public ComponentServiceSummaryBean setImplementation(String address) {
         this.implementation = address;
-        return this;
-    }
-
-    /**
-     * @param averageDuration the averageDuration to set
-     */
-    public ComponentServiceSummaryBean setAverageDuration(long averageDuration) {
-        this.averageDuration = averageDuration;
         return this;
     }
 

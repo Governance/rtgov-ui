@@ -30,12 +30,10 @@ import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.overlord.commons.gwt.client.local.widgets.HtmlSnippet;
 import org.overlord.rtgov.ui.client.local.ClientMessages;
-import org.overlord.rtgov.ui.client.local.pages.services.GatewayMetricsTable;
 import org.overlord.rtgov.ui.client.local.services.NotificationService;
 import org.overlord.rtgov.ui.client.local.services.ServicesRpcService;
 import org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHandler;
 import org.overlord.rtgov.ui.client.local.util.DOMUtil;
-import org.overlord.rtgov.ui.client.local.util.DataBindingLongConverter;
 import org.overlord.rtgov.ui.client.local.util.DataBindingQNameLocalPartConverter;
 import org.overlord.rtgov.ui.client.local.util.DataBindingQNameNamespaceConverter;
 import org.overlord.rtgov.ui.client.model.ReferenceBean;
@@ -88,30 +86,6 @@ public class ReferenceDetailsPage extends AbstractPage {
     @Inject @DataField @Bound(property="referenceInterface")
     InlineLabel referenceInterface;
 
-    // Message Counts
-    @Inject @DataField("total-count")
-    InlineLabel totalCount;
-    @Inject @DataField("success-count") @Bound(property="successCount", converter=DataBindingLongConverter.class)
-    InlineLabel successCount;
-    @Inject @DataField("fault-count") @Bound(property="faultCount", converter=DataBindingLongConverter.class)
-    InlineLabel faultCount;
-    @Inject @DataField("success-rate")
-    InlineLabel successRate;
-
-    // Processing Times
-    @Inject @DataField("total-time") @Bound(property="totalTime", converter=DataBindingLongConverter.class)
-    InlineLabel totalTime;
-    @Inject @DataField("average-time") @Bound(property="averageTime", converter=DataBindingLongConverter.class)
-    InlineLabel averageTime;
-    @Inject @DataField("min-time") @Bound(property="minTime", converter=DataBindingLongConverter.class)
-    InlineLabel minTime;
-    @Inject @DataField("max-time") @Bound(property="maxTime", converter=DataBindingLongConverter.class)
-    InlineLabel maxTime;
-
-    // Gateway Metrics
-    @Inject @DataField("gateway-table") @Bound(property="gatewayMetrics")
-    GatewayMetricsTable gatewayMetricsTable;
-
     @Inject @DataField("reference-details-loading-spinner")
     protected HtmlSnippet loading;
     protected Element pageContent;
@@ -158,14 +132,6 @@ public class ReferenceDetailsPage extends AbstractPage {
         this.reference.setModel(reference, InitialState.FROM_MODEL);
         loading.getElement().addClassName("hide"); //$NON-NLS-1$
         pageContent.removeClassName("hide"); //$NON-NLS-1$
-        long total = reference.getSuccessCount() + reference.getFaultCount();
-        totalCount.setText(String.valueOf(total));
-        if (total > 0) {
-            long rate = (reference.getSuccessCount() * 100) / total;
-            successRate.setText(String.valueOf(rate) + "%"); //$NON-NLS-1$
-        } else {
-            successRate.setText("0%"); //$NON-NLS-1$
-        }
     }
 
 }

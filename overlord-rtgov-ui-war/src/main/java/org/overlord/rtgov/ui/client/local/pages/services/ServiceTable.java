@@ -64,7 +64,6 @@ public class ServiceTable extends SortableTemplatedWidgetTable {
     @Override
     protected void configureColumnSorting() {
         setColumnSortable(0, Constants.SORT_COLID_NAME);
-        setColumnSortable(4, Constants.SORT_COLID_AVERAGE_DURATION);
         sortBy(Constants.SORT_COLID_NAME, true);
     }
 
@@ -80,22 +79,11 @@ public class ServiceTable extends SortableTemplatedWidgetTable {
         InlineLabel application = new InlineLabel(serviceSummaryBean.getApplication());
         InlineLabel interf4ce = new InlineLabel(serviceSummaryBean.getIface());
         InlineLabel bindings = new InlineLabel(serviceSummaryBean.getBindings());
-        InlineLabel averageDuration = new InlineLabel(formatDuration(serviceSummaryBean.getAverageDuration()));
 
         add(rowIdx, 0, name);
         add(rowIdx, 1, application);
         add(rowIdx, 2, interf4ce);
         add(rowIdx, 3, bindings);
-        add(rowIdx, 4, averageDuration);
-    }
-
-    /**
-     * Formats an average duration (in milliseconds) into a human readable format.
-     * @param averageDuration
-     */
-    private String formatDuration(long averageDuration) {
-        // TODO implement this!
-        return String.valueOf(averageDuration);
     }
 
 }

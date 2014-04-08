@@ -38,13 +38,6 @@ public class ServiceBean implements Serializable {
     private QName application;
     private String serviceInterface;
     private List<ReferenceSummaryBean> references = new ArrayList<ReferenceSummaryBean>();
-    private long successCount;
-    private long faultCount;
-    private long totalTime;
-    private long averageTime;
-    private long minTime;
-    private long maxTime;
-    private List<GatewayMetric> gatewayMetrics = new ArrayList<GatewayMetric>();
 
     /**
      * Constructor.
@@ -95,48 +88,6 @@ public class ServiceBean implements Serializable {
     }
     
     /**
-     * @return the successCount
-     */
-    public long getSuccessCount() {
-        return successCount;
-    }
-
-    /**
-     * @return the faultCount
-     */
-    public long getFaultCount() {
-        return faultCount;
-    }
-
-    /**
-     * @return the totalTime
-     */
-    public long getTotalTime() {
-        return totalTime;
-    }
-
-    /**
-     * @return the averageTime
-     */
-    public long getAverageTime() {
-        return averageTime;
-    }
-
-    /**
-     * @return the minTime
-     */
-    public long getMinTime() {
-        return minTime;
-    }
-
-    /**
-     * @return the maxTime
-     */
-    public long getMaxTime() {
-        return maxTime;
-    }
-
-    /**
      * @param serviceId the serviceId to set
      */
     public void setServiceId(String serviceId) {
@@ -162,82 +113,6 @@ public class ServiceBean implements Serializable {
      */
     public void setServiceInterface(String serviceInterface) {
         this.serviceInterface = serviceInterface;
-    }
-
-    /**
-     * @param successCount the successCount to set
-     */
-    public void setSuccessCount(long successCount) {
-        this.successCount = successCount;
-    }
-
-    /**
-     * @param faultCount the faultCount to set
-     */
-    public void setFaultCount(long faultCount) {
-        this.faultCount = faultCount;
-    }
-
-    /**
-     * @param totalTime the totalTime to set
-     */
-    public void setTotalTime(long totalTime) {
-        this.totalTime = totalTime;
-    }
-
-    /**
-     * @param averageTime the averageTime to set
-     */
-    public void setAverageTime(long averageTime) {
-        this.averageTime = averageTime;
-    }
-
-    /**
-     * @param minTime the minTime to set
-     */
-    public void setMinTime(long minTime) {
-        this.minTime = minTime;
-    }
-
-    /**
-     * @param maxTime the maxTime to set
-     */
-    public void setMaxTime(long maxTime) {
-        this.maxTime = maxTime;
-    }
-
-    /**
-     * Adds a single gateway metric to the bean.
-     * @param name
-     * @param type
-     * @param messageCount
-     * @param averageTime
-     * @param timePercent
-     * @param faultPercent
-     */
-    public void addGatewayMetric(String name, String type, long messageCount, long averageTime, int timePercent, int faultPercent) {
-        GatewayMetric metric = new GatewayMetric();
-        metric.setName(name);
-        metric.setType(type);
-        metric.setMessageCount(messageCount);
-        metric.setAverageTime(averageTime);
-        metric.setTimePercent(timePercent);
-        metric.setFaultPercent(faultPercent);
-        this.getGatewayMetrics().add(metric);
-    }
-
-    /**
-     * @return the gatewayMetrics
-     */
-    public List<GatewayMetric> getGatewayMetrics() {
-        return gatewayMetrics;
-    }
-
-    /**
-     * @param gatewayMetrics the gatewayMetrics to set
-     */
-    public void setGatewayMetrics(List<GatewayMetric> gatewayMetrics) {
-        this.gatewayMetrics = gatewayMetrics;
     }
 
 }

@@ -32,7 +32,6 @@ public class ReferenceSummaryBean {
     private String application;
     private String iface;
     private String bindings;
-    private long averageDuration;
 
     /**
      * Constructor.
@@ -69,13 +68,6 @@ public class ReferenceSummaryBean {
     }
 
     /**
-     * @return the averageDuration
-     */
-    public long getAverageDuration() {
-        return averageDuration;
-    }
-
-    /**
      * @param name the name to set
      */
     public ReferenceSummaryBean setName(String name) {
@@ -104,14 +96,6 @@ public class ReferenceSummaryBean {
      */
     public ReferenceSummaryBean setBindings(String address) {
         this.bindings = address;
-        return this;
-    }
-
-    /**
-     * @param averageDuration the averageDuration to set
-     */
-    public ReferenceSummaryBean setAverageDuration(long averageDuration) {
-        this.averageDuration = averageDuration;
         return this;
     }
 
