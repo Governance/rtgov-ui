@@ -19,6 +19,8 @@ import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.management.AttributeList;
 import javax.management.MBeanServerConnection;
@@ -52,13 +54,17 @@ import org.switchyard.remote.http.HttpInvoker;
  */
 public class SwitchYardServicesProvider implements ServicesProvider {
 	
+	private static final Logger LOG=Logger.getLogger(SwitchYardServicesProvider.class.getName());
+	
     private static volatile Messages i18n = new Messages();
 
 	private static final String PROVIDER_NAME = "switchyard";
 
 	// Properties
-	private static final String SWITCHYARD_RESUBMIT_HANDLER_SERVER_URLS = "SwitchYardServiceProvider.serverURLs";
-	private static final String SWITCHYARD_JMX_URL = "SwitchYardServiceProvider.serverJMX";
+	private static final String SWITCHYARD_RESUBMIT_HANDLER_SERVER_URLS = "SwitchYardServicesProvider.serverURLs";
+	private static final String SWITCHYARD_JMX_URL = "SwitchYardServicesProvider.jmxURL";
+	private static final String SWITCHYARD_JMX_USERNAME = "SwitchYardServicesProvider.jmxUsername";
+	private static final String SWITCHYARD_JMX_PASSWORD = "SwitchYardServicesProvider.jmxPassword";
 
 	protected static final String DEFAULT_REMOTE_INVOKER_URL = "http://localhost:8080/switchyard-remote";
 	
@@ -67,11 +73,24 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 	private java.util.List<String> _urlList=new java.util.ArrayList<String>();
 	
 	private MBeanServerConnection _mbeanServerConnection;
-	private String _serverJMX=null;
+	private String _jmxUrl=null;
+	private String _jmxUsername=null;
+	private String _jmxPassword=null;
 
     private static final char ESCAPE_CHAR = '\\';
     private static final char SEPARATOR_CHAR = ':';
 
+    /**
+     * The constructor.
+     */
+    public SwitchYardServicesProvider() {
+		_serverURLs = RTGovProperties.getProperties().getProperty(SWITCHYARD_RESUBMIT_HANDLER_SERVER_URLS);
+
+		_jmxUrl = RTGovProperties.getProperties().getProperty(SWITCHYARD_JMX_URL);
+		_jmxUsername = RTGovProperties.getProperties().getProperty(SWITCHYARD_JMX_USERNAME);
+		_jmxPassword = RTGovProperties.getProperties().getProperty(SWITCHYARD_JMX_PASSWORD);
+    }
+    
 	/**
 	 * {@inheritDoc}
 	 */
@@ -113,9 +132,6 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 	 * @return The server URLs
 	 */
 	public String getServerURLs() {
-		if (_serverURLs == null) {
-			_serverURLs = RTGovProperties.getProperties().getProperty(SWITCHYARD_RESUBMIT_HANDLER_SERVER_URLS);
-		}
 		return (_serverURLs);
 	}
 	
@@ -167,8 +183,8 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 	 * 
 	 * @param url The JMX server URL
 	 */
-	public void setServerJMX(String url) {
-		_serverJMX = url;
+	public void setJMXURL(String url) {
+		_jmxUrl = url;
 	}
 	
 	/**
@@ -176,11 +192,44 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 	 * 
 	 * @return The JMX server URL
 	 */
-	public String getServerJMX() {
-		if (_serverJMX == null && RTGovProperties.getProperties() != null) {
-			_serverJMX = RTGovProperties.getProperties().getProperty(SWITCHYARD_JMX_URL);
-		}
-		return (_serverJMX);
+	public String getJMXURL() {
+		return (_jmxUrl);
+	}
+	
+	/**
+	 * This method sets the JMX Username.
+	 * 
+	 * @param username The JMX Username
+	 */
+	public void setJMXUsername(String username) {
+		_jmxUsername = username;
+	}
+	
+	/**
+	 * This method returns the JMX username.
+	 * 
+	 * @return The JMX username
+	 */
+	public String getJMXUsername() {
+		return (_jmxUsername);
+	}
+	
+	/**
+	 * This method sets the JMX Password.
+	 * 
+	 * @param password The JMX Password
+	 */
+	public void setJMXPassword(String password) {
+		_jmxPassword = password;
+	}
+	
+	/**
+	 * This method returns the JMX Password.
+	 * 
+	 * @return The JMX Password
+	 */
+	public String getJMXPassword() {
+		return (_jmxPassword);
 	}
 	
 	/**
@@ -248,19 +297,45 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 	 */
 	protected synchronized MBeanServerConnection getMBeanServerConnection() throws UiException {
 		if (_mbeanServerConnection == null) {
+			if (LOG.isLoggable(Level.FINEST)) {
+				LOG.finest("Creating JMX connector.....");
+			}
 			
-			if (getServerJMX() == null) {
+			if (getJMXURL() == null) {
+				if (LOG.isLoggable(Level.FINEST)) {
+					LOG.finest("Creating JMX connector by accessing platform bean server");
+				}
 				_mbeanServerConnection = ManagementFactory.getPlatformMBeanServer();
 			} else {
 				try {
 					JMXServiceURL url = 
-						    new JMXServiceURL(getServerJMX());
+						    new JMXServiceURL(getJMXURL());
 					
-					JMXConnector jmxc = JMXConnectorFactory.connect(url, null);
+					java.util.Map<String, String[]> env = new java.util.HashMap<String, String[]>();
+					
+					if (_jmxUsername != null && _jmxPassword != null) {
+						
+						if (LOG.isLoggable(Level.FINEST)) {
+							LOG.finest("Creating JMX connector for user '"+_jmxUsername+"'");
+						}
+						
+						String[] creds = new String[2];
+						creds[0] = _jmxUsername;
+						creds[1] = _jmxPassword;
+						env.put(JMXConnector.CREDENTIALS, creds);
+					} else if (LOG.isLoggable(Level.FINEST)) {
+						LOG.finest("Creating JMX connector with no user credentials");
+					}
+					
+					JMXConnector jmxc = JMXConnectorFactory.connect(url, env);
 					
 					_mbeanServerConnection = jmxc.getMBeanServerConnection();
 				} catch (Exception e) {
 					throw new UiException(i18n.format("SwitchYardServicesProvider.JMXConnectionFailed"), e);
+				}
+				
+				if (LOG.isLoggable(Level.FINEST)) {
+					LOG.finest("Created JMX connector: "+_mbeanServerConnection);
 				}
 			}
 		}
