@@ -16,6 +16,7 @@
 package org.overlord.rtgov.ui.server.services.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -23,6 +24,7 @@ import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
+import org.overlord.rtgov.ui.client.model.Constants;
 import org.overlord.rtgov.ui.client.model.QName;
 import org.overlord.rtgov.ui.client.model.ReferenceBean;
 import org.overlord.rtgov.ui.client.model.ServiceBean;
@@ -41,6 +43,8 @@ import org.overlord.rtgov.ui.server.services.IServicesServiceImpl;
 @ApplicationScoped
 @Alternative
 public class ServicesProviderServiceImpl implements IServicesServiceImpl {
+
+	private static final int SERVICES_PER_PAGE=10;
 
 	@Inject
 	private Instance<ServicesProvider> _providers;
@@ -72,13 +76,54 @@ public class ServicesProviderServiceImpl implements IServicesServiceImpl {
         	services.addAll(sp.findServices(filters));
         }
         
-        // TODO: Pagination support
-
-        serviceResult.setServices(services);
-        serviceResult.setItemsPerPage(services.size());
-        serviceResult.setStartIndex(0);
-        serviceResult.setTotalResults(services.size());
+        int total=services.size();
         
+        // Sort based on column and direction
+        if (sortColumn != null) {
+        	java.util.Comparator<ServiceSummaryBean> comp=null;
+        	
+            if (sortColumn.equals(Constants.SORT_COLID_NAME)) {
+    	        comp = new java.util.Comparator<ServiceSummaryBean>() {
+    	
+    				@Override
+    				public int compare(ServiceSummaryBean o1,
+    						ServiceSummaryBean o2) {
+    					int ret=o1.getName().compareTo(o2.getName());
+    					if (!ascending) {
+    						ret = 0 - ret;
+    					}
+    					return ret;
+    				}
+    	    	};
+            }
+
+            if (comp != null) {
+        		Collections.sort(services, comp);
+        	}
+        }
+        
+        int startIndex=(SERVICES_PER_PAGE*(page-1));
+        
+        if (services.size() >= startIndex) {
+        	// Remove initial entries
+        	for (int i=0; i < startIndex; i++) {
+        		services.remove(0);
+        	}
+        	
+        	// Remove trailing entries
+        	while (services.size() > SERVICES_PER_PAGE) {
+        		services.remove(SERVICES_PER_PAGE);
+        	}
+        	
+        } else {
+        	services.clear();
+        }
+        
+        serviceResult.setServices(services);
+        serviceResult.setItemsPerPage(SERVICES_PER_PAGE);
+        serviceResult.setStartIndex((page-1)*SERVICES_PER_PAGE);
+        serviceResult.setTotalResults(total);
+
         return serviceResult;
     }
 

@@ -63,21 +63,10 @@ public class ReferenceTable extends TemplatedWidgetTable implements HasValue<Lis
         name.setText(summaryBean.getName());
         InlineLabel interf4ce = new InlineLabel(summaryBean.getIface());
         InlineLabel bindings = new InlineLabel(summaryBean.getBindings());
-        InlineLabel averageDuration = new InlineLabel(formatDuration(summaryBean.getAverageDuration()));
 
         add(rowIdx, 0, name);
         add(rowIdx, 1, interf4ce);
         add(rowIdx, 2, bindings);
-        add(rowIdx, 3, averageDuration);
-    }
-
-    /**
-     * Formats an average duration (in milliseconds) into a human readable format.
-     * @param averageDuration
-     */
-    private String formatDuration(long averageDuration) {
-        // TODO implement this!
-        return String.valueOf(averageDuration);
     }
 
 	@Override

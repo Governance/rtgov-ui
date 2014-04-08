@@ -404,7 +404,6 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 					        ssb.setName(name);				        
 					        ssb.setApplication(appName);
 				        	
-					        ssb.setAverageDuration(0L);
 					        ssb.setBindings("");
 					        ssb.setIface((String)getAttributeValue(attrs.get(2)));
 					        
@@ -473,7 +472,6 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 		        					applicationName.equals(appName)) {
 			        rsb.setApplication(appName);
 		        	
-			        rsb.setAverageDuration(0L);
 			        rsb.setBindings("");
 			        rsb.setIface((String)getAttributeValue(attrs.get(2)));
 			        
