@@ -60,6 +60,11 @@
 	        <artifactId>rtgov-jbossas</artifactId>
 	        <version>${rtgov.version}</version>
 	    </dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.content.services</groupId>
+			<artifactId>elasticsearch-rests</artifactId>
+			<version>${rtgov.version}</version>
+		</dependency>
     
     
     <!-- Third Party libs -->
