@@ -79,6 +79,16 @@
     <url-pattern>/js/overlord-header-data.js</url-pattern>
   </servlet-mapping>
 
+    <servlet>
+        <servlet-name>ElasticSearchRESTServer</servlet-name>
+        <servlet-class>org.overlord.rtgov.elasticsearch.rest.ElasticSearchRESTServer</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ElasticSearchRESTServer</servlet-name>
+        <url-pattern>/elasticsearch/*</url-pattern>
+    </servlet-mapping>
+
   <!-- Define a Security Constraint on this Application -->
   <security-constraint>
     <web-resource-collection>
