@@ -27,8 +27,21 @@
         2,
         3
       ],
-      "list": {},
-      "ids": []
+      "list": {
+        "1": {
+          "type": "time",
+          "field": "timestamp",
+          "from": "now-24h",
+          "to": "now",
+          "mandate": "must",
+          "active": true,
+          "alias": "",
+          "id": 1
+        }
+      },
+      "ids": [
+        1
+      ]
     }
   },
   "rows": [
@@ -440,10 +453,10 @@
         "2h",
         "1d"
       ],
-      "timefield": "@timestamp",
+      "timefield": "timestamp",
       "enable": true,
-      "now": false,
-      "filter_id": 0
+      "now": true,
+      "filter_id": 1
     }
   ],
   "refresh": "10s"
