@@ -108,7 +108,7 @@ public class JPASituationStore implements SituationStore {
     /**
      * {@inheritDoc}
      */
-    public Situation getSituation(String id) throws Exception {
+    public Situation getSituation(String id) {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest(i18n.format("JPASituationStore.GetSit", id)); //$NON-NLS-1$
         }
@@ -130,7 +130,7 @@ public class JPASituationStore implements SituationStore {
      * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
-    public java.util.List<Situation> getSituations(SituationsQuery sitQuery) throws Exception {
+    public java.util.List<Situation> getSituations(SituationsQuery sitQuery) {
     	java.util.List<Situation> situations=null;
         EntityManager em=getEntityManager();
 

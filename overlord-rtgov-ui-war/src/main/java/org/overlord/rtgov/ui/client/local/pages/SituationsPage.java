@@ -38,7 +38,11 @@ import org.overlord.rtgov.ui.client.local.pages.situations.SituationWatcherEvent
 import org.overlord.rtgov.ui.client.local.services.NotificationService;
 import org.overlord.rtgov.ui.client.local.services.SituationsRpcService;
 import org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHandler;
+import org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHandler.RpcServiceInvocationHandlerAdapter;
+import org.overlord.rtgov.ui.client.local.widgets.ToggleSwitch;
 import org.overlord.rtgov.ui.client.local.widgets.common.SortableTemplatedWidgetTable.SortColumn;
+import org.overlord.rtgov.ui.client.model.BatchRetryResult;
+import org.overlord.rtgov.ui.client.model.NotificationBean;
 import org.overlord.rtgov.ui.client.model.SituationEventBean;
 import org.overlord.rtgov.ui.client.model.SituationResultSetBean;
 import org.overlord.rtgov.ui.client.model.SituationSummaryBean;
@@ -79,6 +83,13 @@ public class SituationsPage extends AbstractPage {
 
     @Inject @DataField("filter-sidebar")
     protected SituationFilters filtersPanel;
+    @Inject
+    @DataField
+    protected ToggleSwitch toggleFilterSwitch;
+    @Inject
+    @DataField
+    protected Button retrySituations;
+    private boolean applyActionToFilteredRowsOnly = true;
 
     @Inject @DataField("btn-refresh")
     protected Button refreshButton;
@@ -182,6 +193,13 @@ public class SituationsPage extends AbstractPage {
             @Override
             public void onTableSort(TableSortEvent event) {
                 doSearch(currentPage);
+            }
+        });
+        toggleFilterSwitch.addValueChangeHandler(new ValueChangeHandler<String>() {
+
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                applyActionToFilteredRowsOnly = Boolean.valueOf(event.getValue());
             }
         });
 
@@ -305,6 +323,41 @@ public class SituationsPage extends AbstractPage {
         sitWatchButton.setVisible(false);
         this.sitWatchEvents.setVisible(false);
         this.sitWatchEvents.clear();
+    }
+    
+    /**
+     * Event handler that fires when the user clicks the retry button.
+     * 
+     * @param event
+     */
+    @EventHandler("retrySituations")
+    public void onRetryClick(ClickEvent event) {
+        SituationsFilterBean situationsFilterBean = applyActionToFilteredRowsOnly ? filtersPanel.getValue()
+                : new SituationsFilterBean();
+        final NotificationBean notificationBean = notificationService.startProgressNotification(
+                i18n.format("situation-details.resubmit-message-title"), //$NON-NLS-1$
+                i18n.format("situation.batch-retry-message-msg")); //$NON-NLS-1$
+        situationsService.resubmit(situationsFilterBean,
+                new RpcServiceInvocationHandlerAdapter<BatchRetryResult>() {
+                    @Override
+                    public void doOnReturn(BatchRetryResult data) {
+                        notificationService.completeProgressNotification(notificationBean.getUuid(),
+                                i18n.format("situation-details.message-resubmitted"), //$NON-NLS-1$
+                                i18n.format(
+                                        "situation.batch-retry-result", data.getProcessedCount(), data.getIgnoredCount(), data.getFailedCount())); //$NON-NLS-1$
+                    }
+
+                    @Override
+                    public void doOnError(Throwable error) {
+                        notificationService.completeProgressNotification(notificationBean.getUuid(),
+                                i18n.format("situation-details.resubmit-error"), //$NON-NLS-1$
+                                error);
+                    }
+
+                    @Override
+                    public void doOnComplete(RpcResult<BatchRetryResult> result) {
+                    }
+                });
     }
 
 }

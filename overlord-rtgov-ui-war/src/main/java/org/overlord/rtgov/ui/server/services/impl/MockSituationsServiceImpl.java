@@ -34,6 +34,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
 
+import org.overlord.rtgov.ui.client.model.BatchRetryResult;
 import org.overlord.rtgov.ui.client.model.CallTraceBean;
 import org.overlord.rtgov.ui.client.model.Constants;
 import org.overlord.rtgov.ui.client.model.MessageBean;
@@ -392,5 +393,15 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
 	public void updateResolutionState(String situationId, ResolutionState resolutionState) {
 		idToSituation.get(situationId).getProperties().put("resolutionState", resolutionState.name());
 	}
+
+    @Override
+    public BatchRetryResult resubmit(SituationsFilterBean situationsFilterBean) {
+        BatchRetryResult batchRetryResult = new BatchRetryResult();
+        batchRetryResult.setProcessedCount(4);
+        batchRetryResult.setFailedCount(2);
+        batchRetryResult.setIgnoredCount(1);
+        return batchRetryResult;
+    }
+
 
 }

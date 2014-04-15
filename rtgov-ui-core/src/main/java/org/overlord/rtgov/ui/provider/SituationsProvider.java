@@ -15,6 +15,7 @@
  */
 package org.overlord.rtgov.ui.provider;
 
+import org.overlord.rtgov.ui.client.model.BatchRetryResult;
 import org.overlord.rtgov.ui.client.model.MessageBean;
 import org.overlord.rtgov.ui.client.model.ResolutionState;
 import org.overlord.rtgov.ui.client.model.SituationBean;
@@ -76,6 +77,16 @@ public interface SituationsProvider {
      * @throws UiException
      */
     public void resubmit(String situationId, MessageBean message) throws UiException;
+    
+    /**
+     * This method resubmits all situation's matching the given filter criteria
+     * 
+     * @param filters The filters
+     * @return The {@link BatchRetryResult}
+     * @throws UiException
+     *             Failed to search situations
+     */
+    public BatchRetryResult resubmit(SituationsFilterBean situationsFilterBean) throws UiException;
   
 	public void assign(final String situationId, final String userName) throws UiException;
 	

@@ -16,7 +16,7 @@
 package org.overlord.rtgov.ui.client.local.pages.situations;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.Dependent;
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 
 import org.jboss.errai.ui.shared.api.annotations.DataField;
@@ -42,7 +42,6 @@ import com.google.gwt.user.client.ui.TextBox;
  * @author eric.wittmann@redhat.com
  */
 @Templated("/org/overlord/rtgov/ui/client/local/site/situations.html#filter-sidebar")
-@Dependent
 public class SituationFilters extends Composite implements HasValueChangeHandlers<SituationsFilterBean> {
 
     private SituationsFilterBean currentState = new SituationsFilterBean();

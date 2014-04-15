@@ -21,6 +21,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
 
+import org.overlord.rtgov.ui.client.model.BatchRetryResult;
 import org.overlord.rtgov.ui.client.model.Constants;
 import org.overlord.rtgov.ui.client.model.MessageBean;
 import org.overlord.rtgov.ui.client.model.ResolutionState;
@@ -166,6 +167,14 @@ public class SituationsProviderServiceImpl implements ISituationsServiceImpl {
     	mb.setContent(message);
     	
     	_provider.resubmit(situationId, mb);
+    }
+    
+    /**
+     * @see org.overlord.rtgov.ui.server.services.ISituationsServiceImpl#resubmit(SituationsFilterBean)
+     */
+    @Override
+    public BatchRetryResult resubmit(SituationsFilterBean situationsFilterBean) throws UiException {
+        return _provider.resubmit(situationsFilterBean);
     }
 
 	@Override

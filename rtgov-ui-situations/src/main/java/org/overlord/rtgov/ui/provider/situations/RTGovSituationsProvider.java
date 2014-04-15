@@ -48,6 +48,7 @@ import org.overlord.rtgov.call.trace.model.Call;
 import org.overlord.rtgov.call.trace.model.CallTrace;
 import org.overlord.rtgov.call.trace.model.Task;
 import org.overlord.rtgov.call.trace.model.TraceNode;
+import org.overlord.rtgov.ui.client.model.BatchRetryResult;
 import org.overlord.rtgov.ui.client.model.CallTraceBean;
 import org.overlord.rtgov.ui.client.model.MessageBean;
 import org.overlord.rtgov.ui.client.model.ResolutionState;
@@ -488,38 +489,52 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
      */
     @Override
     public void resubmit(String situationId, MessageBean message) throws UiException {
-    	
-    	try {
-	    	Situation sit=_situationStore.getSituation(situationId);
+        Situation situation=_situationStore.getSituation(situationId);
+        if (situation == null) {
+            throw new UiException(i18n.format("RTGovSituationsProvider.SitNotFound", situationId)); //$NON-NLS-1$
+        }
+        resubmitInternal(situation, message);
+    }
 
-	    	if (sit == null) {
-	            throw new UiException(i18n.format("RTGovSituationsProvider.SitNotFound", situationId)); //$NON-NLS-1$
-	    	}
-	    	
-			final ServiceOperationName operationName = getServiceOperationName(sit);
-
-            // Find service provider that can resubmit this message
-            Optional<ServicesProvider> serviceProvider = tryFind(_providers,
-                    new IsResubmitSupported(operationName));
-	    	
-	    	if (!serviceProvider.isPresent()) {
-	            throw new UiException(i18n.format("RTGovSituationsProvider.ResubmitProviderNotFound", situationId)); //$NON-NLS-1$
-	    	}
-	    	
-	    	// TODO: Change to specify service, rather than situation - also possibly locate the
-	    	// provider appropriate for the service rather than situation
-	    	
-	    	serviceProvider.get().resubmit(operationName.getService(), operationName.getOperation(), message);
-			_situationStore.recordSuccessfulResubmit(situationId);
-		} catch (UiException uiException) {
-			_situationStore.recordResubmitFailure(situationId, Throwables.getStackTraceAsString(uiException));
-			throw uiException;
-		} catch (Exception exception) {
-			_situationStore.recordResubmitFailure(situationId, Throwables.getStackTraceAsString(exception));
-			throw new UiException(
-					i18n.format(
-							"RTGovSituationsProvider.ResubmitFailed", situationId + ":" + exception.getLocalizedMessage()), exception); //$NON-NLS-1$
-		}
+    private void resubmitInternal(Situation situation, MessageBean message) throws UiException {
+        final ServiceOperationName operationName = getServiceOperationName(situation);
+        Optional<ServicesProvider> serviceProvider = tryFind(_providers, new IsResubmitSupported(
+                operationName));
+        if (!serviceProvider.isPresent()) {
+            throw new UiException(i18n.format("RTGovSituationsProvider.ResubmitProviderNotFound", situation.getId())); //$NON-NLS-1$
+        }
+        try {
+            // TODO: Change to specify service, rather than situation - also
+            // possibly locate the provider appropriate for the service rather than situation
+            serviceProvider.get().resubmit(operationName.getService(), operationName.getOperation(), message);
+            _situationStore.recordSuccessfulResubmit(situation.getId());
+        } catch (Exception exception) {
+            _situationStore.recordResubmitFailure(situation.getId(), Throwables.getStackTraceAsString(exception));
+            throw new UiException(
+                    i18n.format(
+                            "RTGovSituationsProvider.ResubmitFailed", situation.getId() + ":" + exception.getLocalizedMessage()), exception); //$NON-NLS-1$
+        }
+    }
+    
+    @Override
+    public BatchRetryResult resubmit(SituationsFilterBean situationsFilterBean) throws UiException {
+        int processedCount = 0, failedCount = 0, ignoredCount = 0;
+        List<Situation> situationIdToactivityTypeIds = _situationStore
+                .getSituations(createQuery(situationsFilterBean));
+        for (Situation situation : situationIdToactivityTypeIds) {
+            MessageBean message = getMessage(situation);
+            if (message == null) {
+                ignoredCount++;
+                continue;
+            }
+            try {
+                processedCount++;
+                resubmitInternal(situation, message);
+            } catch (UiException uiException) {
+                failedCount++;
+            }
+        }
+        return new BatchRetryResult(processedCount, failedCount, ignoredCount);
     }
     
 	/**

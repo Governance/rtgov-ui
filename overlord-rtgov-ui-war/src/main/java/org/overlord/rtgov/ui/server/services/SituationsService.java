@@ -21,6 +21,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 import org.jboss.errai.bus.server.annotations.Service;
+import org.overlord.rtgov.ui.client.model.BatchRetryResult;
 import org.overlord.rtgov.ui.client.model.ResolutionState;
 import org.overlord.rtgov.ui.client.model.SituationBean;
 import org.overlord.rtgov.ui.client.model.SituationResultSetBean;
@@ -95,5 +96,10 @@ public class SituationsService implements ISituationsService {
 	public void updateResolutionState(String situationId, String resolutionState) throws UiException {
 		impl.updateResolutionState(situationId, ResolutionState.valueOf(resolutionState));
 	}
+
+    @Override
+    public BatchRetryResult resubmit(SituationsFilterBean situationsFilterBean) throws UiException {
+        return impl.resubmit(situationsFilterBean);
+    }
 
 }

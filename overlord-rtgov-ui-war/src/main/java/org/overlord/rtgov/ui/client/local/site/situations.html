@@ -8,7 +8,7 @@
     <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen"></link>
     <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap-datepicker.css" rel="stylesheet" media="screen"></link>
     <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen"></link>
-    <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap-fileupload.min.css" rel="stylesheet" media="screen"></link>
+    <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap-switch.min.css" rel="stylesheet" media="screen"></link>
     <link href="../../../../../../../../webapp/css/rtgov-ui.css" rel="stylesheet"></link>
     <link href="../../../../../../../../webapp/css/rtgov-ui-responsive.css" rel="stylesheet"></link>
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -19,7 +19,7 @@
     <script type="text/javascript" src="../../../../../../../../webapp/bootstrap-2.3.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../../../../../webapp/bootstrap-2.3.1/js/bootstrap-datepicker.js"></script>
     <script type="text/javascript" src="../../../../../../../../webapp/bootstrap-2.3.1/js/bootstrap-datetimepicker.min.js"></script>
-    <script type="text/javascript" src="../../../../../../../../webapp/bootstrap-2.3.1/js/bootstrap-fileupload.min.js"></script>
+    <script type="text/javascript" src="../../../../../../../../webapp/bootstrap-2.3.1/js/bootstrap-switch.min.js"></script>
     <script type="text/javascript" src="../../../../../../../../webapp/js/rtgov-ui-responsive.js"></script>
   </head>
 
@@ -61,73 +61,98 @@
 
         <!-- Page content -->
         <div class="row-fluid">
-          <!-- The Filter Sidebar -->
-          <div id="filter-sidebar" data-field="filter-sidebar" class="span3 filter-sidebar">
-            <div class="row-fluid filter-header">
-              <a class="span12" data-toggle="slide" data-target="#filters"><span data-i18n-key="deployment-filters">Filters</span> <span class="mobile-only caret pull-right"></span></a>
-            </div>
-            <!-- The Filters -->
-            <div id="filters" class="row-fluid close-on-mobile closed-on-mobile open-on-desktop">
-              <div class="span12">
-                <div class="filter-inner">
-                  <form class="" onSubmit="return false;">
-                    <div class="controls controls-row">
-                      <label class="filter-label" data-i18n-key="severity">Severity</label>
-                      <select data-field="severity" class="selectpicker span12" data-role="dummy">
-                        <option value="" data-i18n-key="any">Any</option>
-                        <option value="" data-i18n-key="low">Low</option>
-                        <option value="" data-i18n-key="medium">Medium</option>
-                        <option value="" data-i18n-key="high">High</option>
-                        <option value="" data-i18n-key="critical">Critical</option>
-                      </select>
+          <div class="span3">
+	          <!-- The Filter Sidebar -->
+	          <div id="filter-sidebar" data-field="filter-sidebar" class="filter-sidebar">
+	            <div class="row-fluid filter-header">
+	              <a class="span12" data-toggle="slide" data-target="#filters"><span data-i18n-key="deployment-filters">Filters</span> <span class="mobile-only caret pull-right"></span></a>
+	            </div>
+	            <!-- The Filters -->
+	            <div id="filters" class="row-fluid close-on-mobile closed-on-mobile open-on-desktop">
+	              <div class="span12">
+	                <div class="filter-inner">
+	                  <form class="" onSubmit="return false;">
+	                    <div class="controls controls-row">
+	                      <label class="filter-label" data-i18n-key="severity">Severity</label>
+	                      <select data-field="severity" class="selectpicker span12" data-role="dummy">
+	                        <option value="" data-i18n-key="any">Any</option>
+	                        <option value="" data-i18n-key="low">Low</option>
+	                        <option value="" data-i18n-key="medium">Medium</option>
+	                        <option value="" data-i18n-key="high">High</option>
+	                        <option value="" data-i18n-key="critical">Critical</option>
+	                      </select>
+	                    </div>
+	                    <div class="controls controls-row">
+	                      <label class="filter-label" data-i18n-key="resolutionState">Status</label>
+	                      <select data-field="resolutionState" class="selectpicker span12" data-role="dummy">
+	                        <option value="" data-i18n-key="resolutionState.any">Any</option>
+	                        <option value="" data-i18n-key="resolutionState.open">Open</option>
+	                        <option value="" data-i18n-key="resolutionState.resolved">Resolved</option>
+	                        <option value="" data-i18n-key="resolutionState.in_progress">In Progress</option>
+	                        <option value="" data-i18n-key="resolutionState.resolved">Resolved</option>
+	                      </select>
+	                    </div>
+	                    <div class="controls controls-row">
+	                      <label class="filter-label" data-i18n-key="type">Type</label>
+	                      <input data-field="type" class="span12" type="text" placeholder="Any"></input>
+	                    </div>
+	                    <div class="controls controls-row">
+	                      <label class="filter-label" data-i18n-key="timestamp">Timestamp</label>
+	                      <div class="input-append">
+	                      <input data-field="timestampFrom" class="filter-date" type="text" placeholder="Any" readonly="readonly"></input>
+	                      <span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span>
+	                      </div>
+	                      <span class="desktop-only" style="padding-top: 4px; text-align: center" data-i18n-key="to">to</span>
+	                      <div class="input-append">
+	                      <input data-field="timestampTo" class="filter-date" type="text" placeholder="Any" readonly="readonly"></input>
+	                      <span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span>
+	                      </div>
+	                    </div>
+	                    <div class="controls controls-row">
+	                      <label class="filter-label" data-i18n-key="description">Description</label>
+	                      <input data-field="description" class="span12" type="text" placeholder="Any"></input>
+	                    </div>
+	                    <div class="controls controls-row">
+	                      <label class="filter-label" data-i18n-key="subject">Subject</label>
+	                      <input data-field="subject" class="span12" type="text" placeholder="Any"></input>
+	                    </div>
+	                    <div class="controls controls-row">
+	                      <label class="filter-label" data-i18n-key="host">Host</label>
+	                      <input data-field="host" class="span12" type="text" placeholder="Any"></input>
+	                    </div>
+	                    <div class="controls">
+	                      <button data-field="clearFilters" class="btn btn-focus btn-clear" data-i18n-key="clear-all-filters">Clear All Filters</button>
+	                    </div>
+	                  </form>
+	                </div>
+	              </div>
+	            </div>
+	          </div>
+	          <!-- The Action Sidebar -->  
+              <div id="action-sidebar" data-field="action-sidebar" class="action-sidebar">
+                  <div class="row-fluid action-header btn-danger">
+                      <a class="span12" data-toggle="slide" data-target="#actions"><span data-i18n-key="situation-actions">Actions</span> <span class="mobile-only caret pull-right"></span></a>
+                  </div>
+                  <div id="actions" class="row-fluid close-on-mobile closed-on-mobile open-on-desktop closed">
+                    <div class="span12">
+                        <div class="filter-inner">
+                            <form class="" onSubmit="return false;">
+                                <div class="controls controls-row">
+                                    <label class="filter-label" data-i18n-key="description">
+                                        apply to <input type="checkbox" data-toggle="switch" checked data-on-label="filtered" data-off-label="all" data-field="toggleFilterSwitch"></input> rows
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <button data-field="retrySituations" class="btn btn-focus btn-large" data-i18n-key="retry-situations" title="Retry"><span class="icon-retweet"></span></button>
+                                    <button data-field="exportSituations" class="btn btn-focus btn-large" data-i18n-key="export-situations" title="Export"><span class="icon-download"></span></button>
+                                    <button data-field="deleteSituations" class="btn btn-focus btn-large" data-i18n-key="delete-situations" title="Delete"><span class="icon-remove"></span></button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                    <div class="controls controls-row">
-                      <label class="filter-label" data-i18n-key="resolutionState">Status</label>
-                      <select data-field="resolutionState" class="selectpicker span12" data-role="dummy">
-                        <option value="" data-i18n-key="resolutionState.any">Any</option>
-                        <option value="" data-i18n-key="resolutionState.open">Open</option>
-                        <option value="" data-i18n-key="resolutionState.resolved">Resolved</option>
-                        <option value="" data-i18n-key="resolutionState.in_progress">In Progress</option>
-                        <option value="" data-i18n-key="resolutionState.resolved">Resolved</option>
-                      </select>
-                    </div>
-                    <div class="controls controls-row">
-                      <label class="filter-label" data-i18n-key="type">Type</label>
-                      <input data-field="type" class="span12" type="text" placeholder="Any"></input>
-                    </div>
-                    <div class="controls controls-row">
-                      <label class="filter-label" data-i18n-key="timestamp">Timestamp</label>
-                      <div class="input-append">
-                      <input data-field="timestampFrom" class="filter-date" type="text" placeholder="Any" readonly="readonly"></input>
-                      <span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span>
-                      </div>
-                      <span class="desktop-only" style="padding-top: 4px; text-align: center" data-i18n-key="to">to</span>
-                      <div class="input-append">
-                      <input data-field="timestampTo" class="filter-date" type="text" placeholder="Any" readonly="readonly"></input>
-                      <span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span>
-                      </div>
-                    </div>
-                    <div class="controls controls-row">
-                      <label class="filter-label" data-i18n-key="description">Description</label>
-                      <input data-field="description" class="span12" type="text" placeholder="Any"></input>
-                    </div>
-                    <div class="controls controls-row">
-                      <label class="filter-label" data-i18n-key="subject">Subject</label>
-                      <input data-field="subject" class="span12" type="text" placeholder="Any"></input>
-                    </div>
-                    <div class="controls controls-row">
-                      <label class="filter-label" data-i18n-key="host">Host</label>
-                      <input data-field="host" class="span12" type="text" placeholder="Any"></input>
-                    </div>
-                    <div class="controls">
-                      <button data-field="clearFilters" class="btn btn-focus btn-clear" data-i18n-key="clear-all-filters">Clear All Filters</button>
-                    </div>
-                  </form>
                 </div>
-              </div>
             </div>
           </div>
-
           <!-- The Situations table -->
           <div class="span9">
             <div class="row-fluid situations">
@@ -234,6 +259,7 @@
               todayBtn: true,
               todayHighlight: true
           });
+          $("[data-toggle='switch']").bootstrapSwitch();
       });
     </script>
 

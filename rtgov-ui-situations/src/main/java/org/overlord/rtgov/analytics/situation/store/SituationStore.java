@@ -43,7 +43,7 @@ public interface SituationStore {
      * @return The situation, or null if not found
      * @throws Exception Failed to get situation
      */
-    public Situation getSituation(String id) throws Exception;
+    public Situation getSituation(String id);
 
     /**
      * This method returns the list of situations that meet the criteria
@@ -53,7 +53,7 @@ public interface SituationStore {
      * @return The list of situations
      * @throws Exception Failed to get situations
      */
-    public java.util.List<Situation> getSituations(SituationsQuery query) throws Exception;
+    public java.util.List<Situation> getSituations(SituationsQuery query);
 
     /**
      * This method assigns a situation to a specified user.

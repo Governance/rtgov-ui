@@ -309,6 +309,31 @@ footer hr {
   border-top: 4px solid white;
 }
 
+.action-sidebar {
+  border: 1px solid rgb(211, 211, 211);
+}
+
+.action-inner {
+  padding: 9px 15px 0px;
+}
+
+.action-header {
+  text-indent: 15px;
+  background-color: rgb(31, 151, 216);
+}
+.action-header a {
+  padding-top: 5px;
+  color: white;
+  margin-top: 3px;
+  margin-bottom: 3px;
+}
+.action-header span.caret {
+  color: white;
+  margin-top: 8px;
+  margin-right: 8px;
+  border-top: 4px solid white;
+}
+
 .services {
   padding: 0px;
 }

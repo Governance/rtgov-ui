@@ -45,5 +45,7 @@
   "situation-details.resubmit-message-msg" : "Please wait while we resubmit the message for situation '{0}.",
   "situation-details.message-resubmitted" : "Message Resubmitted Successfully",
   "situation-details.resubmit-success-msg" : "Successfully resubmitted message for '{0}'.",
-  "situation-details.resubmit-error" : "Message Resubmit Failed"
+  "situation-details.resubmit-error" : "Message Resubmit Failed",
+  "situation.batch-retry-message-msg" : "Please wait while retrying failed message's",
+  "situation.batch-retry-result" : "Processed '{0}' /Ignored '{0}' /Failed '{0}'."
 }

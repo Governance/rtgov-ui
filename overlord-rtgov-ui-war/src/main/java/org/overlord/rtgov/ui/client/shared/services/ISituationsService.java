@@ -16,6 +16,7 @@
 package org.overlord.rtgov.ui.client.shared.services;
 
 import org.jboss.errai.bus.server.annotations.Remote;
+import org.overlord.rtgov.ui.client.model.BatchRetryResult;
 import org.overlord.rtgov.ui.client.model.SituationBean;
 import org.overlord.rtgov.ui.client.model.SituationResultSetBean;
 import org.overlord.rtgov.ui.client.model.SituationsFilterBean;
@@ -72,5 +73,12 @@ public interface ISituationsService {
      * @throws UiException
      */
 	public void updateResolutionState(String situationId, String resolutionState) throws UiException;
+
+	/**
+     * Resubmits all situation's matching the given filter.
+     * @param situationsFilterBean
+     * @throws UiException
+     */
+    public BatchRetryResult resubmit(SituationsFilterBean situationsFilterBean) throws UiException;
 
 }

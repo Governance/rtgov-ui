@@ -24,6 +24,7 @@ import org.jboss.errai.common.client.api.RemoteCallback;
 import org.overlord.rtgov.ui.client.local.services.rpc.DelegatingErrorCallback;
 import org.overlord.rtgov.ui.client.local.services.rpc.DelegatingRemoteCallback;
 import org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHandler;
+import org.overlord.rtgov.ui.client.model.BatchRetryResult;
 import org.overlord.rtgov.ui.client.model.ResolutionState;
 import org.overlord.rtgov.ui.client.model.SituationBean;
 import org.overlord.rtgov.ui.client.model.SituationResultSetBean;
@@ -91,6 +92,19 @@ public class SituationsRpcService {
         }
     }
     
+    /**
+     * @see org.overlord.rtgov.ui.client.shared.services.ISituationsService#resubmit(String,String)
+     */
+    public void resubmit(SituationsFilterBean situationsFilterBean, IRpcServiceInvocationHandler<BatchRetryResult> handler) {
+        RemoteCallback<BatchRetryResult> successCallback = new DelegatingRemoteCallback<BatchRetryResult>(handler);
+        ErrorCallback<?> errorCallback = new DelegatingErrorCallback(handler);
+        try {
+            remoteSituationsService.call(successCallback, errorCallback).resubmit(situationsFilterBean);
+        } catch (UiException e) {
+            errorCallback.error(null, e);
+        }
+    }
+
     /**
      * @see org.overlord.rtgov.ui.client.shared.services.ISituationsService#assign(String)
      */

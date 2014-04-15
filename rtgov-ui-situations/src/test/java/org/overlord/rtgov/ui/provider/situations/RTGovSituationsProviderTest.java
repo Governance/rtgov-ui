@@ -129,12 +129,12 @@ public class RTGovSituationsProviderTest {
 		RTGovSituationsProvider provider=new RTGovSituationsProvider();
 		
 		SituationStore sits=new SituationStore() {
-			public Situation getSituation(String id) throws Exception {
-				throw new Exception("Fail");
+			public Situation getSituation(String id) {
+				throw new AssertionError("Fail");
 			}
-			public java.util.List<Situation> getSituations(SituationsQuery query) throws Exception {
+			public java.util.List<Situation> getSituations(SituationsQuery query) {
 				if (!query.getType().equals(TEST_TYPE)) {
-					throw new Exception("Unexpected query type: "+query.getType());
+					throw new AssertionError("Unexpected query type: "+query.getType());
 				}
 				Situation s1=new Situation();
 				s1.setSubject(TEST_SUBJECT);
@@ -246,17 +246,17 @@ public class RTGovSituationsProviderTest {
 		RTGovSituationsProvider provider=new RTGovSituationsProvider();
 		
 		SituationStore sits=new SituationStore() {
-			public Situation getSituation(String id) throws Exception {
+			public Situation getSituation(String id) {
 				if (!id.equals(TEST_ID)) {
-					throw new Exception("Incorrect id");
+				    throw new AssertionError("Incorrect id");
 				}
 				Situation ret=new Situation();
 				ret.setSubject("Service|Operation");
 				ret.setId(id);
 				return (ret);
 			}
-			public java.util.List<Situation> getSituations(SituationsQuery query) throws Exception {
-				throw new Exception("Fail");
+			public java.util.List<Situation> getSituations(SituationsQuery query) {
+				throw new AssertionError("Fail");
 			}
 			public void assignSituation(String situationId, String userName) throws Exception {
 				throw new Exception("Fail");
